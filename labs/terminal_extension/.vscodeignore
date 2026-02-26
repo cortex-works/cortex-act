@@ -1,0 +1,6 @@
+clean_build/**
+mcp-server/**
+**/*.map
+*.vsix
+*.sh
+**/*.md

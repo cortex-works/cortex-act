@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?><neurosiphon><repository_map><![CDATA[# REPOSITORY_MAP
+src/extension.ts]]></repository_map><file path="src/extension.ts"><![CDATA[// ... (1 imports)
+interface TerminalBuffer {
+name: string;
+pid: number;
+lines: string[];
+}
+export function activate(context: vscode.ExtensionContext) {
+console.log('🚀 Terminal Master extension activated');
+console.log('Extension context:', context.extensionPath);
+const terminalBuffers = new Map<number, TerminalBuffer>();
+const activeExecutions = new Map<vscode.TerminalShellExecution, AsyncIterator<string>>();
+async function getTerminalPid(terminal: vscode.Terminal): Promise<number | undefined> { /* ... */ }
+async function initializeBuffer(terminal: vscode.Terminal) { /* ... */ }
+function addDataToBuffer(pid: number, data: string) { /* ... */ }
+const shellIntegrationListener = vscode.window.onDidChangeTerminalShellIntegration(async (event) => { /* ... */ });
+const executionStartListener = vscode.window.onDidStartTerminalShellExecution(async (event) => {
+const pid = await initializeBuffer(event.terminal);
+if (!pid) return;
+console.log(`🚀 Command started in terminal ${event.terminal.name} (PID: ${pid})`);
+try {
+const stream = event.execution.read();
+const iterator = stream[Symbol.asyncIterator]();
+activeExecutions.set(event.execution, iterator);
+(async () => { /* ... */ })();
+} catch (error) {
+console.error('Error setting up terminal execution reader:', error);
+}
+});
+const executionEndListener = vscode.window.onDidEndTerminalShellExecution((event) => { /* ... */ });
+const terminalCloseListener = vscode.window.onDidCloseTerminal(async (terminal) => { /* ... */ });
+(async () => { /* ... */ })();
+const listCommand = vscode.commands.registerCommand('terminal-master.list', async () => { /* ... */ });
+const runCommand = vscode.commands.registerCommand('terminal-master.run', async (input?: any) => { /* ... */ });
+const readCommand = vscode.commands.registerCommand('terminal-master.read', async (input?: any) => { /* ... */ });
+const runAndWaitCommand = vscode.commands.registerCommand('terminal-master.runAndWait', async (input?: any) => { /* ... */ });
+context.subscriptions.push(
+shellIntegrationListener,
+executionStartListener,
+executionEndListener,
+terminalCloseListener,
+listCommand,
+runCommand,
+readCommand,
+runAndWaitCommand
+);
+}
+export function deactivate() { /* ... */ }]]></file></neurosiphon>

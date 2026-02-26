@@ -1,0 +1,3148 @@
+[
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Can you assist me with generate text embeddings for semantic search?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Please help me generate text embeddings for semantic search"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Can you assist me with create vector representations for ml models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Please help me create vector representations for ml models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Can you assist me with process batch embedding requests?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed\"}"
+    ],
+    "query": [
+      "Please help me process batch embedding requests"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed\",\"description\":\"Generate embeddings for a single text input\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to embed\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Can you assist me with generate text embeddings for semantic search?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Please help me generate text embeddings for semantic search"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Can you assist me with create vector representations for ml models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Please help me create vector representations for ml models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Can you assist me with process batch embedding requests?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"embedding_service_embed_batch\"}"
+    ],
+    "query": [
+      "Please help me process batch embedding requests"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"embedding_service_embed_batch\",\"description\":\"Generate embeddings for multiple text inputs\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_ingest_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with centralize logs from all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_ingest_logs\",\"description\":\"Ingest log entries from microservices\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service sending logs\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_ingest_logs\"}"
+    ],
+    "query": [
+      "Please help me centralize logs from all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_ingest_logs\",\"description\":\"Ingest log entries from microservices\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service sending logs\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_ingest_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with search and filter logs across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_ingest_logs\",\"description\":\"Ingest log entries from microservices\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service sending logs\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_ingest_logs\"}"
+    ],
+    "query": [
+      "Please help me search and filter logs across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_ingest_logs\",\"description\":\"Ingest log entries from microservices\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service sending logs\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_search_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with centralize logs from all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_search_logs\",\"description\":\"Search logs with advanced filtering and querying\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query string\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_search_logs\"}"
+    ],
+    "query": [
+      "Please help me centralize logs from all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_search_logs\",\"description\":\"Search logs with advanced filtering and querying\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query string\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_search_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with search and filter logs across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_search_logs\",\"description\":\"Search logs with advanced filtering and querying\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query string\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_search_logs\"}"
+    ],
+    "query": [
+      "Please help me search and filter logs across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_search_logs\",\"description\":\"Search logs with advanced filtering and querying\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query string\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with centralize logs from all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Please help me centralize logs from all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with real-time log streaming and monitoring?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Please help me real-time log streaming and monitoring"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Can you assist me with search and filter logs across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"logging_service_stream_logs\"}"
+    ],
+    "query": [
+      "Please help me search and filter logs across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"logging_service_stream_logs\",\"description\":\"Stream logs in real-time with filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_upload_file\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_upload_file\",\"description\":\"Upload a file to the configured storage backend\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_name\":{\"type\":\"string\",\"description\":\"Name of the file\",\"items\":null}},\"required\":[\"file_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_upload_file\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_upload_file\",\"description\":\"Upload a file to the configured storage backend\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_name\":{\"type\":\"string\",\"description\":\"Name of the file\",\"items\":null}},\"required\":[\"file_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_upload_file\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_upload_file\",\"description\":\"Upload a file to the configured storage backend\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_name\":{\"type\":\"string\",\"description\":\"Name of the file\",\"items\":null}},\"required\":[\"file_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_upload_file\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_upload_file\",\"description\":\"Upload a file to the configured storage backend\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_name\":{\"type\":\"string\",\"description\":\"Name of the file\",\"items\":null}},\"required\":[\"file_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_download_file\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_download_file\",\"description\":\"Download a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to download\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_download_file\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_download_file\",\"description\":\"Download a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to download\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_download_file\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_download_file\",\"description\":\"Download a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to download\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_download_file\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_download_file\",\"description\":\"Download a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to download\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_delete_file\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_delete_file\",\"description\":\"Delete a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to delete\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_delete_file\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_delete_file\",\"description\":\"Delete a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to delete\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_delete_file\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_delete_file\",\"description\":\"Delete a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to delete\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_delete_file\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_delete_file\",\"description\":\"Delete a file from storage\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file to delete\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_list_files\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_list_files\",\"description\":\"List files in storage with optional filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{\"prefix\":{\"type\":\"string\",\"description\":\"File name prefix filter\",\"items\":null}},\"required\":[\"prefix\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_list_files\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_list_files\",\"description\":\"List files in storage with optional filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{\"prefix\":{\"type\":\"string\",\"description\":\"File name prefix filter\",\"items\":null}},\"required\":[\"prefix\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_list_files\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_list_files\",\"description\":\"List files in storage with optional filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{\"prefix\":{\"type\":\"string\",\"description\":\"File name prefix filter\",\"items\":null}},\"required\":[\"prefix\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_list_files\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_list_files\",\"description\":\"List files in storage with optional filtering\",\"parameters\":{\"type\":\"object\",\"properties\":{\"prefix\":{\"type\":\"string\",\"description\":\"File name prefix filter\",\"items\":null}},\"required\":[\"prefix\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Can you assist me with manage file metadata and permissions?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Please help me manage file metadata and permissions"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_file_metadata\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_file_metadata\",\"description\":\"Get metadata for a specific file\",\"parameters\":{\"type\":\"object\",\"properties\":{\"file_id\":{\"type\":\"string\",\"description\":\"Unique identifier of the file\",\"items\":null}},\"required\":[\"file_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_storage_stats\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve files from cloud storage?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_storage_stats\",\"description\":\"Get storage usage statistics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_storage_stats\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve files from cloud storage"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_storage_stats\",\"description\":\"Get storage usage statistics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_storage_stats\"}"
+    ],
+    "query": [
+      "Can you assist me with provide unified interface across storage providers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_storage_stats\",\"description\":\"Get storage usage statistics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"storage_service_get_storage_stats\"}"
+    ],
+    "query": [
+      "Please help me provide unified interface across storage providers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"storage_service_get_storage_stats\",\"description\":\"Get storage usage statistics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_upsert_vector\"}"
+    ],
+    "query": [
+      "Can you assist me with store vector embeddings?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_upsert_vector\",\"description\":\"Insert or update a vector in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_upsert_vector\"}"
+    ],
+    "query": [
+      "Please help me store vector embeddings"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_upsert_vector\",\"description\":\"Insert or update a vector in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_upsert_vector\"}"
+    ],
+    "query": [
+      "Can you assist me with manage vector collections?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_upsert_vector\",\"description\":\"Insert or update a vector in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_upsert_vector\"}"
+    ],
+    "query": [
+      "Please help me manage vector collections"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_upsert_vector\",\"description\":\"Insert or update a vector in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Can you assist me with store vector embeddings?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Please help me store vector embeddings"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Can you assist me with perform similarity searches?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Please help me perform similarity searches"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Can you assist me with manage vector collections?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_search_vector\"}"
+    ],
+    "query": [
+      "Please help me manage vector collections"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_search_vector\",\"description\":\"Search for similar vectors in a collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_create_collection\"}"
+    ],
+    "query": [
+      "Can you assist me with store vector embeddings?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_create_collection\",\"description\":\"Create a new vector collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_create_collection\"}"
+    ],
+    "query": [
+      "Please help me store vector embeddings"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_create_collection\",\"description\":\"Create a new vector collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_create_collection\"}"
+    ],
+    "query": [
+      "Can you assist me with manage vector collections?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_create_collection\",\"description\":\"Create a new vector collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"vector_service_create_collection\"}"
+    ],
+    "query": [
+      "Please help me manage vector collections"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"vector_service_create_collection\",\"description\":\"Create a new vector collection\",\"parameters\":{\"type\":\"object\",\"properties\":{\"collection_name\":{\"type\":\"string\",\"description\":\"Name of the collection\",\"items\":null}},\"required\":[\"collection_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_search\"}"
+    ],
+    "query": [
+      "Can you assist me with perform semantic search over document collections?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_search\",\"description\":\"Perform semantic search over indexed documents\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_search\"}"
+    ],
+    "query": [
+      "Please help me perform semantic search over document collections"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_search\",\"description\":\"Perform semantic search over indexed documents\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_search\"}"
+    ],
+    "query": [
+      "Can you assist me with generate relevant queries for retrieval?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_search\",\"description\":\"Perform semantic search over indexed documents\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_search\"}"
+    ],
+    "query": [
+      "Please help me generate relevant queries for retrieval"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_search\",\"description\":\"Perform semantic search over indexed documents\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_index_document\"}"
+    ],
+    "query": [
+      "Can you assist me with retrieve and rank documents by relevance?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_index_document\",\"description\":\"Index a document for semantic search\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rag_service_index_document\"}"
+    ],
+    "query": [
+      "Please help me retrieve and rank documents by relevance"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rag_service_index_document\",\"description\":\"Index a document for semantic search\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_queue_job\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_queue_job\",\"description\":\"Queue a new job for background processing\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_type\":{\"type\":\"string\",\"description\":\"Type/category of the job\",\"items\":null}},\"required\":[\"job_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_queue_job\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_queue_job\",\"description\":\"Queue a new job for background processing\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_type\":{\"type\":\"string\",\"description\":\"Type/category of the job\",\"items\":null}},\"required\":[\"job_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_job_status\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_job_status\",\"description\":\"Get the current status and details of a job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_job_status\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_job_status\",\"description\":\"Get the current status and details of a job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_job_status\"}"
+    ],
+    "query": [
+      "Can you assist me with track job execution status and progress?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_job_status\",\"description\":\"Get the current status and details of a job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_job_status\"}"
+    ],
+    "query": [
+      "Please help me track job execution status and progress"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_job_status\",\"description\":\"Get the current status and details of a job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_cancel_job\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_cancel_job\",\"description\":\"Cancel a queued or running job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_cancel_job\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_cancel_job\",\"description\":\"Cancel a queued or running job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_list_jobs\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_list_jobs\",\"description\":\"List jobs with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"status_filter\":{\"type\":\"string\",\"description\":\"Filter by job status\",\"items\":null}},\"required\":[\"status_filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_list_jobs\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_list_jobs\",\"description\":\"List jobs with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"status_filter\":{\"type\":\"string\",\"description\":\"Filter by job status\",\"items\":null}},\"required\":[\"status_filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_retry_job\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_retry_job\",\"description\":\"Manually retry a failed job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_retry_job\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_retry_job\",\"description\":\"Manually retry a failed job\",\"parameters\":{\"type\":\"object\",\"properties\":{\"job_id\":{\"type\":\"string\",\"description\":\"Job identifier\",\"items\":null}},\"required\":[\"job_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_queue_stats\"}"
+    ],
+    "query": [
+      "Can you assist me with queue background jobs for asynchronous processing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_queue_stats\",\"description\":\"Get queue statistics and health metrics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"job_queue_service_get_queue_stats\"}"
+    ],
+    "query": [
+      "Please help me queue background jobs for asynchronous processing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"job_queue_service_get_queue_stats\",\"description\":\"Get queue statistics and health metrics\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_system_health\"}"
+    ],
+    "query": [
+      "Can you assist me with monitor health status of all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_system_health\",\"description\":\"Get overall system health status across all services\",\"parameters\":{\"type\":\"object\",\"properties\":{\"include_details\":{\"type\":\"string\",\"description\":\"Include detailed health information\",\"items\":null}},\"required\":[\"include_details\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_system_health\"}"
+    ],
+    "query": [
+      "Please help me monitor health status of all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_system_health\",\"description\":\"Get overall system health status across all services\",\"parameters\":{\"type\":\"object\",\"properties\":{\"include_details\":{\"type\":\"string\",\"description\":\"Include detailed health information\",\"items\":null}},\"required\":[\"include_details\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_metrics\"}"
+    ],
+    "query": [
+      "Can you assist me with collect and aggregate performance metrics?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_metrics\",\"description\":\"Get performance metrics for specific services\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_names\":{\"type\":\"string\",\"description\":\"List of service names to get metrics for\",\"items\":null}},\"required\":[\"service_names\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_metrics\"}"
+    ],
+    "query": [
+      "Please help me collect and aggregate performance metrics"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_metrics\",\"description\":\"Get performance metrics for specific services\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_names\":{\"type\":\"string\",\"description\":\"List of service names to get metrics for\",\"items\":null}},\"required\":[\"service_names\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_active_alerts\"}"
+    ],
+    "query": [
+      "Can you assist me with monitor health status of all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_active_alerts\",\"description\":\"Get currently active alerts and their details\",\"parameters\":{\"type\":\"object\",\"properties\":{\"severity_filter\":{\"type\":\"string\",\"description\":\"Filter by severity level\",\"items\":null}},\"required\":[\"severity_filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_active_alerts\"}"
+    ],
+    "query": [
+      "Please help me monitor health status of all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_active_alerts\",\"description\":\"Get currently active alerts and their details\",\"parameters\":{\"type\":\"object\",\"properties\":{\"severity_filter\":{\"type\":\"string\",\"description\":\"Filter by severity level\",\"items\":null}},\"required\":[\"severity_filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_status\"}"
+    ],
+    "query": [
+      "Can you assist me with monitor health status of all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_status\",\"description\":\"Get detailed status information for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_status\"}"
+    ],
+    "query": [
+      "Please help me monitor health status of all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_status\",\"description\":\"Get detailed status information for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_status\"}"
+    ],
+    "query": [
+      "Can you assist me with detect service failures and outages?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_status\",\"description\":\"Get detailed status information for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_get_service_status\"}"
+    ],
+    "query": [
+      "Please help me detect service failures and outages"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_get_service_status\",\"description\":\"Get detailed status information for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_stream_metrics\"}"
+    ],
+    "query": [
+      "Can you assist me with collect and aggregate performance metrics?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_stream_metrics\",\"description\":\"Stream real-time metrics data for monitoring dashboards\",\"parameters\":{\"type\":\"object\",\"properties\":{\"services\":{\"type\":\"string\",\"description\":\"Services to stream metrics for\",\"items\":null}},\"required\":[\"services\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_stream_metrics\"}"
+    ],
+    "query": [
+      "Please help me collect and aggregate performance metrics"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_stream_metrics\",\"description\":\"Stream real-time metrics data for monitoring dashboards\",\"parameters\":{\"type\":\"object\",\"properties\":{\"services\":{\"type\":\"string\",\"description\":\"Services to stream metrics for\",\"items\":null}},\"required\":[\"services\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_trigger_health_check\"}"
+    ],
+    "query": [
+      "Can you assist me with monitor health status of all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_trigger_health_check\",\"description\":\"Manually trigger health check for specific services\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"monitor_service_trigger_health_check\"}"
+    ],
+    "query": [
+      "Please help me monitor health status of all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"monitor_service_trigger_health_check\",\"description\":\"Manually trigger health check for specific services\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_service_config\",\"description\":\"Retrieve configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to get configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_service_config\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_service_config\",\"description\":\"Retrieve configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to get configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_service_config\",\"description\":\"Retrieve configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to get configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_service_config\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_service_config\",\"description\":\"Retrieve configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to get configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_set_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_set_service_config\",\"description\":\"Update configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to update configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_set_service_config\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_set_service_config\",\"description\":\"Update configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to update configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_set_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_set_service_config\",\"description\":\"Update configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to update configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_set_service_config\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_set_service_config\",\"description\":\"Update configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to update configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_list_services\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_list_services\",\"description\":\"List all services with configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_list_services\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_list_services\",\"description\":\"List all services with configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_list_services\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_list_services\",\"description\":\"List all services with configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_list_services\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_list_services\",\"description\":\"List all services with configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_delete_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_delete_service_config\",\"description\":\"Delete configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to delete configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_delete_service_config\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_delete_service_config\",\"description\":\"Delete configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to delete configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_delete_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_delete_service_config\",\"description\":\"Delete configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to delete configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_delete_service_config\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_delete_service_config\",\"description\":\"Delete configuration for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to delete configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_reload_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_reload_service_config\",\"description\":\"Trigger configuration reload for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to reload configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_reload_service_config\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_reload_service_config\",\"description\":\"Trigger configuration reload for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to reload configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_reload_service_config\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_reload_service_config\",\"description\":\"Trigger configuration reload for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to reload configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_reload_service_config\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_reload_service_config\",\"description\":\"Trigger configuration reload for a specific service\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to reload configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Can you assist me with manage environment-specific settings?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Please help me manage environment-specific settings"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_get_environments\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_get_environments\",\"description\":\"List all available environments\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_validate_config\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve service configurations?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_validate_config\",\"description\":\"Validate configuration against service schema\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to validate configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_validate_config\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve service configurations"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_validate_config\",\"description\":\"Validate configuration against service schema\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to validate configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_validate_config\"}"
+    ],
+    "query": [
+      "Can you assist me with provide centralized configuration for all microservices?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_validate_config\",\"description\":\"Validate configuration against service schema\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to validate configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"settings_service_validate_config\"}"
+    ],
+    "query": [
+      "Please help me provide centralized configuration for all microservices"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"settings_service_validate_config\",\"description\":\"Validate configuration against service schema\",\"parameters\":{\"type\":\"object\",\"properties\":{\"service_name\":{\"type\":\"string\",\"description\":\"Name of the service to validate configuration for\",\"items\":null}},\"required\":[\"service_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_generate_dataset\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_generate_dataset\",\"description\":\"Generate a new synthetic dataset based on specifications\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_augment_dataset\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_augment_dataset\",\"description\":\"Augment an existing dataset with additional synthetic samples\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"ID of source dataset to augment\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_analyze_dataset\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_analyze_dataset\",\"description\":\"Analyze dataset quality, distribution, and characteristics\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to analyze\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_convert_dataset_format\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_convert_dataset_format\",\"description\":\"Convert dataset between different formats and schemas\",\"parameters\":{\"type\":\"object\",\"properties\":{\"source_dataset_id\":{\"type\":\"string\",\"description\":\"Source dataset identifier\",\"items\":null}},\"required\":[\"source_dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_list_datasets\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_list_datasets\",\"description\":\"List available datasets with filtering and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter_type\":{\"type\":\"string\",\"description\":\"Filter by dataset type\",\"items\":null}},\"required\":[\"filter_type\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_delete_dataset\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_delete_dataset\",\"description\":\"Delete a dataset and its associated files\",\"parameters\":{\"type\":\"object\",\"properties\":{\"dataset_id\":{\"type\":\"string\",\"description\":\"Dataset identifier to delete\",\"items\":null}},\"required\":[\"dataset_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Can you assist me with generate synthetic training datasets for machine learning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Please help me generate synthetic training datasets for machine learning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Can you assist me with augment existing datasets with additional samples?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Please help me augment existing datasets with additional samples"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Can you assist me with create labeled datasets from raw data sources?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"dataset_generator_service_get_generation_status\"}"
+    ],
+    "query": [
+      "Please help me create labeled datasets from raw data sources"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"dataset_generator_service_get_generation_status\",\"description\":\"Get status of ongoing dataset generation or processing tasks\",\"parameters\":{\"type\":\"object\",\"properties\":{\"task_id\":{\"type\":\"string\",\"description\":\"Task identifier\",\"items\":null}},\"required\":[\"task_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_create_plan\"}"
+    ],
+    "query": [
+      "Can you assist me with multi-step task decomposition and planning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_create_plan\",\"description\":\"Create a new execution plan for a given task\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"User task or query to plan for\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_create_plan\"}"
+    ],
+    "query": [
+      "Please help me multi-step task decomposition and planning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_create_plan\",\"description\":\"Create a new execution plan for a given task\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"User task or query to plan for\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_create_plan\"}"
+    ],
+    "query": [
+      "Can you assist me with llm-driven intelligent planning strategies?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_create_plan\",\"description\":\"Create a new execution plan for a given task\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"User task or query to plan for\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_create_plan\"}"
+    ],
+    "query": [
+      "Please help me llm-driven intelligent planning strategies"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_create_plan\",\"description\":\"Create a new execution plan for a given task\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"User task or query to plan for\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_get_plan\"}"
+    ],
+    "query": [
+      "Can you assist me with multi-step task decomposition and planning?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_get_plan\",\"description\":\"Retrieve an existing plan by ID\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_get_plan\"}"
+    ],
+    "query": [
+      "Please help me multi-step task decomposition and planning"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_get_plan\",\"description\":\"Retrieve an existing plan by ID\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_get_plan\"}"
+    ],
+    "query": [
+      "Can you assist me with llm-driven intelligent planning strategies?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_get_plan\",\"description\":\"Retrieve an existing plan by ID\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_get_plan\"}"
+    ],
+    "query": [
+      "Please help me llm-driven intelligent planning strategies"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_get_plan\",\"description\":\"Retrieve an existing plan by ID\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_execute_plan\"}"
+    ],
+    "query": [
+      "Can you assist me with complex workflow execution coordination?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_execute_plan\",\"description\":\"Execute a plan with step-by-step coordination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier to execute\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"planner_service_execute_plan\"}"
+    ],
+    "query": [
+      "Please help me complex workflow execution coordination"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"planner_service_execute_plan\",\"description\":\"Execute a plan with step-by-step coordination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"plan_id\":{\"type\":\"string\",\"description\":\"Plan identifier to execute\",\"items\":null}},\"required\":[\"plan_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank\"}"
+    ],
+    "query": [
+      "Can you assist me with rerank search results by relevance to query?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank\",\"description\":\"Rerank a list of documents based on their relevance to a query\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"The search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank\"}"
+    ],
+    "query": [
+      "Please help me rerank search results by relevance to query"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank\",\"description\":\"Rerank a list of documents based on their relevance to a query\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"The search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank\"}"
+    ],
+    "query": [
+      "Can you assist me with score document relevance for ranking?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank\",\"description\":\"Rerank a list of documents based on their relevance to a query\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"The search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank\"}"
+    ],
+    "query": [
+      "Please help me score document relevance for ranking"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank\",\"description\":\"Rerank a list of documents based on their relevance to a query\",\"parameters\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"The search query\",\"items\":null}},\"required\":[\"query\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank_batch\"}"
+    ],
+    "query": [
+      "Can you assist me with rerank search results by relevance to query?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank_batch\",\"description\":\"Rerank multiple sets of documents for different queries\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank_batch\"}"
+    ],
+    "query": [
+      "Please help me rerank search results by relevance to query"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank_batch\",\"description\":\"Rerank multiple sets of documents for different queries\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank_batch\"}"
+    ],
+    "query": [
+      "Can you assist me with score document relevance for ranking?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank_batch\",\"description\":\"Rerank multiple sets of documents for different queries\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"rerank_service_rerank_batch\"}"
+    ],
+    "query": [
+      "Please help me score document relevance for ranking"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"rerank_service_rerank_batch\",\"description\":\"Rerank multiple sets of documents for different queries\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_initiate_chat\"}"
+    ],
+    "query": [
+      "Can you assist me with handle conversational ai requests with auto-tool selection?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_initiate_chat\",\"description\":\"Start a new chat conversation with auto-tool selection capabilities\",\"parameters\":{\"type\":\"object\",\"properties\":{\"agent_id\":{\"type\":\"string\",\"description\":\"ID of the agent to use\",\"items\":null}},\"required\":[\"agent_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_initiate_chat\"}"
+    ],
+    "query": [
+      "Please help me handle conversational ai requests with auto-tool selection"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_initiate_chat\",\"description\":\"Start a new chat conversation with auto-tool selection capabilities\",\"parameters\":{\"type\":\"object\",\"properties\":{\"agent_id\":{\"type\":\"string\",\"description\":\"ID of the agent to use\",\"items\":null}},\"required\":[\"agent_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_initiate_chat\"}"
+    ],
+    "query": [
+      "Can you assist me with manage multi-agent conversations and routing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_initiate_chat\",\"description\":\"Start a new chat conversation with auto-tool selection capabilities\",\"parameters\":{\"type\":\"object\",\"properties\":{\"agent_id\":{\"type\":\"string\",\"description\":\"ID of the agent to use\",\"items\":null}},\"required\":[\"agent_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_initiate_chat\"}"
+    ],
+    "query": [
+      "Please help me manage multi-agent conversations and routing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_initiate_chat\",\"description\":\"Start a new chat conversation with auto-tool selection capabilities\",\"parameters\":{\"type\":\"object\",\"properties\":{\"agent_id\":{\"type\":\"string\",\"description\":\"ID of the agent to use\",\"items\":null}},\"required\":[\"agent_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_continue_chat\"}"
+    ],
+    "query": [
+      "Can you assist me with handle conversational ai requests with auto-tool selection?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_continue_chat\",\"description\":\"Continue an existing chat conversation with context\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_continue_chat\"}"
+    ],
+    "query": [
+      "Please help me handle conversational ai requests with auto-tool selection"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_continue_chat\",\"description\":\"Continue an existing chat conversation with context\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_continue_chat\"}"
+    ],
+    "query": [
+      "Can you assist me with manage multi-agent conversations and routing?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_continue_chat\",\"description\":\"Continue an existing chat conversation with context\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"chat_agent_service_continue_chat\"}"
+    ],
+    "query": [
+      "Please help me manage multi-agent conversations and routing"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"chat_agent_service_continue_chat\",\"description\":\"Continue an existing chat conversation with context\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"a2a_service_register_integration\"}"
+    ],
+    "query": [
+      "Can you assist me with handle incoming webhooks from third-party services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"a2a_service_register_integration\",\"description\":\"Register a new external integration or webhook endpoint\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"a2a_service_register_integration\"}"
+    ],
+    "query": [
+      "Please help me handle incoming webhooks from third-party services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"a2a_service_register_integration\",\"description\":\"Register a new external integration or webhook endpoint\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_set\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve key-value pairs in redis?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_set\",\"description\":\"Store a key-value pair in Redis with optional expiration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to store\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_set\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve key-value pairs in redis"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_set\",\"description\":\"Store a key-value pair in Redis with optional expiration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to store\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_set\"}"
+    ],
+    "query": [
+      "Can you assist me with cache frequently accessed data across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_set\",\"description\":\"Store a key-value pair in Redis with optional expiration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to store\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_set\"}"
+    ],
+    "query": [
+      "Please help me cache frequently accessed data across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_set\",\"description\":\"Store a key-value pair in Redis with optional expiration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to store\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve key-value pairs in redis?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get\",\"description\":\"Retrieve a value by key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to retrieve\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve key-value pairs in redis"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get\",\"description\":\"Retrieve a value by key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to retrieve\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get\"}"
+    ],
+    "query": [
+      "Can you assist me with cache frequently accessed data across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get\",\"description\":\"Retrieve a value by key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to retrieve\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get\"}"
+    ],
+    "query": [
+      "Please help me cache frequently accessed data across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get\",\"description\":\"Retrieve a value by key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to retrieve\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_delete\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve key-value pairs in redis?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_delete\",\"description\":\"Delete a key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to delete\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_delete\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve key-value pairs in redis"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_delete\",\"description\":\"Delete a key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to delete\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_delete\"}"
+    ],
+    "query": [
+      "Can you assist me with cache frequently accessed data across services?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_delete\",\"description\":\"Delete a key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to delete\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_delete\"}"
+    ],
+    "query": [
+      "Please help me cache frequently accessed data across services"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_delete\",\"description\":\"Delete a key from Redis\",\"parameters\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"Key to delete\",\"items\":null}},\"required\":[\"key\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_store_chat_history\"}"
+    ],
+    "query": [
+      "Can you assist me with manage chat conversation history and context?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_store_chat_history\",\"description\":\"Store chat conversation history for a session\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Chat session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_store_chat_history\"}"
+    ],
+    "query": [
+      "Please help me manage chat conversation history and context"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_store_chat_history\",\"description\":\"Store chat conversation history for a session\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Chat session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get_chat_history\"}"
+    ],
+    "query": [
+      "Can you assist me with manage chat conversation history and context?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get_chat_history\",\"description\":\"Retrieve chat conversation history for a session\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Chat session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_get_chat_history\"}"
+    ],
+    "query": [
+      "Please help me manage chat conversation history and context"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_get_chat_history\",\"description\":\"Retrieve chat conversation history for a session\",\"parameters\":{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\",\"description\":\"Chat session identifier\",\"items\":null}},\"required\":[\"session_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_health_check\"}"
+    ],
+    "query": [
+      "Can you assist me with store and retrieve key-value pairs in redis?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_health_check\",\"description\":\"Check Redis connection health and service status\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"in_memory_service_health_check\"}"
+    ],
+    "query": [
+      "Please help me store and retrieve key-value pairs in redis"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"in_memory_service_health_check\",\"description\":\"Check Redis connection health and service status\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_generate_embedding\"}"
+    ],
+    "query": [
+      "Can you assist me with generate sentence embeddings locally without api calls?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_generate_embedding\",\"description\":\"Generate sentence embeddings using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to generate embeddings for\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_generate_embedding\"}"
+    ],
+    "query": [
+      "Please help me generate sentence embeddings locally without api calls"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_generate_embedding\",\"description\":\"Generate sentence embeddings using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to generate embeddings for\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_generate_embedding\"}"
+    ],
+    "query": [
+      "Can you assist me with perform text classification using local transformer models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_generate_embedding\",\"description\":\"Generate sentence embeddings using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to generate embeddings for\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_generate_embedding\"}"
+    ],
+    "query": [
+      "Please help me perform text classification using local transformer models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_generate_embedding\",\"description\":\"Generate sentence embeddings using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to generate embeddings for\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_classify_text\"}"
+    ],
+    "query": [
+      "Can you assist me with perform text classification using local transformer models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_classify_text\",\"description\":\"Perform text classification using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to classify\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_classify_text\"}"
+    ],
+    "query": [
+      "Please help me perform text classification using local transformer models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_classify_text\",\"description\":\"Perform text classification using local transformer models\",\"parameters\":{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"description\":\"Text to classify\",\"items\":null}},\"required\":[\"text\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_get_model_info\"}"
+    ],
+    "query": [
+      "Can you assist me with perform text classification using local transformer models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_get_model_info\",\"description\":\"Get information about loaded models\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_get_model_info\"}"
+    ],
+    "query": [
+      "Please help me perform text classification using local transformer models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_get_model_info\",\"description\":\"Get information about loaded models\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_load_model\"}"
+    ],
+    "query": [
+      "Can you assist me with perform text classification using local transformer models?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_load_model\",\"description\":\"Load a new transformer model for inference\",\"parameters\":{\"type\":\"object\",\"properties\":{\"model_name\":{\"type\":\"string\",\"description\":\"HuggingFace model name or local path\",\"items\":null}},\"required\":[\"model_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"candle_service_load_model\"}"
+    ],
+    "query": [
+      "Please help me perform text classification using local transformer models"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"candle_service_load_model\",\"description\":\"Load a new transformer model for inference\",\"parameters\":{\"type\":\"object\",\"properties\":{\"model_name\":{\"type\":\"string\",\"description\":\"HuggingFace model name or local path\",\"items\":null}},\"required\":[\"model_name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_create_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_create_workflow\",\"description\":\"Create a new workflow definition with steps and dependencies\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Workflow name\",\"items\":null}},\"required\":[\"name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_create_workflow\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_create_workflow\",\"description\":\"Create a new workflow definition with steps and dependencies\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Workflow name\",\"items\":null}},\"required\":[\"name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_create_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_create_workflow\",\"description\":\"Create a new workflow definition with steps and dependencies\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Workflow name\",\"items\":null}},\"required\":[\"name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_create_workflow\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_create_workflow\",\"description\":\"Create a new workflow definition with steps and dependencies\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"Workflow name\",\"items\":null}},\"required\":[\"name\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with orchestrate dynamic agent-based task execution?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Please help me orchestrate dynamic agent-based task execution"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_execute_workflow\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_execute_workflow\",\"description\":\"Execute a workflow with provided input data\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_execution_status\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_execution_status\",\"description\":\"Get the current status and progress of a workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_execution_status\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_execution_status\",\"description\":\"Get the current status and progress of a workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_execution_status\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_execution_status\",\"description\":\"Get the current status and progress of a workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_execution_status\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_execution_status\",\"description\":\"Get the current status and progress of a workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_stop_execution\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_stop_execution\",\"description\":\"Stop a running workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_stop_execution\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_stop_execution\",\"description\":\"Stop a running workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_stop_execution\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_stop_execution\",\"description\":\"Stop a running workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_stop_execution\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_stop_execution\",\"description\":\"Stop a running workflow execution\",\"parameters\":{\"type\":\"object\",\"properties\":{\"execution_id\":{\"type\":\"string\",\"description\":\"Execution identifier\",\"items\":null}},\"required\":[\"execution_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_list_workflows\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_list_workflows\",\"description\":\"List available workflows with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter\":{\"type\":\"string\",\"description\":\"Filter by workflow name or tag\",\"items\":null}},\"required\":[\"filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_list_workflows\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_list_workflows\",\"description\":\"List available workflows with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter\":{\"type\":\"string\",\"description\":\"Filter by workflow name or tag\",\"items\":null}},\"required\":[\"filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_list_workflows\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_list_workflows\",\"description\":\"List available workflows with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter\":{\"type\":\"string\",\"description\":\"Filter by workflow name or tag\",\"items\":null}},\"required\":[\"filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_list_workflows\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_list_workflows\",\"description\":\"List available workflows with filtering and pagination\",\"parameters\":{\"type\":\"object\",\"properties\":{\"filter\":{\"type\":\"string\",\"description\":\"Filter by workflow name or tag\",\"items\":null}},\"required\":[\"filter\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_workflow_definition\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_workflow_definition\",\"description\":\"Get detailed workflow definition and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_workflow_definition\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_workflow_definition\",\"description\":\"Get detailed workflow definition and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_workflow_definition\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_workflow_definition\",\"description\":\"Get detailed workflow definition and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_get_workflow_definition\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_get_workflow_definition\",\"description\":\"Get detailed workflow definition and metadata\",\"parameters\":{\"type\":\"object\",\"properties\":{\"workflow_id\":{\"type\":\"string\",\"description\":\"Workflow identifier\",\"items\":null}},\"required\":[\"workflow_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_validate_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with create and manage complex multi-step workflows?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_validate_workflow\",\"description\":\"Validate a workflow definition for correctness\",\"parameters\":{\"type\":\"object\",\"properties\":{\"definition\":{\"type\":\"string\",\"description\":\"Workflow definition to validate\",\"items\":null}},\"required\":[\"definition\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_validate_workflow\"}"
+    ],
+    "query": [
+      "Please help me create and manage complex multi-step workflows"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_validate_workflow\",\"description\":\"Validate a workflow definition for correctness\",\"parameters\":{\"type\":\"object\",\"properties\":{\"definition\":{\"type\":\"string\",\"description\":\"Workflow definition to validate\",\"items\":null}},\"required\":[\"definition\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_validate_workflow\"}"
+    ],
+    "query": [
+      "Can you assist me with handle parallel and sequential workflow steps?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_validate_workflow\",\"description\":\"Validate a workflow definition for correctness\",\"parameters\":{\"type\":\"object\",\"properties\":{\"definition\":{\"type\":\"string\",\"description\":\"Workflow definition to validate\",\"items\":null}},\"required\":[\"definition\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"workflow_service_validate_workflow\"}"
+    ],
+    "query": [
+      "Please help me handle parallel and sequential workflow steps"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"workflow_service_validate_workflow\",\"description\":\"Validate a workflow definition for correctness\",\"parameters\":{\"type\":\"object\",\"properties\":{\"definition\":{\"type\":\"string\",\"description\":\"Workflow definition to validate\",\"items\":null}},\"required\":[\"definition\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_configs\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_configs\",\"description\":\"List all configured MCP server configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_configs\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_configs\",\"description\":\"List all configured MCP server configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_configs\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_configs\",\"description\":\"List all configured MCP server configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_configs\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_configs\",\"description\":\"List all configured MCP server configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{},\"required\":[]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_connect_to_config\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_connect_to_config\",\"description\":\"Connect to an MCP server using a specific configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to connect to\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_connect_to_config\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_connect_to_config\",\"description\":\"Connect to an MCP server using a specific configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to connect to\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_connect_to_config\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_connect_to_config\",\"description\":\"Connect to an MCP server using a specific configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to connect to\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_connect_to_config\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_connect_to_config\",\"description\":\"Connect to an MCP server using a specific configuration\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to connect to\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_disconnect_from_config\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_disconnect_from_config\",\"description\":\"Disconnect from an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to disconnect from\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_disconnect_from_config\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_disconnect_from_config\",\"description\":\"Disconnect from an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to disconnect from\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_disconnect_from_config\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_disconnect_from_config\",\"description\":\"Disconnect from an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to disconnect from\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_disconnect_from_config\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_disconnect_from_config\",\"description\":\"Disconnect from an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration to disconnect from\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Can you assist me with execute tools with proper error handling?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_list_tools\"}"
+    ],
+    "query": [
+      "Please help me execute tools with proper error handling"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_list_tools\",\"description\":\"List all available tools from connected MCP servers\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to filter tools from specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Can you assist me with execute tools with proper error handling?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_call_tool\"}"
+    ],
+    "query": [
+      "Please help me execute tools with proper error handling"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_call_tool\",\"description\":\"Execute a tool on an MCP server\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"ID of the MCP configuration\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_get_status\"}"
+    ],
+    "query": [
+      "Can you assist me with connect to mcp servers via different transports?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_get_status\",\"description\":\"Get connection status for all or specific MCP configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to get status for specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_get_status\"}"
+    ],
+    "query": [
+      "Please help me connect to mcp servers via different transports"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_get_status\",\"description\":\"Get connection status for all or specific MCP configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to get status for specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_get_status\"}"
+    ],
+    "query": [
+      "Can you assist me with discover available tools from mcp servers?"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_get_status\",\"description\":\"Get connection status for all or specific MCP configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to get status for specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  },
+  {
+    "answers": [
+      "{\"arguments\":{},\"name\":\"mcp_service_get_status\"}"
+    ],
+    "query": [
+      "Please help me discover available tools from mcp servers"
+    ],
+    "tools": [
+      "{\"type\":\"function\",\"function\":{\"name\":\"mcp_service_get_status\",\"description\":\"Get connection status for all or specific MCP configurations\",\"parameters\":{\"type\":\"object\",\"properties\":{\"config_id\":{\"type\":\"string\",\"description\":\"Optional config ID to get status for specific server\",\"items\":null}},\"required\":[\"config_id\"]}}}"
+    ]
+  }
+]

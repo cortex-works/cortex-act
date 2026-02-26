@@ -1,0 +1,40 @@
+opencv-python>=4.6.0
+scikit-image>=0.21.0
+numpy>=1.23,<2.0
+pillow>=10.2.0
+python-Levenshtein>=0.21.0
+jiwer>=3.0.3
+pythainlp>=5.0.0
+regex>=2023.12.25
+unicodedata2; python_version<'3.9'
+rich>=13.7.0
+
+# Engines
+pytesseract>=0.3.10
+easyocr>=1.7.1
+transformers>=4.44.0
+torch>=2.3.0
+sentencepiece>=0.2.0
+accelerate>=0.33.0
+
+# PaddleOCR is optional; installing on macOS ARM is unreliable.
+# If you want to try it locally, uncomment the following and ensure compatible versions:
+# paddlepaddle==2.6.1; platform_machine=='arm64'
+# paddleocr==2.6.0.1
+numpy
+opencv-python
+pillow
+scikit-image
+python-Levenshtein
+jiwer
+rich
+# OCR libraries
+pytesseract
+easyocr
+paddlepaddle==2.6.1; platform_machine != 'arm64'
+paddleocr
+transformers
+torch
+sentencepiece
+accelerate
+pythainlp

@@ -1,0 +1,131 @@
+# Fine-Tune Service .gitignore
+# This file prevents Python environments, generated files, and training artifacts from being committed
+# 
+# KEEP IN REPO:
+# - requirements.txt (Python dependencies)
+# - *.sh (installation scripts)
+# - src/ (Rust source code)
+# - proto/ (Protocol buffer definitions)
+# - Cargo.toml (Rust project configuration)
+# - README.md, *.md (documentation)
+#
+# IGNORE:
+# - Python virtual environments
+# - Generated training scripts
+# - Model artifacts and checkpoints
+# - Test files and logs
+
+# Python virtual environments
+venv/
+venv_*/
+fine_tune_env/
+env/
+.env
+.venv/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python test files (generated during testing)
+test_*.py
+*_test.py
+generated_training_script.py
+universal_fine_tuner.py
+final_verification.py
+fix_existing_model.py
+
+# Keep important test files (comment out if you want to track them)
+# test_hardware_detection.py
+# test_engine_selection.py
+# test_mlx_integration.py
+
+# Python requirements (keep requirements.txt but ignore lock files)
+pip-selfcheck.json
+Pipfile.lock
+poetry.lock
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Fine-tuning specific files
+models/
+fine_tuned_model/
+data/
+datasets/
+*.jsonl
+*.log
+debug_logs.txt
+fine-tune-service.log
+fine-tune.log
+fine_tune_debug.log
+dataset.jsonl
+train_data.jsonl
+test_fixed_dataset.json
+
+# MLX/Unsloth training artifacts
+adapters/
+checkpoints/
+training_output/
+artifacts/
+*_model/
+*_merged/
+training_complete.txt
+*.safetensors
+*.bin
+
+# Dataset files (except small test datasets)
+enhanced_api_docs_dataset_*.json
+ultra_precision_evaluation_results.json
+function_calling_test_results.json
+
+# Rust target directory
+target/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local

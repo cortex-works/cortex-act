@@ -1,0 +1,170 @@
+{
+  "functions": [
+    {
+      "name": "search_web",
+      "description": "Search the web for real-time information using Serper.dev API. Use this when the user asks about current events, recent information, or specific facts that might not be in your training data.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The search query to find information about"
+          },
+          "num_results": {
+            "type": "integer",
+            "description": "Number of search results to return (default: 5, max: 10)",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "required": ["query"]
+      },
+      "examples": [
+        {
+          "query": "latest news about artificial intelligence",
+          "num_results": 5
+        },
+        {
+          "query": "weather in San Francisco today"
+        }
+      ]
+    },
+    {
+      "name": "translate_text",
+      "description": "Translate text from one language to another using MyMemory API. Supports over 100 language pairs. Use this when user explicitly asks for translation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The text to translate"
+          },
+          "source_lang": {
+            "type": "string",
+            "description": "Source language code (e.g., 'en' for English, 'es' for Spanish, 'auto' for auto-detection)",
+            "default": "auto"
+          },
+          "target_lang": {
+            "type": "string",
+            "description": "Target language code (e.g., 'en' for English, 'es' for Spanish, 'fr' for French)"
+          }
+        },
+        "required": ["text", "target_lang"]
+      },
+      "examples": [
+        {
+          "text": "Hello, how are you?",
+          "source_lang": "en",
+          "target_lang": "es"
+        },
+        {
+          "text": "Bonjour le monde",
+          "target_lang": "en"
+        }
+      ]
+    },
+    {
+      "name": "get_weather",
+      "description": "Get current weather information for a specific location using OpenWeatherMap API. Use this when user asks about weather conditions, temperature, or forecasts.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "City name or 'city,country' or 'city,state,country'"
+          },
+          "units": {
+            "type": "string",
+            "description": "Temperature units: 'metric' (Celsius), 'imperial' (Fahrenheit), or 'kelvin'",
+            "enum": ["metric", "imperial", "kelvin"],
+            "default": "metric"
+          },
+          "include_forecast": {
+            "type": "boolean",
+            "description": "Include 5-day forecast in response",
+            "default": false
+          }
+        },
+        "required": ["location"]
+      },
+      "examples": [
+        {
+          "location": "San Francisco,CA,US",
+          "units": "imperial"
+        },
+        {
+          "location": "London,GB",
+          "include_forecast": true
+        }
+      ]
+    },
+    {
+      "name": "calculate_math",
+      "description": "Perform mathematical calculations including basic arithmetic, percentages, and simple algebraic expressions. Use this for mathematical queries that require precise computation.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "description": "Mathematical expression to evaluate (e.g., '2 + 3 * 4', 'sqrt(16)', 'sin(30)')"
+          },
+          "precision": {
+            "type": "integer",
+            "description": "Number of decimal places in the result",
+            "default": 2,
+            "minimum": 0,
+            "maximum": 10
+          }
+        },
+        "required": ["expression"]
+      },
+      "examples": [
+        {
+          "expression": "2 + 3 * 4"
+        },
+        {
+          "expression": "sqrt(16) + log(10)",
+          "precision": 4
+        }
+      ]
+    },
+    {
+      "name": "get_time_info",
+      "description": "Get current time, date, or timezone information for different locations. Use this when user asks about time, dates, or timezones.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "City name or timezone (e.g., 'New York', 'UTC', 'America/Los_Angeles')",
+            "default": "UTC"
+          },
+          "format": {
+            "type": "string",
+            "description": "Time format: 'iso', '12hour', '24hour', 'timestamp'",
+            "enum": ["iso", "12hour", "24hour", "timestamp"],
+            "default": "iso"
+          },
+          "include_timezone": {
+            "type": "boolean",
+            "description": "Include timezone information in response",
+            "default": true
+          }
+        },
+        "required": []
+      },
+      "examples": [
+        {
+          "location": "Tokyo",
+          "format": "12hour"
+        },
+        {
+          "location": "UTC",
+          "format": "iso"
+        }
+      ]
+    }
+  ],
+  "system_prompt_template": "You are a helpful AI assistant with access to external tools. When a user asks a question that requires real-time information, translation, weather data, calculations, or time information, you should use the appropriate function.\n\nAvailable functions:\n{function_list}\n\nTo call a function, respond with a JSON object in this exact format:\n```json\n{\n  \"function_call\": {\n    \"name\": \"function_name\",\n    \"parameters\": {\n      \"param1\": \"value1\",\n      \"param2\": \"value2\"\n    }\n  },\n  \"reasoning\": \"Brief explanation of why you chose this function\"\n}\n```\n\nIf you can answer the question directly without needing external tools, provide a regular text response.\n\nRules:\n1. Only call functions when necessary\n2. Use the exact function names and parameter types specified\n3. Always include reasoning for function calls\n4. If uncertain, ask for clarification rather than guessing\n5. Format responses clearly and helpfully"
+}

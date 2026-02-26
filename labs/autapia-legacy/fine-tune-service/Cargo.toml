@@ -1,0 +1,100 @@
+[package]
+name = "fine_tune_service"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "fine_tune_service"
+path = "src/lib.rs"
+
+[[bin]]
+name = "fine_tune_service"
+path = "src/main.rs"
+
+[dependencies]
+# Core async runtime
+tokio = { version = "1.0", features = ["full"] }
+tokio-stream = "0.1"
+tokio-util = "0.7"
+
+# gRPC and protobuf
+tonic = "0.12"
+prost = "0.13"
+
+# HTTP server
+axum = "0.7"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Utilities
+uuid = { version = "1.0", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.0", features = ["derive"] }
+
+# HTTP client
+reqwest = { version = "0.12", features = ["json"] }
+
+# Database operations - PostgreSQL
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "migrate"] }
+
+# CSV processing
+csv = "1.3"
+
+# Logging
+log = "0.4"
+
+# --- Native Candle Engine Dependencies ---
+candle-core = { version = "0.9.1", features = ["metal", "accelerate"] }
+candle-nn = "0.9.1" 
+candle-transformers = "0.9.1"
+tokenizers = "0.19.1"
+rand = "0.8.5"
+safetensors = "0.4.5"
+hf-hub = { version = "0.3.2", features = ["tokio"] }  # Hugging Face Hub for model downloading
+# Note: candle-lora is not yet on crates.io, implementing LoRA manually
+
+# Metal support for Apple Silicon GPU acceleration
+metal = "0.27.0"
+# --- End of Candle Dependencies ---
+
+# CLI and configuration
+dotenv = "0.15"
+
+# Async traits
+async-trait = "0.1"
+
+# Time handling
+tempfile = "3.0"
+
+# Futures and streams
+futures = "0.3"
+futures-util = "0.3"
+
+# Metrics
+prometheus = "0.13"
+
+[features]
+default = ["grpc", "metal"]
+grpc = []
+cuda = []
+metal = ["candle-core/metal", "candle-core/accelerate"]
+
+[build-dependencies]
+tonic-build = "0.12"
+
+# 2025 Function Calling Dependencies
+jsonschema = "0.17"
+async-openai = "0.23"
+uuid = { version = "1.0", features = ["v4"] }

@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?><neurosiphon><repository_map><![CDATA[# REPOSITORY_MAP
+run_typhoon_api.py
+output_md_clean.txt
+demo_output.txt
+README_TYPHOON_OCR_MPS.md
+run_typhoon_ocr.py
+KOSMOS25_RUN_REPORT_TEMPLATE.md
+output_ocr_clean.txt
+scripts/setup_kosmos25.sh
+README_KOSMOS25_MPS.md
+scripts/setup_typhoon_ocr.sh
+run_kosmos25_demo.py
+output_ocr_parsed.json
+KOSMOS25_RUN_REPORT.md
+output_ocr_raw.txt
+output_md_raw.txt
+output_ocr_ocr_lines.csv]]></repository_map><file path="run_typhoon_api.py"><![CDATA[// ... (1 imports)
+def main():
+        ...
+if __name__ == "__main__":
+    main()]]></file><file path="output_md_clean.txt"><![CDATA[# TRUNCATED
+|<pre><code> | |</code></pre>
+<p>
+|-------------------|-------------------|
+</p>
+| **SHIP TO:**
+&gt;
+&gt; John Doe
+&gt;
+&gt; 123 Main Street,
+&gt;
+&gt; Apt 4B,
+&gt;
+&gt; New York, 10001, | **FROM:**
+ACME Corporation
+456 Industrial Blvd,
+Los Angeles, 90001, USA |
+<table>
+<thead>
+<tr>
+<th>
+<strong>
+ORDER ID:
+</strong>
+</th>
+<th>
+123456789
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<strong>
+WEIGHT:
+</strong>
+</td>
+<td>
+2.5 KG
+</td>
+</tr>
+<tr>
+<td>
+<strong>
+DIMENSIONS:
+</strong>
+/* ... */]]></file><file path="demo_output.txt"><![CDATA[# TRUNCATED
+`torch_dtype` is deprecated! Use `dtype` instead!
+Kosmos2_5TextForCausalLM has generative capabilities, as `prepare_inputs_for_generation` is explicitly defined. However, it doesn't directly inherit from `GenerationMixin`. From 👉v4.50👈 onwards, `PreTrainedModel` will NOT inherit from `GenerationMixin`, and this model will lose the ability to call `generate` and other related functions.
+  - If you're using `trust_remote_code=True`, you can get rid of this warning by loading the model with an auto class. See https://huggingface.co/docs/transformers/en/model_doc/auto#auto-classes
+  - If you are the owner of the model architecture code, please modify your model class such that it inherits from `GenerationMixin` (after `PreTrainedModel`, otherwise you'll get an exception).
+  - If you are not the owner of the model architecture class, please contact the model code owner to update it.
+Device: mps | DType: torch.float16
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:02<00:02,  2.10s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.07s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.22s/it]
+Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Fetching 1 files: 100%|██████████| 1/1 [00:00<00:00, 7570.95it/s]
+Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Fetching 1 files: 100%|██████████| 1/1 [00:00<00:00, 11781.75it/s]
+Using a slow image processor as `use_fast` is unset and a slow processor was saved with this model. `use_fast=True` will be the default behavior in v4.52, even if the model was saved with a slow processor. This will result in minor differences in outputs. You'll still be able to use a slow processor with `use_fast=False`.
+The OrderedVocab you are attempting to save contains holes for indices [100260, 100265, 100266, 100267, 100268, 100269, 100270, 100271, 100272, 100273, 100274, 100275, 10
+/* ... */]]></file><file path="README_TYPHOON_OCR_MPS.md"><![CDATA[# TRUNCATED
+# Typhoon OCR (Thai/English) on Apple Silicon (MPS)
+This adds a fast local runner for `scb10x/typhoon-ocr-3b` (Qwen2.5-VL based) using PyTorch MPS on macOS. It takes an image and outputs a single JSON with the key `natural_text` containing Thai/English OCR in markdown.
+## Quick start
+1) Setup (creates `.venv` and installs deps):
+```bash
+bash scripts/setup_typhoon_ocr.sh
+```
+2) Activate and run on an image (defaults to `1.jpg`):
+```bash
+source .venv/bin/activate
+# optional knobs
+export DEVICE=mps            # or cpu
+export DTYPE=bf16            # bf16|fp16|fp32 (bf16 recommended on M3/M4)
+export IMAGE_MAX_SIDE=1600   # downscale for speed
+export MAX_NEW_TOKENS=4096   # generation budget
+export TEMPERATURE=0.1
+export VERBOSE=1
+python3 run_typhoon_ocr.py 1.jpg > output.json
+```
+This prints a single JSON to stdout and also writes `output_ocr_parsed.json`.
+## Notes
+- Model: `scb10x/typhoon-ocr-3b` (Apache-2.0). Base: Qwen2.5-VL 3B.
+- Prompting: The script uses the recommended "default" prompt and asks the model to return JSON with `natural_text`.
+- Performance: On M3/M4, prefer `DTYPE=bf16` and keep `IMAGE_MAX_SIDE` ≤ 1600. Increase `MAX_NEW_TOKENS` for long pages.
+- API alternative: For best performance, the authors recommend vLLM or their hosted API. You can also `pip install typhoon-ocr` and use `ocr_document()` against a local vLLM server.
+## Output schema
+```json
+{
+  "natural_text": "...markdown content in Thai/English..."
+}
+```
+If the model returns non-JSON content, the runner wraps it into this schema.
+## Next steps
+- Map `natural_text` into our structured fields (ship_to, from, details, tracking) by reusing the existing parser.
+- Add an option to run via vLLM server for speed and multi-page PDFs using `typhoon_ocr` utilities.]]></file><file path="run_typhoon_ocr.py"><![CDATA[// ... (6 imports)
+def _maybe_downscale(img: Image.Image) -> Image.Image:
+        ...
+def _default_prompt(base_text: str) -> str:
+        ...
+def run_ocr(image_path: str) -> dict:
+        ...
+def main():
+        ...
+if __name__ == "__main__":
+    main()]]></file><file path="KOSMOS25_RUN_REPORT_TEMPLATE.md"><![CDATA[# TRUNCATED
+# KOSMOS-2.5 MPS Short Report (Template)
+Fill this after running `python run_kosmos25_demo.py` (it also auto-generates a report file):
+- Device: (e.g., M2 Pro, 32GB)
+- macOS: (e.g., 14.5 Sonoma)
+- PyTorch: `python -c "import torch; print(torch.__version__)"`
+- Transformers: `python -c "import transformers; print(transformers.__version__)"`
+- DType: (float16/bfloat16/float32 and why)
+- Tokens/sec: `<md>` ~X tok/s, `<ocr>` ~Y tok/s
+- Caveats: (precision, memory, timeouts, etc.)]]></file><file path="output_ocr_clean.txt"><![CDATA[# TRUNCATED
+<bbox><x_85><y_59><x_257><y_108></bbox>SHIP TO:
+<bbox><x_76><y_139><x_193><y_171></bbox>John Doe
+<bbox><x_76><y_179><x_277><y_211></bbox>123 Main Street,
+<bbox><x_76><y_221><x_164><y_253></bbox>Apt 4B,
+<bbox><x_76><y_261><x_348><y_293></bbox>New York, 10001, USA
+<bbox><x_609><y_57><x_689><y_88></bbox>FROM:
+<bbox><x_617><y_144><x_834><y_175></bbox>ACME Corporation
+<bbox><x_617><y_183><x_840><y_214></bbox>456 Industrial Blvd,
+<bbox><x_617><y_222><x_908><y_253></bbox>Los Angeles, 90001, USA
+<bbox><x_51><y_476><x_174><y_507></bbox>ORDER ID:
+<bbox><x_275><y_477><x_409><y_508></bbox>123456789
+<bbox><x_51><y_541><x_157><y_572></bbox>WEIGHT:
+<bbox><x_275><y_541><x_351><y_572></bbox>2.5 KG
+<bbox><x_51><y_602><x_217><y_633></bbox>DIMENSIONS:
+<bbox><x_275><y_602><x_501><y_633></bbox>12cmx12cmx12cm
+<bbox><x_49><y_667><x_248><y_698></bbox>SHIPPING DATE:
+<bbox><x_275><y_666><x_407><y_697></bbox>2024-08-31
+<bbox><x_609><y_473><x_740><y_504></bbox>REMARKS:
+<bbox><x_617><y_520><x_781><y_551></bbox>NO REMARKS
+<bbox><x_367><y_938><x_658><y_970></bbox>TRACK123456789US]]></file><file path="scripts/setup_kosmos25.sh"><![CDATA[/* TRUNCATED */
+#!/usr/bin/env bash
+set -euo pipefail
+# KOSMOS-2.5 on Apple Silicon (PyTorch + MPS) setup
+# - Creates a Python venv
+# - Installs PyTorch with MPS support and Transformers
+# - Verifies that MPS is available
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/.." && pwd)"
+echo "[1/3] Creating virtual environment at $ROOT/.venv"
+python3 -m venv "$ROOT/.venv"
+source "$ROOT/.venv/bin/activate"
+echo "[2/3] Upgrading pip tooling"
+python -m pip install --upgrade pip wheel setuptools
+echo "[2/3] Installing core deps (PyTorch + Transformers stack)"
+pip install --upgrade torch torchvision torchaudio
+pip install --upgrade transformers accelerate pillow requests tokenizers
+echo "[3/3] Verifying MPS availability"
+python - <<'PY'
+import torch, platform
+print("Python:", platform.python_version())
+print("Torch:", torch.__version__)
+print("MPS available:", torch.backends.mps.is_available())
+print("MPS built:", torch.backends.mps.is_built())
+PY
+echo "\nIf 'MPS available: True' is shown above, you're good to go."]]></file><file path="README_KOSMOS25_MPS.md"><![CDATA[# TRUNCATED
+# KOSMOS-2.5 on Apple Silicon (PyTorch + MPS)
+Minimal, reproducible setup to run `microsoft/kosmos-2.5` locally on macOS with PyTorch MPS (Metal). No CUDA, no FlashAttention.
+## Quickstart
+```bash
+# 1) Setup (creates .venv and verifies MPS)
+bash scripts/setup_kosmos25.sh
+# 2) Activate and run the demo (downloads weights on first run)
+source .venv/bin/activate
+python run_kosmos25_demo.py
+```
+Options:
+- Override image: `IMAGE=/path/to/your.jpg python run_kosmos25_demo.py`
+- Force dtype: `DTYPE=float32|float16|bfloat16`
+- Lower memory: `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 python run_kosmos25_demo.py`
+## What it does
+- Loads `microsoft/kosmos-2.5`
+- Uses `attn_implementation="sdpa"` to avoid FlashAttention on Mac
+- Prefers `float16` on M1/M2 (use `bfloat16` if you’re on M3), falls back to `float32` if needed
+- Runs two prompts on a sample receipt image:
+  - `<md>`: structured Markdown description
+  - `<ocr>`: OCR tokens with spatial tags
+## Troubleshooting
+- MPS unavailable: update macOS and Xcode CLT; ensure PyTorch is recent; check `torch.backends.mps.is_available()`
+- Dtype errors: set `DTYPE=float32`
+- OOM/slow: reduce `max_new_tokens`, close heavy apps, set `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0`
+- Download stalls: set `HF_HUB_ENABLE_HF_TRANSFER=1` (optional) or try another network
+## Notes
+- First run downloads weights into `~/.cache/huggingface`
+- Subsequent runs are faster
+- The demo writes `KOSMOS25_RUN_REPORT.md` with throughput and settings]]></file><file path="scripts/setup_typhoon_ocr.sh"><![CDATA[/* TRUNCATED */
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+PY=${PYTHON:-python3}
+if [ ! -d .venv ]; then
+${PY} -m venv .venv
+fi
+source .venv/bin/activate
+pip install --upgrade pip wheel setuptools
+# Core deps: torch with MPS, transformers with Qwen2.5-VL, pillow
+pip install --upgrade "torch>=2.3.0" torchvision torchaudio
+pip install --upgrade "transformers>=4.45" tokenizers accelerate pillow
+# Optional: official typhoon-ocr helpers (anchor text, pdf utils)
+pip install --upgrade typhoon-ocr
+${PY} - << 'PY'
+import torch, sys
+print('python:', sys.version.split()[0])
+print('torch:', torch.__version__)
+print('mps available:', torch.backends.mps.is_available(), 'built:', torch.backends.mps.is_built())
+try:
+import transformers as t
+from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+print('transformers:', t.__version__)
+print('Qwen2_5_VLForConditionalGeneration: OK')
+except Exception as e:
+print('transformers import error:', e)
+PY
+echo "Setup complete. Activate with: source .venv/bin/activate"]]></file><file path="run_kosmos25_demo.py"><![CDATA[// ... (15 imports)
+warnings.filterwarnings("ignore")
+hf_logging.set_verbosity_error()
+os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
+try:
+except Exception:  # pragma: no cover
+    Kosmos2_5ForConditionalGeneration = None  # type: ignore
+REPO = os.environ.get("KOSMOS25_REPO", "microsoft/kosmos-2.5")
+def choose_device_dtype():
+        ...
+def load_image(url_or_path: str) -> Image.Image:
+        ...
+def maybe_downscale(image: Image.Image) -> Image.Image:
+        ...
+def main():
+    default_url = (
+        "https://huggingface.co/microsoft/kosmos-2.5/resolve/main/receipt_00008.png"
+    )
+    local_default = os.path.join(os.path.dirname(__file__), "shipping_label_02.png")
+    preferred = local_default if os.path.exists(local_default) else default_url
+    image_src = os.environ.get("IMAGE", sys.argv[1] if len(sys.argv) > 1 else preferred)
+    device, dtype = choose_device_dtype()
+    if os.environ.get("VERBOSE") == "1":
+        print(f"Device: {device} | DType: {dtype}", file=sys.stderr)
+    t0 = time.time()
+    model = None
+    first_err = None
+    if Kosmos2_5ForConditionalGeneration is not None:
+        try:
+            model = Kosmos2_5ForConditionalGeneration.from_pretrained(
+                REPO,
+                torch_dtype=dtype,
+                attn_implementation="sdpa",
+            )
+        except Exception as e:
+            first_err = e
+    if model is None:
+        try:
+            cfg = AutoConfig.from_pretrained(REPO, trust_remote_code=True)
+            try:
+                model = AutoModelForCausalLM.from_pretrained(
+                    REPO,
+                    config=cfg,
+                    torch_dtype=dtype,
+                    trust_remote_code=True,
+                    attn_implementation="sdpa",
+                )
+            except TypeError:
+                model = AutoModelForCausalLM.from_pretrained(
+                    REPO,
+                    config=cfg,
+                    torch_dtype=dtype,
+                    trust_remote_code=True,
+                )
+        except Exception as e:
+            if first_err is not None:
+                raise RuntimeError(f"Failed to load model. Native err: {first_err}; Auto fallback err: {e}")
+            raise
+    processor = AutoProcessor.from_pretrained(REPO, trust_remote_code=True, use_fast=True)
+    model.to(device)
+    model.eval()
+    t1 = time.time()
+    image = maybe_downscale(load_image(image_src))
+    def run(prompt: str, max_new_tokens=224):
+        inputs = processor(text=prompt, images=image, return_tensors="pt")
+        height = inputs.get("height", None)
+        width = inputs.get("width", None)
+        raw_w, raw_h = image.size
+        if torch.is_tensor(height):
+            try:
+                height = int(height.item())
+            except Exception:
+                height = None
+        if torch.is_tensor(width):
+            try:
+                width = int(width.item())
+            except Exception:
+                width = None
+        tens = {k: (v.to(device) if torch.is_tensor(v) else v) for k, v in inputs.items()}
+        if "flattened_patches" in tens and tens["flattened_patches"].dtype != dtype:
+            tens["flattened_patches"] = tens["flattened_patches"].to(dtype)
+        with torch.inference_mode():
+            g0 = time.time()
+            out_ids = model.generate(
+                **tens,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                use_cache=True,
+            )
+            g1 = time.time()
+        text_raw = processor.batch_decode(out_ids, skip_special_tokens=False)[0]
+        text_clean = processor.batch_decode(out_ids, skip_special_tokens=True)[0]
+        ocr_lines = None
+        if prompt.strip() == "<ocr>":
+            y = text_raw.replace(prompt, "")
+            if height and width:
+                scale_h = raw_h / float(height)
+                scale_w = raw_w / float(width)
+            else:
+                scale_h = scale_w = 1.0
+            pattern = r"<bbox><x_\d+><y_\d+><x_\d+><y_\d+></bbox>"
+            bboxs_raw = re.findall(pattern, y)
+            lines = re.split(pattern, y)[1:]
+            bboxs = [re.findall(r"\d+", i) for i in bboxs_raw]
+            bboxs = [[int(j) for j in i] for i in bboxs]
+            formatted = []
+            for i in range(min(len(lines), len(bboxs))):
+                x0, y0, x1, y1 = bboxs[i]
+                if not (x0 >= x1 or y0 >= y1):
+                    x0 = int(x0 * scale_w)
+                    y0 = int(y0 * scale_h)
+                    x1 = int(x1 * scale_w)
+                    y1 = int(y1 * scale_h)
+                    text_line = lines[i].strip()
+                    if text_line:
+                        formatted.append(f"{x0},{y0},{x1},{y0},{x1},{y1},{x0},{y1},{text_line}")
+            ocr_lines = "\n".join(formatted)
+        new_tokens = out_ids.shape[-1] - tens["input_ids"].shape[-1]
+        dt = max(1e-6, g1 - g0)
+        tps = new_tokens / dt
+        result_json = None
+        if ocr_lines is not None:
+            try:
+                lines = []
+                for ln in ocr_lines.splitlines():
+                    parts = ln.split(",")
+                    if len(parts) < 9:
+                        continue
+                    x0,y0,x1,_,_,y1,_,_,text = parts[0],parts[1],parts[2],parts[3],parts[4],parts[5],parts[6],parts[7],",".join(parts[8:])
+                    lines.append({
+                        "x0": int(x0), "y0": int(y0), "x1": int(x1), "y1": int(y1), "text": text.strip()
+                    })
+                lines.sort(key=lambda r: (r["y0"], r["x0"]))
+                structured = {"ship_to": [], "from": [], "details": {}, "tracking": None}
+                left_mid = raw_w / 2.0
+                label_names = ["ORDER ID", "WEIGHT", "DIMENSIONS", "SHIPPING DATE", "REMARKS"]
+                y_thresh = next((r["y0"] for r in lines if any(r["text"].upper().startswith(l) for l in label_names)), raw_h)
+                for r in lines:
+                    t = r["text"]
+                    if r["y0"] >= y_thresh:
+                        continue
+                    up = t.upper()
+                    if up.startswith("SHIP TO") or up.startswith("FROM") or up.startswith("TRACK"):
+                        continue
+                    (structured["ship_to"] if r["x0"] < left_mid else structured["from"]).append(t)
+                for r in lines:
+                    t = r["text"].strip()
+                    if t.upper().startswith("TRACK"):
+                        structured["tracking"] = t
+                def nearest_value(label_y, label_x):
+                                        ...
+                for name in label_names:
+                    for r in lines:
+                        if r["text"].upper().startswith(name):
+                            val = nearest_value(r["y0"], r["x0"])
+                            if val:
+                                structured["details"][name] = val
+                            break
+                result_json = structured
+            except Exception:
+                result_json = None
+        return tps, result_json
+    def pick_tokens(default_val: int, key: str):
+                ...
+    default_max = int(os.environ.get("MAX_NEW_TOKENS", "0") or 0)
+    if default_max <= 0:
+        default_max = 224
+    max_md = pick_tokens(default_max, "MAX_NEW_TOKENS_MD")
+    max_ocr = pick_tokens(default_max, "MAX_NEW_TOKENS_OCR")
+    _, parsed = run("<ocr>", max_new_tokens=max_ocr)
+    out_json = parsed or {"error": "parsing_failed"}
+    print(json.dumps(out_json, indent=2))
+    out_path = os.path.join(os.path.dirname(__file__), "output_ocr_parsed.json")
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(out_json, f, indent=2)
+if __name__ == "__main__":
+    main()]]></file><file path="output_ocr_parsed.json"><![CDATA[/* TRUNCATED */
+{
+  "error": "typhoon_ocr not installed: PDF utilities are not available.Installation instructions for Poppler utilities:\n- macOS: Run 'brew install poppler'\n- Ubuntu/Debian: Run 'apt-get install poppler-utils'\n- Windows: Install from https://github.com/oschwartz10612/poppler-windows/releases/ and add to PATH"
+}]]></file><file path="KOSMOS25_RUN_REPORT.md"><![CDATA[# TRUNCATED
+# KOSMOS-2.5 MPS Run Report
+Device: mps
+DType: torch.float32
+PyTorch: 2.8.0
+Transformers: auto
+Image: shipping_label_02.png
+Throughput (approx):
+- <md>:  1.96 tok/s
+- <ocr>: 3.08 tok/s
+Caveats:
+- First run downloads weights; subsequent runs are faster.
+- If you hit MPS/dtype errors, set DTYPE=float32 and retry.
+- Consider setting PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 for lower memory pressure.]]></file><file path="output_ocr_raw.txt"><![CDATA[/* MINIFIED_OR_GENERATED — skipped */]]></file><file path="output_md_raw.txt"><![CDATA[/* MINIFIED_OR_GENERATED — skipped */]]></file><file path="output_ocr_ocr_lines.csv"><![CDATA[/* TRUNCATED */
+109,77,331,77,331,141,109,141,SHIP TO:
+97,181,248,181,248,223,97,223,John Doe
+97,233,356,233,356,275,97,275,123 Main Street,
+97,288,211,288,211,330,97,330,Apt 4B,
+97,341,448,341,448,382,97,382,New York, 10001, USA
+784,74,887,74,887,114,784,114,FROM:
+794,188,1074,188,1074,228,794,228,ACME Corporation
+794,239,1081,239,1081,279,794,279,456 Industrial Blvd,
+794,290,1169,290,1169,330,794,330,Los Angeles, 90001, USA
+65,621,224,621,224,662,65,662,ORDER ID:
+354,623,526,623,526,663,354,663,123456789
+65,706,202,706,202,747,65,747,WEIGHT:
+354,706,452,706,452,747,354,747,2.5 KG
+65,786,279,786,279,827,65,827,DIMENSIONS:
+354,786,645,786,645,827,354,827,12cmx12cmx12cm
+63,871,319,871,319,911,63,911,SHIPPING DATE:
+354,870,524,870,524,910,354,910,2024-08-31
+784,617,953,617,953,658,784,658,REMARKS:
+794,679,1005,679,1005,719,794,719,NO REMARKS
+472,1225,847,1225,847,1267,472,1267,TRACK123456789US
+</s>]]></file></neurosiphon>

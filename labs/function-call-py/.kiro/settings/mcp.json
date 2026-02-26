@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "env": {},
+      "disabled": true,
+      "autoApprove": []
+    },
+    "sequential-thinking": {
+      "command": "/opt/homebrew/bin/npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "sequentialthinking"
+      ]
+    },
+    "scrapy-searxng-scrapyrt": {
+      "command": "node",
+      "args": [
+        "/Users/hero/Documents/work/scrapy/mcp-wrapper/index.js"
+      ],
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

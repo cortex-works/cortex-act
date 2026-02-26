@@ -1,0 +1,85 @@
+[package]
+name = "dataset-generator-service"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "dataset-generator-service"
+path = "src/main.rs"
+
+[[bin]]
+name = "generate-real-api-dataset"
+path = "src/bin/generate_real_api_dataset.rs"
+
+[dependencies]
+# gRPC and protobuf
+tonic = "0.12"
+prost = "0.13"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "signal", "fs"] }
+tokio-stream = "0.1"
+
+# Data processing
+polars = { version = "0.41", features = ["lazy", "csv", "json", "strings", "temporal", "parquet"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# File handling and I/O
+csv = "1.3"
+walkdir = "2.4"
+
+# Machine learning and data science
+linfa = "0.7"
+linfa-clustering = "0.7"
+ndarray = "0.15"
+
+# HTTP client for service communication
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# CLI and configuration
+clap = { version = "4.0", features = ["derive", "env"] }
+dotenv = "0.15"
+
+# Logging
+log = "0.4"
+env_logger = "0.10"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Async traits
+async-trait = "0.1"
+
+# Random sampling
+rand = "0.8"
+
+# Text processing
+regex = "1.10"
+unicode-segmentation = "1.10"
+
+# Futures and streams
+futures = "0.3"
+futures-util = "0.3"
+
+# UUID generation
+uuid = { version = "1.0", features = ["v4"] }
+
+# Date and time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Database dependencies for direct PostgreSQL access
+autapia_shared_types = { path = "../../shared/autapia_shared_types", features = ["sqlx"] }
+autapia_microservice_types = { path = "../../shared/autapia_microservice_types" }
+autapia_database_client = { path = "../../shared/autapia_database_client" }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "migrate"] }
+
+# HTTP server for admin endpoints
+axum = { version = "0.8", features = ["json"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors"] }
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[dev-dependencies]
+tempfile = "3.8"

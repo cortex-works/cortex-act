@@ -1,0 +1,76 @@
+# Training Configuration for xLAM-2 Banking Agent Fine-tuning
+
+# Model Configuration
+model:
+  name: "Salesforce/xLAM-2-1b-fc-r"
+  use_lora: true
+  lora_config:
+    r: 16
+    alpha: 32
+    dropout: 0.1
+    target_modules: ["q_proj", "v_proj", "k_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+# Data Configuration
+data:
+  dataset_name: "galileo-ai/agent-leaderboard-v2"
+  domain: "banking"
+  max_length: 2048
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+
+# Training Arguments
+training:
+  output_dir: "models/xlam-banking-agent"
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 4
+  warmup_steps: 100
+  learning_rate: 2e-4
+  weight_decay: 0.01
+  logging_steps: 10
+  evaluation_strategy: "steps"
+  eval_steps: 100
+  save_steps: 500
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+  fp16: false
+  bf16: true
+  dataloader_pin_memory: false
+  remove_unused_columns: false
+
+# Optimization
+optimization:
+  optimizer: "adamw_torch"
+  lr_scheduler_type: "cosine"
+  warmup_ratio: 0.1
+
+# Monitoring
+monitoring:
+  report_to: "wandb"
+  project_name: "xlam-banking-agent"
+  run_name: "finetune-v1"
+  log_level: "info"
+
+# Hardware
+hardware:
+  use_cpu: false
+  device_map: "auto"
+  torch_dtype: "bfloat16"
+
+# Evaluation
+evaluation:
+  metrics: ["action_completion", "tool_selection_quality"]
+  eval_batch_size: 8
+  max_eval_samples: null
+
+# Inference
+inference:
+  max_new_tokens: 512
+  do_sample: true
+  temperature: 0.7
+  top_p: 0.9
+  repetition_penalty: 1.1

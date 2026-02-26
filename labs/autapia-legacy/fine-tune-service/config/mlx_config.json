@@ -1,0 +1,115 @@
+{
+  "mlx_config": {
+    "description": "MLX Engine Configuration for Apple Silicon Fine-Tuning",
+    "version": "1.0",
+    "hardware": {
+      "required_arch": "arm64",
+      "required_os": "darwin",
+      "minimum_memory_gb": 8,
+      "recommended_memory_gb": 16,
+      "optimal_memory_gb": 32
+    },
+    "models": {
+      "supported_families": [
+        "mistral",
+        "llama",
+        "phi",
+        "qwen",
+        "gemma",
+        "olmo",
+        "minicpm",
+        "internlm"
+      ],
+      "recommended_models": [
+        "mlx-community/Mistral-7B-Instruct-v0.2-4bit",
+        "mlx-community/Meta-Llama-3-8B-Instruct-4bit",
+        "mlx-community/Phi-3-mini-4k-instruct-4bit",
+        "mlx-community/Qwen2-7B-Instruct-4bit",
+        "mlx-community/gemma-7b-it-4bit"
+      ],
+      "memory_requirements": {
+        "2b_models": 8,
+        "7b_models": 16,
+        "8b_models": 16,
+        "13b_models": 24,
+        "30b_models": 32,
+        "70b_models": 64
+      }
+    },
+    "training": {
+      "default_parameters": {
+        "lora_layers": 16,
+        "lora_rank": 16,
+        "lora_alpha": 32,
+        "learning_rate": 1e-5,
+        "batch_size": 2,
+        "max_seq_length": 2048,
+        "grad_checkpoint": true,
+        "warmup_steps": 100,
+        "weight_decay": 0.01
+      },
+      "memory_optimized": {
+        "lora_layers": 8,
+        "lora_rank": 8,
+        "lora_alpha": 16,
+        "learning_rate": 1e-5,
+        "batch_size": 1,
+        "max_seq_length": 1024,
+        "grad_checkpoint": true,
+        "warmup_steps": 50,
+        "weight_decay": 0.01
+      },
+      "performance_optimized": {
+        "lora_layers": 32,
+        "lora_rank": 32,
+        "lora_alpha": 64,
+        "learning_rate": 2e-5,
+        "batch_size": 4,
+        "max_seq_length": 4096,
+        "grad_checkpoint": false,
+        "warmup_steps": 200,
+        "weight_decay": 0.01
+      }
+    },
+    "dataset": {
+      "supported_formats": [
+        "apigen-mt-5k",
+        "jsonl",
+        "conversation"
+      ],
+      "conversion": {
+        "train_split": 0.8,
+        "valid_split": 0.1,
+        "test_split": 0.1,
+        "shuffle": true,
+        "max_length": 2048
+      }
+    },
+    "optimization": {
+      "unified_memory": true,
+      "gpu_acceleration": true,
+      "mixed_precision": true,
+      "gradient_checkpointing": true,
+      "compile_model": true
+    },
+    "monitoring": {
+      "log_level": "INFO",
+      "steps_per_report": 10,
+      "steps_per_eval": 100,
+      "save_steps": 500,
+      "eval_steps": 100,
+      "early_stopping": {
+        "enabled": true,
+        "patience": 5,
+        "min_delta": 0.001
+      }
+    },
+    "output": {
+      "save_adapters": true,
+      "save_merged_model": false,
+      "save_tokenizer": true,
+      "save_logs": true,
+      "output_format": "mlx"
+    }
+  }
+}

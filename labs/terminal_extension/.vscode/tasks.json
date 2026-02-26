@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Extension",
+      "type": "shell",
+      "command": "npm run compile",
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "options": { "cwd": "${workspaceFolder}" }
+    },
+    {
+      "label": "Build MCP Server",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/mcp-server" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Build All",
+      "type": "shell",
+      "command": "npm run build:all",
+      "group": "build",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Clean Extension",
+      "type": "shell",
+      "command": "npm run clean",
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean MCP Server",
+      "type": "shell",
+      "command": "npm run clean",
+      "options": { "cwd": "${workspaceFolder}/mcp-server" },
+      "problemMatcher": []
+    }
+  ]
+}

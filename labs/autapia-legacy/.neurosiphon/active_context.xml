@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="utf-8"?><neurosiphon><repository_map><![CDATA[# REPOSITORY_MAP
+fine-tune-service/config/unsloth_config.json
+fine-tune-service/src/client/vector_client.rs
+fine-tune-service/src/service.rs
+dataset-generator-service/src/database.rs
+dataset-generator-service/build.rs
+dataset-generator-service/src/clients.rs
+fine-tune-service/src/log_forwarder.rs
+dataset-generator-service/src/api_config.rs
+fine-tune-service/src/client/chat_client.rs
+dataset-generator-service/src/enhanced_pipeline.rs
+dataset-generator-service/src/export_dynamic_function_dataset.rs
+dataset-generator-service/src/bin/generate_real_api_dataset.rs
+dataset-generator-service/src/function_tools.rs
+fine-tune-service/src/error.rs
+dataset-generator-service/src/dynamic_function_dataset_generator.rs
+dataset-generator-service/migrations/001_initial.sql
+dataset-generator-service/src/service.rs
+fine-tune-service/src/client/embedding_client.rs
+dataset-generator-service/src/bin/test_api_config.rs
+fine-tune-service/src/orchestrator.rs]]></repository_map><file path="fine-tune-service/config/unsloth_config.json"><![CDATA[/* TRUNCATED */
+{
+  "database": {
+    "database_url": "postgresql://postgres:root@localhost:5432/autapia"
+  },
+  "services": {
+    "vector_service_url": "http://127.0.0.1:20030",
+    "chat_service_url": "http://127.0.0.1:20010",
+    "embedding_service_url": "http://127.0.0.1:20020",
+    "candle_fine_tune_service_url": "http://127.0.0.1:50051"
+  },
+  "fine_tuning": {
+    "models_dir": "./models",
+    "datasets_dir": "./datasets",
+    "max_concurrent_jobs": 2,
+    "default_device": "cuda",
+    "candle_cli_path": null,
+    "engine": "unsloth",
+    "prefer_candle_for_embeddings": true
+  },
+  "storage": {
+    "artifacts_dir": "./artifacts",
+    "temp_dir": "./temp",
+    "max_dataset_size_mb": 1000
+  },
+  "data_dir": "./data",
+  "max_memory_mb": 8192
+}]]></file><file path="fine-tune-service/src/client/vector_client.rs"><![CDATA[// ... (4 uses)
+pub trait VectorClient: Send + Sync {
+async fn search_points(&self, request: SearchRequest) -> std::result::Result<Vec<ScoredVectorPoint>, Box<dyn std::error::Error + Send + Sync>>;
+}
+pub struct SearchRequest {
+pub collection: String,
+pub query_vector: Vec<f32>,
+pub limit: u64,
+pub score_threshold: Option<f32>,
+pub with_payload: bool,
+pub with_vector: bool,
+}
+pub struct ScoredVectorPoint {
+pub id: String,
+pub score: f32,
+pub payload: std::collections::HashMap<String, String>,
+}
+pub struct VectorServiceClient {
+client: Arc<dyn VectorClient>,
+}
+impl VectorServiceClient {
+pub async fn new(vector_service_url: &str) -> Result<Self> {
+debug!("Connecting to vector service at: {}", vector_service_url);
+struct StubVectorClient;
+impl VectorClient for StubVectorClient {
+async fn search_points(&self, _request: SearchRequest) -> std::result::Result<Vec<ScoredVectorPoint>, Box<dyn std::error::Error + Send + Sync>> { /* ... */ }
+}
+Ok(Self {
+client: Arc::new(StubVectorClient)
+})
+}
+pub async fn search_similar_chunks(
+&self,
+query_embedding: Vec<f32>,
+collection_name: &str,
+top_k: usize,
+score_threshold: Option<f32>,
+) -> Result<Vec<ScoredVectorPoint>> { /* ... */ }
+pub async fn retrieve_training_data(
+&self,
+seed_prompt: &str,
+collection_name: &str,
+top_k: usize,
+query_embedding: Vec<f32>,
+filters: Option<DatasetFilters>,
+) -> Result<Vec<TrainingChunk>> { /* ... */ }
+fn passes_filters(&self, chunk: &TrainingChunk, filters: &DatasetFilters) -> bool { /* ... */ }
+}
+pub struct TrainingChunk {
+pub id: String,
+pub content: String,
+pub metadata: std::collections::HashMap<String, String>,
+pub score: f32,
+pub source: String,
+}
+pub struct DatasetFilters {
+pub min_content_length: Option<usize>,
+pub max_content_length: Option<usize>,
+pub min_score: Option<f32>,
+pub allowed_sources: Vec<String>,
+pub excluded_sources: Vec<String>,
+}]]></file><file path="fine-tune-service/src/service.rs"><![CDATA[// ... (8 uses)
+client::{
+vector_client::VectorServiceClient,
+chat_client::ChatServiceClient,
+embedding_client::EmbeddingServiceClient,
+},
+config::Config,
+database::FineTuneDatabase,
+error::{FineTuneError, Result},
+orchestrator::FineTuningOrchestrator,
+};
+fine_tune_server::FineTune,
+SubmitRequest, SubmitResponse, StatusRequest, StatusResponse,
+CancelRequest, CancelResponse, DeleteRequest, DeleteResponse,
+ListJobsRequest, ListJobsResponse,
+JobLogsRequest, JobLogEntry, HealthRequest, HealthResponse,
+JobStatus, JobMetadata, TrainingMetrics, FineTuningMethod,
+};
+collections::HashMap,
+sync::{Arc, RwLock as StdRwLock},
+};
+pub struct FineTuneService {
+config: Arc<StdRwLock<Config>>,
+orchestrator: Arc<RwLock<FineTuningOrchestrator>>,
+pub database: FineTuneDatabase,
+vector_client: Arc<RwLock<VectorServiceClient>>,
+chat_client: Arc<RwLock<ChatServiceClient>>,
+embedding_client: Arc<RwLock<EmbeddingServiceClient>>,
+active_jobs: Arc<RwLock<HashMap<String, CancellationToken>>>,
+}
+impl FineTuneService {
+pub async fn new(config: Config) -> Result<Self> { /* ... */ }
+pub async fn new_with_reload(config: Config) -> Result<Self> { /* ... */ }
+pub async fn reload_config(&self) -> Result<String> { /* ... */ }
+fn get_config(&self) -> Config { /* ... */ }
+fn validate_request(&self, request: &SubmitRequest) -> Result<()> { /* ... */ }
+async fn get_job_metadata(&self, job_id: &str) -> Result<JobMetadata> { /* ... */ }
+pub async fn cancel_stuck_jobs(&self) -> Result<Vec<String>> { /* ... */ }
+}
+impl FineTune for FineTuneService {
+async fn submit_job(
+&self,
+request: Request<SubmitRequest>,
+) -> std::result::Result<Response<SubmitResponse>, Status> { /* ... */ }
+async fn get_status(
+&self,
+request: Request<StatusRequest>,
+) -> std::result::Result<Response<StatusResponse>, Status> { /* ... */ }
+async fn cancel_job(
+&self,
+request: Request<CancelRequest>,
+) -> std::result::Result<Response<CancelResponse>, Status> { /* ... */ }
+async fn delete_job(
+&self,
+request: Request<DeleteRequest>,
+) -> std::result::Result<Response<DeleteResponse>, Status> { /* ... */ }
+async fn list_jobs(
+&self,
+request: Request<ListJobsRequest>,
+) -> std::result::Result<Response<ListJobsResponse>, Status> { /* ... */ }
+type GetJobLogsStream = tokio_stream::wrappers::ReceiverStream<std::result::Result<JobLogEntry, Status>>;
+async fn get_job_logs(
+&self,
+request: Request<JobLogsRequest>,
+) -> std::result::Result<Response<Self::GetJobLogsStream>, Status> { /* ... */ }
+async fn get_health(
+&self,
+_request: Request<HealthRequest>,
+) -> std::result::Result<Response<HealthResponse>, Status> { /* ... */ }
+}
+impl FineTuneService {
+async fn cleanup_model_files(&self, job_id: &str, job_metadata: Option<&crate::database::JobMetadata>) { /* ... */ }
+}]]></file><file path="dataset-generator-service/src/database.rs"><![CDATA[// ... (8 uses)
+pub struct Dataset {
+pub id: Uuid,
+pub name: String,
+pub description: Option<String>,
+pub file_path: String,
+pub record_count: i32,
+pub status: String,
+pub created_at: DateTime<Utc>,
+pub updated_at: DateTime<Utc>,
+}
+pub struct DatasetGenerationJob {
+pub id: Uuid,
+pub name: String,
+pub input_config: serde_json::Value,
+pub status: String,
+pub progress: f32,
+pub message: Option<String>,
+pub result_dataset_id: Option<Uuid>,
+pub error_details: Option<String>,
+pub created_at: DateTime<Utc>,
+pub updated_at: DateTime<Utc>,
+pub completed_at: Option<DateTime<Utc>>,
+}
+pub struct EnhancedDatasetJob {
+pub id: Uuid,
+pub job_name: String,
+pub variations_per_use_case: i32,
+pub status: String,
+pub progress: f32,
+pub message: Option<String>,
+pub total_examples: Option<i32>,
+pub total_endpoints: Option<i32>,
+pub services_covered: Vec<String>,
+pub output_path: Option<String>,
+pub error_details: Option<String>,
+pub created_at: DateTime<Utc>,
+pub updated_at: DateTime<Utc>,
+pub completed_at: Option<DateTime<Utc>>,
+}
+pub struct JobStatistics {
+pub id: Uuid,
+pub job_id: Uuid,
+pub job_type: String,
+pub execution_time_seconds: Option<f32>,
+pub memory_usage_mb: Option<f32>,
+pub cpu_usage_percent: Option<f32>,
+pub records_processed: Option<i32>,
+pub success_rate: Option<f32>,
+pub created_at: DateTime<Utc>,
+}
+pub struct CreateDataset {
+pub name: String,
+pub description: Option<String>,
+pub file_path: String,
+pub record_count: i32,
+}
+pub struct CreateDatasetJob {
+pub name: String,
+pub input_config: serde_json::Value,
+}
+pub struct CreateEnhancedDatasetJob {
+pub job_name: String,
+pub variations_per_use_case: i32,
+}
+pub struct DatasetDatabase {
+pool: DatabasePool,
+}
+impl DatasetDatabase {
+pub async fn new(database_url: &str) -> Result<Self> { /* ... */ }
+pub async fn health_check(&self) -> Result<()> { /* ... */ }
+pub async fn create_dataset(&self, dataset: &CreateDataset) -> Result<Dataset> { /* ... */ }
+pub async fn get_dataset(&self, dataset_id: &Uuid) -> Result<Option<Dataset>> { /* ... */ }
+pub async fn list_datasets(&self, limit: i64, offset: i64) -> Result<Vec<Dataset>> { /* ... */ }
+pub async fn delete_dataset(&self, dataset_id: &Uuid) -> Result<bool> { /* ... */ }
+pub async fn create_enhanced_dataset_job(&self, job: &CreateEnhancedDatasetJob) -> Result<Uuid> { /* ... */ }
+pub async fn get_enhanced_dataset_job(&self, job_id: &Uuid) -> Result<Option<EnhancedDatasetJob>> { /* ... */ }
+pub async fn update_enhanced_job_status(&self, job_id: &Uuid, status: &str, progress: f32, message: Option<&str>) -> Result<bool> { /* ... */ }
+pub async fn complete_enhanced_job(&self, job_id: &Uuid, total_examples: i32, total_endpoints: i32, services_covered: &[String], output_path: &str) -> Result<bool> { /* ... */ }
+pub async fn fail_enhanced_job(&self, job_id: &Uuid, error_details: &str) -> Result<bool> { /* ... */ }
+pub async fn list_enhanced_dataset_jobs(&self, limit: i64, offset: i64) -> Result<Vec<EnhancedDatasetJob>> { /* ... */ }
+pub async fn create_generation_job(&self, job: &CreateDatasetJob) -> Result<Uuid> { /* ... */ }
+pub async fn get_generation_job(&self, job_id: &Uuid) -> Result<Option<DatasetGenerationJob>> { /* ... */ }
+pub async fn update_job_status(&self, job_id: &Uuid, status: &str, progress: f32, message: Option<&str>) -> Result<bool> { /* ... */ }
+pub async fn complete_job(&self, job_id: &Uuid, dataset_id: &Uuid) -> Result<bool> { /* ... */ }
+pub async fn list_generation_jobs(&self, limit: i64, offset: i64) -> Result<Vec<DatasetGenerationJob>> { /* ... */ }
+pub async fn get_active_jobs_count(&self) -> Result<i64> { /* ... */ }
+pub async fn record_job_statistics(&self, job_id: &Uuid, job_type: &str, stats: &JobStatistics) -> Result<()> { /* ... */ }
+pub async fn get_processing_statistics(&self) -> Result<serde_json::Value> { /* ... */ }
+}]]></file><file path="dataset-generator-service/build.rs"><![CDATA[fn main() -> Result<(), Box<dyn std::error::Error>> { /* ... */ }]]></file><file path="dataset-generator-service/src/clients.rs"><![CDATA[// ... (6 uses)
+pub struct ServiceClients {
+http_client: Client,
+vector_service_addr: String,
+embedding_service_addr: String,
+chat_service_addr: String,
+retry_operation: RetryOperation,
+}
+impl ServiceClients {
+pub async fn new(
+vector_service_addr: String,
+embedding_service_addr: String,
+chat_service_addr: String,
+) -> Result<Self> { /* ... */ }
+async fn test_connectivity(&self) -> Result<()> { /* ... */ }
+async fn test_service_health(&self, service_addr: &str, service_name: &str) -> Result<()> { /* ... */ }
+pub async fn generate_embedding(&self, request: EmbeddingRequest) -> Result<EmbeddingResponse> { /* ... */ }
+async fn generate_embedding_internal(&self, request: EmbeddingRequest) -> Result<EmbeddingResponse> { /* ... */ }
+pub async fn generate_chat_completion(&self, request: ChatRequest) -> Result<ChatResponse> { /* ... */ }
+async fn generate_chat_completion_internal(&self, request: ChatRequest) -> Result<ChatResponse> { /* ... */ }
+pub async fn search_vectors(&self, query: Vec<f32>, collection: &str, limit: usize) -> Result<Vec<serde_json::Value>> { /* ... */ }
+async fn search_vectors_internal(&self, query: Vec<f32>, collection: &str, limit: usize) -> Result<Vec<serde_json::Value>> { /* ... */ }
+pub fn with_retry_config(&mut self, config: RetryConfig) -> &mut Self { /* ... */ }
+pub fn get_service_addresses(&self) -> (String, String, String) { /* ... */ }
+pub async fn validate_connections(&self) -> Result<()> { /* ... */ }
+pub async fn mock_for_testing() -> Result<Self> { /* ... */ }
+}]]></file><file path="fine-tune-service/src/log_forwarder.rs"><![CDATA[// ... (7 uses)
+pub struct LogForwarder {
+sender: mpsc::UnboundedSender<LogEntry>,
+}
+struct LogEntry {
+timestamp: chrono::DateTime<chrono::Utc>,
+level: String,
+service: String,
+message: String,
+metadata: HashMap<String, serde_json::Value>,
+target: String,
+}
+impl LogForwarder {
+pub fn new(logging_service_url: String, _service_name: String) -> Self { /* ... */ }
+async fn send_batch(client: &Client, url: &str, batch: &[LogEntry]) { /* ... */ }
+fn forward_log(&self, log_entry: LogEntry) { /* ... */ }
+}
+impl<S> Layer<S> for LogForwarder
+where
+S: Subscriber,
+{
+fn on_event(&self, event: &Event<'_>, _ctx: tracing_subscriber::layer::Context<'_, S>) { /* ... */ }
+}
+struct LogVisitor {
+message: String,
+fields: HashMap<String, serde_json::Value>,
+}
+impl LogVisitor {
+fn new() -> Self { /* ... */ }
+}
+impl tracing::field::Visit for LogVisitor {
+fn record_debug(&mut self, field: &tracing::field::Field, value: &dyn std::fmt::Debug) { /* ... */ }
+fn record_str(&mut self, field: &tracing::field::Field, value: &str) { /* ... */ }
+fn record_i64(&mut self, field: &tracing::field::Field, value: i64) { /* ... */ }
+fn record_u64(&mut self, field: &tracing::field::Field, value: u64) { /* ... */ }
+fn record_bool(&mut self, field: &tracing::field::Field, value: bool) { /* ... */ }
+}]]></file><file path="dataset-generator-service/src/api_config.rs"><![CDATA[// ... (3 uses)
+pub struct ApiEndpoint {
+pub name: String,
+pub description: String,
+pub method: String,
+pub endpoint: String,
+pub parameters: HashMap<String, String>,
+pub use_cases: Vec<String>,
+}
+pub struct ServiceDefinition {
+pub endpoints: Vec<ApiEndpoint>,
+}
+pub struct ApiConfiguration {
+pub services: HashMap<String, ServiceDefinition>,
+pub metadata: ApiMetadata,
+}
+pub struct ApiMetadata {
+pub version: String,
+pub total_endpoints: usize,
+pub services_count: usize,
+pub format: String,
+pub description: String,
+pub generated_at: String,
+}
+pub struct EnhancedDatasetExample {
+pub conversations: Vec<ConversationTurn>,
+pub system: String,
+pub tools: Vec<ToolDefinition>,
+pub metadata: ExampleMetadata,
+}
+pub struct ConversationTurn {
+pub role: String,
+pub content: String,
+pub tool_calls: Option<Vec<ToolCall>>,
+pub tool_call_id: Option<String>,
+}
+pub struct ToolDefinition {
+pub r#type: String,
+pub function: FunctionDefinition,
+}
+pub struct FunctionDefinition {
+pub name: String,
+pub description: String,
+pub parameters: ParameterSchema,
+}
+pub struct ParameterSchema {
+pub r#type: String,
+pub properties: HashMap<String, ParameterProperty>,
+pub required: Vec<String>,
+}
+pub struct ParameterProperty {
+pub r#type: String,
+pub description: String,
+pub items: Option<Box<ParameterProperty>>,
+}
+pub struct ToolCall {
+pub id: String,
+pub r#type: String,
+pub function: FunctionCall,
+}
+pub struct FunctionCall {
+pub name: String,
+pub arguments: String,
+}
+pub struct ExampleMetadata {
+pub endpoint: String,
+pub service: String,
+pub use_case: String,
+pub variation: usize,
+pub complexity: String,
+pub scenario_type: String,
+}
+pub struct SingleTurnDatasetExample {
+pub query: Vec<String>,
+pub tools: Vec<String>,
+pub answers: Vec<String>,
+pub metadata: ExampleMetadata,
+}
+pub enum DatasetFormat {
+SingleTurn,
+MultiTurn,
+}
+pub struct EnhancedDataset {
+pub format: DatasetFormat,
+pub multi_turn_data: Option<Vec<EnhancedDatasetExample>>,
+pub single_turn_data: Option<Vec<SingleTurnDatasetExample>>,
+pub metadata: DatasetMetadata,
+}
+pub struct DatasetGenerationConfig {
+pub format: DatasetFormat,
+pub variations_per_use_case: usize,
+pub include_system_messages: bool,
+pub max_concurrent_services: usize,
+pub quality_threshold: f64,
+}
+impl Default for DatasetGenerationConfig {
+fn default() -> Self { /* ... */ }
+}
+impl Default for ApiConfiguration {
+fn default() -> Self { /* ... */ }
+}
+impl ApiConfiguration {
+pub fn new() -> Self { /* ... */ }
+}]]></file><file path="fine-tune-service/src/client/chat_client.rs"><![CDATA[// ... (4 uses)
+pub trait ChatClient: Send + Sync {
+async fn complete(&self, prompt: &str) -> std::result::Result<ChatResponse, Box<dyn std::error::Error + Send + Sync>>;
+}
+pub struct ChatResponse {
+pub response: String,
+}
+pub struct ChatServiceClient {
+client: Arc<dyn ChatClient>,
+}
+impl ChatServiceClient {
+pub async fn new(chat_service_url: &str) -> Result<Self> {
+debug!("Connecting to chat service at: {}", chat_service_url);
+struct StubChatClient;
+impl ChatClient for StubChatClient {
+async fn complete(&self, prompt: &str) -> std::result::Result<ChatResponse, Box<dyn std::error::Error + Send + Sync>> { /* ... */ }
+}
+Ok(Self {
+client: Arc::new(StubChatClient)
+})
+}
+pub async fn complete(&self, prompt: &str, _model: Option<&str>) -> Result<String> { /* ... */ }
+pub async fn generate_qa_pairs(
+&self,
+content: &str,
+context: Option<&str>,
+model: Option<&str>,
+) -> Result<Vec<QAPair>> { /* ... */ }
+pub async fn clean_content(
+&self,
+content: &str,
+cleaning_instructions: Option<&str>,
+model: Option<&str>,
+) -> Result<String> { /* ... */ }
+pub async fn extract_key_information(
+&self,
+content: &str,
+extraction_type: &str,
+model: Option<&str>,
+) -> Result<String> { /* ... */ }
+pub async fn validate_content_quality(
+&self,
+content: &str,
+criteria: Option<&str>,
+model: Option<&str>,
+) -> Result<ContentQuality> { /* ... */ }
+pub async fn generate_training_examples(
+&self,
+topic: &str,
+example_count: usize,
+model: Option<&str>,
+) -> Result<Vec<String>> { /* ... */ }
+fn parse_qa_response(&self, response: &str) -> Result<Vec<QAPair>> { /* ... */ }
+fn extract_qa_fallback(&self, response: &str) -> Result<Vec<QAPair>> { /* ... */ }
+fn parse_quality_response(&self, response: &str) -> Result<ContentQuality> { /* ... */ }
+fn parse_examples_response(&self, response: &str) -> Result<Vec<String>> { /* ... */ }
+}
+pub struct QAPair {
+pub question: String,
+pub answer: String,
+}
+pub struct ContentQuality {
+pub score: f32,
+pub is_suitable: bool,
+pub issues: Vec<String>,
+pub recommendations: Vec<String>,
+}]]></file><file path="dataset-generator-service/src/enhanced_pipeline.rs"><![CDATA[// ... (11 uses)
+pub struct EnhancedApiDatasetPipeline {
+clients: Arc<ServiceClients>,
+api_config: ApiConfiguration,
+}
+impl EnhancedApiDatasetPipeline {
+pub fn new(clients: Arc<ServiceClients>) -> Self { /* ... */ }
+pub async fn generate_comprehensive_dataset(
+&self,
+variations_per_use_case: usize,
+output_path: &str,
+format: crate::api_config::DatasetFormat,
+) -> Result<EnhancedDataset> { /* ... */ }
+fn clone_for_async(&self) -> Self { /* ... */ }
+async fn generate_service_examples_limited(
+&self,
+service_name: String,
+service_def: crate::api_config::ServiceDefinition,
+variations_per_use_case: usize,
+max_examples: usize,
+) -> Result<(Vec<EnhancedDatasetExample>, usize)> { /* ... */ }
+async fn generate_service_examples(
+&self,
+service_name: String,
+service_def: crate::api_config::ServiceDefinition,
+variations_per_use_case: usize,
+) -> Result<(Vec<EnhancedDatasetExample>, usize)> { /* ... */ }
+async fn generate_single_enhanced_example(
+&self,
+service_name: &str,
+_endpoint: &crate::api_config::ApiEndpoint,
+use_case: &str,
+variation: usize,
+) -> Result<EnhancedDatasetExample> { /* ... */ }
+fn generate_realistic_arguments(&self, parameters: &HashMap<String, String>) -> serde_json::Value { /* ... */ }
+fn generate_varied_user_query(&self, use_case: &str, variation: usize) -> String { /* ... */ }
+fn generate_comprehensive_tools(&self) -> Vec<ToolDefinition> { /* ... */ }
+pub fn generate_comprehensive_tools_list(&self) -> Vec<ToolDefinition> { /* ... */ }
+fn generate_parameter_description(&self, param_name: &str) -> String { /* ... */ }
+async fn save_dataset(&self, dataset: &EnhancedDataset, output_path: &str) -> Result<()> { /* ... */ }
+fn convert_to_fiftyone_format(&self, examples: &[EnhancedDatasetExample]) -> Result<Vec<crate::api_config::SingleTurnDatasetExample>> { /* ... */ }
+fn convert_to_apigen_format(&self, dataset: &EnhancedDataset) -> Result<Vec<serde_json::Value>> { /* ... */ }
+fn convert_examples_to_apigen_format(&self, examples: &[EnhancedDatasetExample]) -> Result<Vec<crate::api_config::SingleTurnDatasetExample>> { /* ... */ }
+}]]></file><file path="dataset-generator-service/src/export_dynamic_function_dataset.rs"><![CDATA[// ... (8 uses)
+pub struct ExportDynamicFunctionDatasetArgs {
+pub examples_per_function: usize,
+pub output_file: String,
+pub force_overwrite: bool,
+pub validate: bool,
+}
+pub async fn export_dynamic_function_dataset(args: ExportDynamicFunctionDatasetArgs) -> Result<(), Box<dyn std::error::Error + Send + Sync>> { /* ... */ }
+fn validate_dataset(examples: &[crate::dynamic_function_dataset_generator::FiftyOneApiExample]) -> Result<(), Box<dyn std::error::Error + Send + Sync>> { /* ... */ }
+fn get_expected_function_names() -> std::collections::HashSet<String> { /* ... */ }
+fn generate_export_summary(examples: &[crate::dynamic_function_dataset_generator::FiftyOneApiExample], output_file: &str) -> Result<(), Box<dyn std::error::Error + Send + Sync>> { /* ... */ }
+mod tests {
+async fn test_export_dynamic_function_dataset() { /* ... */ }
+}]]></file><file path="dataset-generator-service/src/bin/generate_real_api_dataset.rs"><![CDATA[// ... (4 uses)
+pub struct Cli {
+pub command: Commands,
+}
+pub enum Commands {
+Generate {
+num_examples: usize,
+output: String,
+workspace_root: Option<String>,
+},
+Stats {
+workspace_root: Option<String>,
+},
+Validate {
+dataset_path: String,
+workspace_root: Option<String>,
+},
+}
+async fn main() -> Result<(), Box<dyn std::error::Error>> { /* ... */ }]]></file><file path="dataset-generator-service/src/function_tools.rs"><![CDATA[// ... (2 uses)
+pub fn get_function_tools() -> Vec<FunctionTool> { /* ... */ }]]></file><file path="fine-tune-service/src/error.rs"><![CDATA[// ... (2 uses)
+pub enum FineTuneError {
+Config(#[from] anyhow::Error),
+Database(String),
+VectorService(String),
+ChatService(String),
+EmbeddingService(String),
+JobNotFound { job_id: String },
+JobAlreadyExists { job_id: String },
+InvalidJobState {
+job_id: String,
+current_state: String,
+},
+Training(String),
+Engine(String),
+Dataset(String),
+DatasetError(String),
+ConfigError(String),
+EngineError(String),
+IoError(String),
+Model(String),
+Storage(String),
+Serialization(#[from] serde_json::Error),
+Transport(#[from] tonic::transport::Error),
+Status(#[from] tonic::Status),
+ResourceLimit(String),
+Validation(String),
+Timeout(String),
+Cancellation(String),
+Internal(String),
+Candle(#[from] candle_core::Error),
+}
+impl From<FineTuneError> for Status {
+fn from(error: FineTuneError) -> Self { /* ... */ }
+}
+impl From<std::io::Error> for FineTuneError {
+fn from(err: std::io::Error) -> Self { /* ... */ }
+}
+pub type Result<T> = std::result::Result<T, FineTuneError>;]]></file><file path="dataset-generator-service/src/dynamic_function_dataset_generator.rs"><![CDATA[// ... (7 uses)
+ServiceDefinition, FunctionTool, ServiceFunctionRegistry, StructuredOutputsConfig,
+chat_service, rag_service, vector_service, embedding_service, mcp_service
+};
+pub struct FiftyOneApiExample {
+pub query: Vec<String>,
+pub tools: Vec<String>,
+pub answers: Vec<String>,
+}
+pub struct DynamicFunctionDatasetGenerator {
+rng: rand::rngs::ThreadRng,
+}
+impl DynamicFunctionDatasetGenerator {
+pub fn new() -> Self { /* ... */ }
+pub fn generate_complete_dataset(&mut self, examples_per_function: usize) -> Vec<FiftyOneApiExample> { /* ... */ }
+pub fn get_all_service_registries(&self) -> Vec<ServiceFunctionRegistry> { /* ... */ }
+fn get_additional_service_registries(&self) -> Vec<ServiceFunctionRegistry> { /* ... */ }
+fn create_config_service_registry(&self) -> ServiceFunctionRegistry { /* ... */ }
+fn create_monitor_service_registry(&self) -> ServiceFunctionRegistry { /* ... */ }
+fn create_settings_service_registry(&self) -> ServiceFunctionRegistry { /* ... */ }
+fn generate_function_example(
+&mut self,
+registry: &ServiceFunctionRegistry,
+function_tool: &FunctionTool,
+variant: usize
+) -> Option<FiftyOneApiExample> { /* ... */ }
+fn create_hf_tool_definition(&self, function_tool: &FunctionTool) -> Value { /* ... */ }
+fn generate_function_arguments(&mut self, function_tool: &FunctionTool, variant: usize) -> Value { /* ... */ }
+fn generate_sample_parameter_value(&mut self, param_name: &str, param_schema: &Value, variant: usize) -> Option<Value> { /* ... */ }
+fn generate_user_query_for_function(&mut self, function_tool: &FunctionTool, variant: usize) -> String { /* ... */ }
+}
+impl Default for DynamicFunctionDatasetGenerator {
+fn default() -> Self { /* ... */ }
+}
+mod tests {
+fn test_generate_complete_dataset() { /* ... */ }
+fn test_all_services_covered() { /* ... */ }
+}]]></file><file path="dataset-generator-service/migrations/001_initial.sql"><![CDATA[/* TRUNCATED */
+-- Dataset Generator Service Database Schema
+-- This migration creates tables for managing datasets and generation jobs
+-- Table for storing dataset metadata
+CREATE TABLE IF NOT EXISTS datasets (
+id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+name VARCHAR(255) NOT NULL,
+description TEXT,
+file_path VARCHAR(512) NOT NULL,
+record_count INTEGER NOT NULL DEFAULT 0,
+status VARCHAR(50) NOT NULL DEFAULT 'active',
+created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+-- Index for performance
+CREATE INDEX IF NOT EXISTS idx_datasets_status ON datasets(status);
+CREATE INDEX IF NOT EXISTS idx_datasets_created_at ON datasets(created_at);
+-- Table for storing dataset generation job metadata
+CREATE TABLE IF NOT EXISTS dataset_generation_jobs (
+id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+name VARCHAR(255) NOT NULL,
+input_config JSONB NOT NULL,
+status VARCHAR(50) NOT NULL DEFAULT 'pending',
+progress REAL NOT NULL DEFAULT 0.0,
+message TEXT,
+result_dataset_id UUID REFERENCES datasets(id),
+error_details TEXT,
+created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+completed_at TIMESTAMPTZ
+);
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_status ON dataset_generation_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_created_at ON dataset_generation_jobs(created_at);
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_result_dataset ON dataset_generation_jobs(result_dataset_id);
+-- Table for storing enhanced dataset generation metadata
+CREATE TABLE IF NOT EXISTS enhanced_dataset_jobs (
+id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+job_name VARCHAR(255) NOT NULL,
+variations_per_use_case INTEGER NOT NULL DEFAULT 1,
+status VARCHAR(50) NOT NULL DEFAULT 'pending',
+progress REAL NOT NULL DEFAULT 0.0,
+message TEXT,
+total_examples INTEGER DEFAULT 0,
+total_endpoints INTEGER DEFAULT 0,
+services_covered TEXT[] DEFAULT '{}',]]></file><file path="dataset-generator-service/src/service.rs"><![CDATA[// ... (13 uses)
+dataset_generator_server::DatasetGenerator,
+*,
+};
+type SharedConfig = Arc<RwLock<crate::Args>>;
+pub struct DatasetGeneratorService {
+clients: Arc<ServiceClients>,
+pipeline: Arc<DatasetPipeline>,
+jobs: Arc<RwLock<HashMap<String, DatasetJob>>>,
+output_dir: String,
+max_concurrent_jobs: usize,
+active_jobs: Arc<Mutex<usize>>,
+config: SharedConfig,
+database: Arc<crate::database::DatasetDatabase>,
+}
+impl DatasetGeneratorService {
+pub async fn new(
+database_url: String,
+vector_service_addr: String,
+embedding_service_addr: String,
+chat_service_addr: String,
+output_dir: String,
+max_concurrent_jobs: usize,
+config: SharedConfig,
+) -> Result<Self> { /* ... */ }
+pub async fn reload_config(&self) -> Result<String> { /* ... */ }
+async fn can_start_job(&self) -> bool { /* ... */ }
+async fn increment_active_jobs(&self) { /* ... */ }
+async fn decrement_active_jobs(&self) { /* ... */ }
+pub async fn generate_enhanced_api_dataset_internal(
+&self,
+variations_per_use_case: usize,
+format: crate::api_config::DatasetFormat,
+) -> Result<String, Status> { /* ... */ }
+async fn generate_enhanced_dataset_background(
+job_id: Uuid,
+variations_per_use_case: usize,
+output_dir: String,
+clients: Arc<ServiceClients>,
+database: Arc<crate::database::DatasetDatabase>,
+format: crate::api_config::DatasetFormat,
+) -> Result<(String, i32, i32, Vec<String>)> { /* ... */ }
+async fn update_job_progress(
+jobs: &Arc<RwLock<HashMap<String, DatasetJob>>>,
+job_id: &str,
+progress: f32,
+message: &str,
+) { /* ... */ }
+}
+impl DatasetGenerator for DatasetGeneratorService {
+async fn generate_dataset(
+&self,
+request: Request<GenerateDatasetRequest>,
+) -> Result<Response<GenerateDatasetResponse>, Status> { /* ... */ }
+async fn get_generation_status(
+&self,
+request: Request<GetGenerationStatusRequest>,
+) -> Result<Response<GetGenerationStatusResponse>, Status> { /* ... */ }
+async fn list_datasets(
+&self,
+request: Request<ListDatasetsRequest>,
+) -> Result<Response<ListDatasetsResponse>, Status> { /* ... */ }
+async fn delete_dataset(
+&self,
+request: Request<DeleteDatasetRequest>,
+) -> Result<Response<DeleteDatasetResponse>, Status> { /* ... */ }
+async fn generate_enhanced_api_dataset(
+&self,
+request: Request<GenerateEnhancedApiDatasetRequest>,
+) -> Result<Response<GenerateEnhancedApiDatasetResponse>, Status> { /* ... */ }
+}]]></file><file path="fine-tune-service/src/client/embedding_client.rs"><![CDATA[// ... (4 uses)
+pub struct EmbeddingServiceClient {
+client: Client,
+base_url: String,
+}
+struct EmbeddingRequest {
+text: String,
+model: Option<String>,
+}
+struct BatchEmbeddingRequest {
+texts: Vec<String>,
+model: Option<String>,
+}
+struct EmbeddingResponse {
+embedding: Vec<f32>,
+}
+impl EmbeddingServiceClient {
+pub async fn new(embedding_service_url: &str) -> Result<Self> { /* ... */ }
+pub async fn generate_embedding(&mut self, text: &str) -> Result<Vec<f32>> { /* ... */ }
+pub async fn generate_batch_embeddings(&mut self, texts: Vec<String>) -> Result<Vec<Vec<f32>>> { /* ... */ }
+pub async fn embed_training_chunks(
+&mut self,
+chunks: &[String],
+batch_size: usize,
+) -> Result<Vec<Vec<f32>>> { /* ... */ }
+pub async fn generate_embedding_with_model(
+&mut self,
+text: &str,
+model: &str,
+) -> Result<Vec<f32>> { /* ... */ }
+pub async fn calculate_similarity(&mut self, text1: &str, text2: &str) -> Result<f32> { /* ... */ }
+pub async fn find_most_similar(
+&mut self,
+query_text: &str,
+candidate_texts: &[String],
+) -> Result<(usize, f32)> { /* ... */ }
+}
+fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 { /* ... */ }]]></file><file path="dataset-generator-service/src/bin/test_api_config.rs"><![CDATA[// ... (4 uses)
+async fn main() -> Result<(), Box<dyn std::error::Error>> { /* ... */ }]]></file><file path="fine-tune-service/src/orchestrator.rs"><![CDATA[// ... (6 uses)
+client::{
+chat_client::ChatServiceClient,
+embedding_client::EmbeddingServiceClient,
+},
+config::Config,
+database::FineTuneDatabase,
+engine::{EngineFactory, ProgressUpdate, FineTuneRequest, TrainingConfig},
+error::{FineTuneError, Result},
+fine_tune::{SubmitRequest, VectorDatasetConfig, LocalDatasetConfig, DatasetSplit},
+};
+path::PathBuf,
+sync::Arc,
+};
+pub struct FineTuningOrchestrator {
+config: Config,
+database: FineTuneDatabase,
+}
+struct TrainingExample {
+input: String,
+output: String,
+metadata: Option<serde_json::Value>,
+}
+pub struct TrainingChunk {
+pub id: String,
+pub content: String,
+pub source: String,
+pub score: f64,
+}
+pub struct DatasetFilters {
+pub min_content_length: Option<usize>,
+pub max_content_length: Option<usize>,
+pub min_score: Option<f64>,
+pub allowed_sources: Vec<String>,
+pub excluded_sources: Vec<String>,
+}
+impl FineTuningOrchestrator {
+pub async fn new(config: Config, database: FineTuneDatabase) -> Result<Self> { /* ... */ }
+fn resolve_dataset_path(&self, configured_path: &str) -> Result<PathBuf> { /* ... */ }
+pub async fn run_fine_tuning_job(
+&self,
+job_id: &str,
+request: SubmitRequest,
+_chat_client: Arc<RwLock<ChatServiceClient>>,
+_embedding_client: Arc<RwLock<EmbeddingServiceClient>>,
+cancel_token: CancellationToken,
+) -> Result<()> { /* ... */ }
+async fn process_vector_dataset(
+&self,
+_request: &SubmitRequest,
+vector_config: &VectorDatasetConfig,
+_chat_client: &Arc<RwLock<ChatServiceClient>>,
+_embedding_client: &Arc<RwLock<EmbeddingServiceClient>>,
+_cancel_token: &CancellationToken,
+) -> Result<Vec<TrainingExample>> { /* ... */ }
+async fn process_local_dataset(
+&self,
+local_config: &LocalDatasetConfig,
+split_config: Option<&DatasetSplit>,
+dataset_type: Option<i32>,
+cancel_token: &CancellationToken,
+) -> Result<Vec<TrainingExample>> { /* ... */ }
+async fn apply_dataset_split(
+&self,
+mut examples: Vec<TrainingExample>,
+split_config: &DatasetSplit,
+) -> Result<Vec<TrainingExample>> { /* ... */ }
+async fn create_dataset_file(
+&self,
+job_id: &str,
+examples: &[TrainingExample],
+) -> Result<PathBuf> { /* ... */ }
+async fn train_model(
+&self,
+job_id: &str,
+request: &SubmitRequest,
+dataset_path: &PathBuf,
+_cancel_token: &CancellationToken,
+) -> Result<PathBuf> { /* ... */ }
+async fn update_job_status(
+&self,
+job_id: &str,
+status: &str,
+progress: f32,
+logs: &[String],
+) -> Result<()> { /* ... */ }
+pub async fn update_job_status_static(
+database: &FineTuneDatabase,
+job_id: &str,
+status: &str,
+progress: f32,
+logs: &[String],
+) -> Result<()> { /* ... */ }
+fn process_single_turn_conversations(
+&self,
+conversations: &[serde_json::Value],
+item: &serde_json::Value,
+examples: &mut Vec<TrainingExample>,
+) -> Result<()> { /* ... */ }
+fn process_multi_turn_conversations(
+&self,
+conversations: &[serde_json::Value],
+item: &serde_json::Value,
+examples: &mut Vec<TrainingExample>,
+) -> Result<()> { /* ... */ }
+fn process_single_turn_api_format(
+&self,
+json_data: &serde_json::Value,
+examples: &mut Vec<TrainingExample>,
+) -> Result<()> { /* ... */ }
+fn create_tool_response_from_item(&self, item: &serde_json::Value) -> Result<String> { /* ... */ }
+}]]></file></neurosiphon>

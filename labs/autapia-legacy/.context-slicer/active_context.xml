@@ -1,0 +1,4174 @@
+<?xml version="1.0" encoding="utf-8"?><context_slicer><file path="dataset-generator-service/API_DOCUMENTATION.md"><![CDATA[# Dataset Generator Service API Documentation
+
+## Service Overview
+
+The Dataset Generator Service is a microservice designed for creating high-quality training datasets for machine learning workflows. It specializes in generating comprehensive API documentation datasets for function-calling scenarios, covering 85+ API endpoints across the Autapia platform.
+
+### Service Details
+- **Service Name**: `dataset-generator-service`
+- **Version**: `0.1.0`
+- **gRPC Port**: `20090`
+- **Admin HTTP Port**: `20091`
+- **Database**: PostgreSQL (database-per-service pattern)
+
+### Key Capabilities
+- Generate synthetic training datasets for machine learning
+- Create enhanced API documentation datasets with multiple variations
+- Augment existing datasets with additional samples
+- Convert between different dataset formats (CSV, JSON, Parquet)
+- Analyze dataset quality and distribution
+- Support for multiple concurrent dataset generation jobs
+
+## gRPC API
+
+### Service Definition
+```protobuf
+syntax = "proto3";
+package dataset_generator;
+
+service DatasetGenerator {
+  rpc GenerateDataset(GenerateDatasetRequest) returns (GenerateDatasetResponse);
+  rpc GenerateEnhancedApiDataset(GenerateEnhancedApiDatasetRequest) returns (GenerateEnhancedApiDatasetResponse);
+  rpc GetGenerationStatus(GetGenerationStatusRequest) returns (GetGenerationStatusResponse);
+  rpc ListDatasets(ListDatasetsRequest) returns (ListDatasetsResponse);
+  rpc DeleteDataset(DeleteDatasetRequest) returns (DeleteDatasetResponse);
+}
+```
+
+### Methods
+
+#### GenerateDataset
+Generates a dataset from raw corpus data sources.
+
+**Request:**
+```protobuf
+message GenerateDatasetRequest {
+  string job_id = 1;                    // Optional job identifier
+  DatasetConfig config = 2;             // Dataset configuration
+  repeated RawSource sources = 3;       // Data sources
+}
+```
+
+**Response:**
+```protobuf
+message GenerateDatasetResponse {
+  string job_id = 1;                    // Generated job ID
+  GenerationStatus status = 2;          // Current status
+  string message = 3;                   // Status message
+  optional DatasetInfo dataset_info = 4; // Dataset information
+}
+```
+
+**Usage Example:**
+```bash
+grpcurl -plaintext \
+  -d '{
+    "config": {
+      "name": "my_dataset", 
+      "dataset_type": "FUNCTION_CALLING",
+      "processing": {"chunking": {"chunk_size": 512}},
+      "output": {"format": "OUTPUT_JSONL"}
+    },
+    "sources": [{
+      "source_type": "API_SPECIFICATION",
+      "path": "/path/to/openapi.json"
+    }]
+  }' \
+  localhost:20090 \
+  dataset_generator.DatasetGenerator/GenerateDataset
+```
+
+#### GenerateEnhancedApiDataset
+Generates comprehensive API documentation datasets with enhanced variations.
+
+**Request:**
+```protobuf
+message GenerateEnhancedApiDatasetRequest {
+  int32 variations_per_use_case = 1;    // Number of variations per use case
+}
+```
+
+**Response:**
+```protobuf
+message GenerateEnhancedApiDatasetResponse {
+  string job_id = 1;                    // Job identifier
+  GenerationStatus status = 2;          // Current status
+  string message = 3;                   // Status message
+  int32 estimated_examples = 4;         // Estimated total examples
+}
+```
+
+**Usage Example:**
+```bash
+grpcurl -plaintext \
+  -d '{"variations_per_use_case": 3}' \
+  localhost:20090 \
+  dataset_generator.DatasetGenerator/GenerateEnhancedApiDataset
+```
+
+#### GetGenerationStatus
+Retrieves the status of a dataset generation job.
+
+**Request:**
+```protobuf
+message GetGenerationStatusRequest {
+  string job_id = 1;                    // Job identifier
+}
+```
+
+**Response:**
+```protobuf
+message GetGenerationStatusResponse {
+  string job_id = 1;                    // Job identifier
+  GenerationStatus status = 2;          // Current status
+  string message = 3;                   // Status message
+  float progress = 4;                   // Progress (0.0 to 1.0)
+  optional DatasetInfo dataset_info = 5; // Dataset information
+}
+```
+
+#### ListDatasets
+Lists available datasets with pagination and filtering.
+
+**Request:**
+```protobuf
+message ListDatasetsRequest {
+  uint32 page = 1;                      // Page number (1-based)
+  uint32 page_size = 2;                 // Results per page
+}
+```
+
+**Response:**
+```protobuf
+message ListDatasetsResponse {
+  repeated DatasetInfo datasets = 1;    // Dataset list
+  uint32 total_count = 2;               // Total datasets
+  uint32 page = 3;                      // Current page
+  uint32 page_size = 4;                 // Page size
+}
+```
+
+#### DeleteDataset
+Deletes a generated dataset.
+
+**Request:**
+```protobuf
+message DeleteDatasetRequest {
+  string dataset_id = 1;                // Dataset identifier
+}
+```
+
+**Response:**
+```protobuf
+message DeleteDatasetResponse {
+  bool success = 1;                     // Success flag
+  string message = 2;                   // Result message
+}
+```
+
+### Data Types
+
+#### DatasetConfig
+```protobuf
+message DatasetConfig {
+  string name = 1;                      // Dataset name
+  string description = 2;               // Dataset description
+  DatasetType dataset_type = 3;         // Type of dataset
+  ProcessingConfig processing = 4;      // Processing options
+  FilteringConfig filtering = 5;        // Filtering options
+  SamplingConfig sampling = 6;          // Sampling options
+  OutputConfig output = 7;              // Output configuration
+}
+```
+
+#### DatasetType
+```protobuf
+enum DatasetType {
+  QUESTION_ANSWER = 0;
+  INSTRUCTION_FOLLOWING = 1;
+  CLASSIFICATION = 2;
+  SUMMARIZATION = 3;
+  CONVERSATION = 4;
+  FUNCTION_CALLING = 5;                 // API documentation for function calling
+}
+```
+
+#### GenerationStatus
+```protobuf
+enum GenerationStatus {
+  PENDING = 0;                          // Job submitted but not started
+  PROCESSING = 1;                       // Job in progress
+  COMPLETED = 2;                        // Job completed successfully
+  FAILED = 3;                           // Job failed with error
+}
+```
+
+#### DatasetInfo
+```protobuf
+message DatasetInfo {
+  string dataset_id = 1;                // Unique dataset ID
+  string name = 2;                      // Dataset name
+  string description = 3;               // Dataset description
+  uint64 total_samples = 4;             // Total number of samples
+  uint64 train_samples = 5;             // Training samples
+  uint64 validation_samples = 6;        // Validation samples
+  uint64 test_samples = 7;              // Test samples
+  string created_at = 8;                // Creation timestamp
+  string output_path = 9;               // File system path
+  uint64 file_size_bytes = 10;          // File size in bytes
+}
+```
+
+## HTTP Admin API
+
+The service exposes administrative endpoints for health monitoring and configuration management.
+
+### Base URL
+```
+http://localhost:20091
+```
+
+### OpenAPI Specification
+
+```yaml
+openapi: 3.0.3
+info:
+  title: Dataset Generator Service Admin API
+  description: Administrative endpoints for the Dataset Generator Service
+  version: 0.1.0
+  contact:
+    name: Autapia Platform
+servers:
+  - url: http://localhost:20091
+    description: Development server
+
+paths:
+  /admin/health:
+    get:
+      summary: Health Check
+      description: Returns the health status of the service
+      operationId: healthCheck
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  service:
+                    type: string
+                    example: "dataset-generator-service"
+                  version:
+                    type: string
+                    example: "0.1.0"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-07-08T12:00:00Z"
+              example:
+                status: "healthy"
+                service: "dataset-generator-service"
+                version: "0.1.0"
+                timestamp: "2024-07-08T12:00:00Z"
+
+  /admin/reload:
+    post:
+      summary: Reload Configuration
+      description: Reloads the service configuration from environment variables
+      operationId: reloadConfig
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: Configuration reloaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReloadResponse'
+              example:
+                success: true
+                message: "Dataset generator configuration reloaded successfully"
+                timestamp: "2024-07-08T12:00:00Z"
+        '500':
+          description: Configuration reload failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReloadResponse'
+              example:
+                success: false
+                message: "Failed to reload configuration: Invalid environment variable"
+                timestamp: "2024-07-08T12:00:00Z"
+
+components:
+  schemas:
+    ReloadResponse:
+      type: object
+      required:
+        - success
+        - message
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          description: Whether the reload operation succeeded
+        message:
+          type: string
+          description: Human-readable result message
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the operation
+```
+
+### HTTP Endpoint Details
+
+#### GET /admin/health
+**Description:** Health check endpoint for monitoring service availability.
+
+**Response Headers:**
+- `Content-Type: application/json`
+
+**Response Body:**
+```json
+{
+  "status": "healthy",
+  "service": "dataset-generator-service", 
+  "version": "0.1.0",
+  "timestamp": "2024-07-08T12:00:00Z"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:20091/admin/health
+```
+
+#### POST /admin/reload
+**Description:** Reloads service configuration from environment variables without restarting.
+
+**Configuration Variables Reloaded:**
+- `GRPC_ADDR` - gRPC server bind address
+- `VECTOR_SERVICE_ADDR` - Vector service URL  
+- `EMBEDDING_SERVICE_ADDR` - Embedding service URL
+- `CHAT_SERVICE_ADDR` - Chat service URL
+- `OUTPUT_DIR` - Dataset output directory
+- `MAX_CONCURRENT_JOBS` - Maximum concurrent generation jobs
+- `DATABASE_URL` - PostgreSQL database connection string
+
+**Response Headers:**
+- `Content-Type: application/json`
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "Dataset generator configuration reloaded successfully",
+  "timestamp": "2024-07-08T12:00:00Z"
+}
+```
+
+**Error Response (500):**
+```json
+{
+  "success": false,
+  "message": "Failed to load configuration: Invalid OUTPUT_DIR path",
+  "timestamp": "2024-07-08T12:00:00Z"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:20091/admin/reload
+```
+
+## Database Schema
+
+The service uses PostgreSQL with the following tables:
+
+### datasets
+```sql
+CREATE TABLE datasets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR NOT NULL,
+    description TEXT,
+    file_path VARCHAR NOT NULL,
+    record_count INTEGER NOT NULL,
+    status VARCHAR NOT NULL DEFAULT 'active',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+### dataset_generation_jobs
+```sql
+CREATE TABLE dataset_generation_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR NOT NULL,
+    input_config JSONB NOT NULL,
+    status VARCHAR NOT NULL DEFAULT 'pending',
+    progress REAL NOT NULL DEFAULT 0.0,
+    message TEXT,
+    result_dataset_id UUID REFERENCES datasets(id),
+    error_details TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+```
+
+### enhanced_dataset_jobs
+```sql
+CREATE TABLE enhanced_dataset_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_name VARCHAR NOT NULL,
+    variations_per_use_case INTEGER NOT NULL,
+    status VARCHAR NOT NULL DEFAULT 'pending',
+    progress REAL NOT NULL DEFAULT 0.0,
+    message TEXT,
+    total_examples INTEGER,
+    total_endpoints INTEGER,
+    services_covered TEXT[],
+    output_path TEXT,
+    error_details TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+```
+
+### job_statistics
+```sql
+CREATE TABLE job_statistics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_id UUID NOT NULL,
+    job_type VARCHAR NOT NULL,
+    execution_time_seconds REAL,
+    memory_usage_mb REAL,
+    cpu_usage_percent REAL,
+    records_processed INTEGER,
+    success_rate REAL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+## Error Handling
+
+### gRPC Status Codes
+- `OK` (0) - Success
+- `INVALID_ARGUMENT` (3) - Missing or invalid request parameters
+- `NOT_FOUND` (5) - Dataset or job not found
+- `RESOURCE_EXHAUSTED` (8) - Maximum concurrent jobs reached
+- `INTERNAL` (13) - Internal server error
+
+### HTTP Status Codes
+- `200 OK` - Success
+- `400 Bad Request` - Invalid request
+- `404 Not Found` - Endpoint not found
+- `500 Internal Server Error` - Server error
+
+### Error Response Format
+gRPC errors follow the standard tonic Status format:
+```rust
+Status::invalid_argument("Dataset configuration is required")
+Status::resource_exhausted("Maximum concurrent jobs reached")
+```
+
+HTTP errors return JSON:
+```json
+{
+  "success": false,
+  "message": "Error description",
+  "timestamp": "2024-07-08T12:00:00Z"
+}
+```
+
+## Usage Examples
+
+### Complete Workflow Example
+
+1. **Generate Enhanced API Dataset:**
+```bash
+# Start enhanced API dataset generation
+grpcurl -plaintext \
+  -d '{"variations_per_use_case": 5}' \
+  localhost:20090 \
+  dataset_generator.DatasetGenerator/GenerateEnhancedApiDataset
+```
+
+2. **Monitor Progress:**
+```bash
+# Check job status (replace JOB_ID with actual ID)
+grpcurl -plaintext \
+  -d '{"job_id": "550e8400-e29b-41d4-a716-446655440000"}' \
+  localhost:20090 \
+  dataset_generator.DatasetGenerator/GetGenerationStatus
+```
+
+3. **List Generated Datasets:**
+```bash
+# List all datasets
+grpcurl -plaintext \
+  -d '{"page": 1, "page_size": 10}' \
+  localhost:20090 \
+  dataset_generator.DatasetGenerator/ListDatasets
+```
+
+### Configuration Management
+
+1. **Check Service Health:**
+```bash
+curl http://localhost:20091/admin/health
+```
+
+2. **Reload Configuration:**
+```bash
+# Update environment variables, then reload
+export OUTPUT_DIR="/new/dataset/path"
+export MAX_CONCURRENT_JOBS=10
+curl -X POST http://localhost:20091/admin/reload
+```
+
+## Client Integration
+
+### Rust Client Example
+```rust
+use autapia_microservice_types::dataset_generator::{
+    dataset_generator_client::DatasetGeneratorClient,
+    GenerateEnhancedApiDatasetRequest,
+};
+use tonic::transport::Channel;
+
+async fn generate_dataset() -> Result<(), Box<dyn std::error::Error>> {
+    let mut client = DatasetGeneratorClient::connect("http://127.0.0.1:20090").await?;
+    
+    let request = tonic::Request::new(GenerateEnhancedApiDatasetRequest {
+        variations_per_use_case: 3,
+    });
+    
+    let response = client.generate_enhanced_api_dataset(request).await?;
+    println!("Job ID: {}", response.into_inner().job_id);
+    
+    Ok(())
+}
+```
+
+### Python Client Example
+```python
+import grpc
+from generated import dataset_generator_pb2, dataset_generator_pb2_grpc
+
+def generate_dataset():
+    channel = grpc.insecure_channel('localhost:20090')
+    stub = dataset_generator_pb2_grpc.DatasetGeneratorStub(channel)
+    
+    request = dataset_generator_pb2.GenerateEnhancedApiDatasetRequest(
+        variations_per_use_case=3
+    )
+    
+    response = stub.GenerateEnhancedApiDataset(request)
+    print(f"Job ID: {response.job_id}")
+```
+
+## Performance Characteristics
+
+### Throughput
+- **Concurrent Jobs**: Up to 5 concurrent dataset generation jobs (configurable)
+- **API Endpoints**: Processes 85+ API endpoints in enhanced mode
+- **Generation Rate**: ~50-100 examples per minute depending on complexity
+
+### Resource Usage
+- **Memory**: ~500MB-2GB depending on dataset size
+- **CPU**: Moderate usage during generation, minimal when idle
+- **Disk**: Proportional to dataset size, typically 10-500MB per dataset
+- **Network**: Moderate during generation (API calls to other services)
+
+### Latency
+- **Health Check**: < 10ms
+- **Configuration Reload**: < 100ms
+- **Dataset Generation**: 5-30 minutes depending on size and variations
+- **Status Queries**: < 50ms
+
+## Security Considerations
+
+### Authentication
+- Currently uses internal service communication (no external auth)
+- Services communicate over HTTP within trusted network
+- Future: Consider mTLS for production deployments
+
+### Authorization
+- No fine-grained permissions currently implemented
+- Service-to-service communication trusted
+- Admin endpoints accessible from localhost only
+
+### Data Privacy
+- Generated datasets may contain synthetic but realistic data
+- Ensure compliance with data retention policies
+- Consider anonymization for sensitive domains
+
+## Monitoring and Observability
+
+### Logging
+- Structured logging with configurable levels
+- Request/response logging for gRPC methods
+- Performance metrics for generation operations
+
+### Metrics (Future)
+- Job success/failure rates
+- Generation throughput
+- Resource utilization
+- Queue depths
+
+### Health Monitoring
+- HTTP health check endpoint
+- Service dependency health
+- Database connectivity status
+
+## Migration and Deployment
+
+### Environment Variables
+```bash
+# Required
+DATABASE_URL=postgresql://postgres:root@localhost:5432/autapia
+
+# Optional (with defaults)
+GRPC_ADDR=0.0.0.0:20090
+VECTOR_SERVICE_ADDR=http://127.0.0.1:20030
+EMBEDDING_SERVICE_ADDR=http://127.0.0.1:20020
+CHAT_SERVICE_ADDR=http://127.0.0.1:20010
+OUTPUT_DIR=./datasets
+MAX_CONCURRENT_JOBS=5
+```
+
+### Database Migration
+```bash
+# Run migrations on startup (automatic)
+# Or manually:
+cd services/dataset-generator-service
+sqlx migrate run --database-url $DATABASE_URL
+```
+
+### Service Dependencies
+- **PostgreSQL**: Database for job tracking and metadata
+- **vector-service**: Vector operations and embeddings
+- **embedding-service**: Text embedding generation
+- **chat-service**: LLM interactions for dataset generation
+- **settings-service**: Configuration management (optional) ]]></file><file path="dataset-generator-service/Cargo.toml"><![CDATA[[package]
+name = "dataset-generator-service"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "dataset-generator-service"
+path = "src/main.rs"
+
+[[bin]]
+name = "generate-real-api-dataset"
+path = "src/bin/generate_real_api_dataset.rs"
+
+[dependencies]
+# gRPC and protobuf
+tonic = "0.12"
+prost = "0.13"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread", "signal", "fs"] }
+tokio-stream = "0.1"
+
+# Data processing
+polars = { version = "0.41", features = ["lazy", "csv", "json", "strings", "temporal", "parquet"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# File handling and I/O
+csv = "1.3"
+walkdir = "2.4"
+
+# Machine learning and data science
+linfa = "0.7"
+linfa-clustering = "0.7"
+ndarray = "0.15"
+
+# HTTP client for service communication
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# CLI and configuration
+clap = { version = "4.0", features = ["derive", "env"] }
+dotenv = "0.15"
+
+# Logging
+log = "0.4"
+env_logger = "0.10"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Async traits
+async-trait = "0.1"
+
+# Random sampling
+rand = "0.8"
+
+# Text processing
+regex = "1.10"
+unicode-segmentation = "1.10"
+
+# Futures and streams
+futures = "0.3"
+futures-util = "0.3"
+
+# UUID generation
+uuid = { version = "1.0", features = ["v4"] }
+
+# Date and time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Database dependencies for direct PostgreSQL access
+autapia_shared_types = { path = "../../shared/autapia_shared_types", features = ["sqlx"] }
+autapia_microservice_types = { path = "../../shared/autapia_microservice_types" }
+autapia_database_client = { path = "../../shared/autapia_database_client" }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid", "migrate"] }
+
+# HTTP server for admin endpoints
+axum = { version = "0.8", features = ["json"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors"] }
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[dev-dependencies]
+tempfile = "3.8"]]></file><file path="dataset-generator-service/build.rs"><![CDATA[fn main() -> Result<(), Box<dyn std::error::Error>> {
+    tonic_build::configure()
+        .build_client(false) // We only need server code
+        .compile_protos(
+            &["../../shared/autapia_microservice_types/proto/dataset_generator.proto"],
+            &["../../shared/autapia_microservice_types/proto"],
+        )?;
+    Ok(())
+} ]]></file><file path="dataset-generator-service/migrations/001_initial.sql"><![CDATA[-- Dataset Generator Service Database Schema
+-- This migration creates tables for managing datasets and generation jobs
+
+-- Table for storing dataset metadata
+CREATE TABLE IF NOT EXISTS datasets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    file_path VARCHAR(512) NOT NULL,
+    record_count INTEGER NOT NULL DEFAULT 0,
+    status VARCHAR(50) NOT NULL DEFAULT 'active',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Index for performance
+CREATE INDEX IF NOT EXISTS idx_datasets_status ON datasets(status);
+CREATE INDEX IF NOT EXISTS idx_datasets_created_at ON datasets(created_at);
+
+-- Table for storing dataset generation job metadata
+CREATE TABLE IF NOT EXISTS dataset_generation_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    input_config JSONB NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    progress REAL NOT NULL DEFAULT 0.0,
+    message TEXT,
+    result_dataset_id UUID REFERENCES datasets(id),
+    error_details TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_status ON dataset_generation_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_created_at ON dataset_generation_jobs(created_at);
+CREATE INDEX IF NOT EXISTS idx_generation_jobs_result_dataset ON dataset_generation_jobs(result_dataset_id);
+
+-- Table for storing enhanced dataset generation metadata
+CREATE TABLE IF NOT EXISTS enhanced_dataset_jobs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_name VARCHAR(255) NOT NULL,
+    variations_per_use_case INTEGER NOT NULL DEFAULT 1,
+    status VARCHAR(50) NOT NULL DEFAULT 'pending',
+    progress REAL NOT NULL DEFAULT 0.0,
+    message TEXT,
+    total_examples INTEGER DEFAULT 0,
+    total_endpoints INTEGER DEFAULT 0,
+    services_covered TEXT[] DEFAULT '{}',
+    output_path VARCHAR(512),
+    error_details TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+
+-- Indexes for enhanced dataset jobs
+CREATE INDEX IF NOT EXISTS idx_enhanced_jobs_status ON enhanced_dataset_jobs(status);
+CREATE INDEX IF NOT EXISTS idx_enhanced_jobs_created_at ON enhanced_dataset_jobs(created_at);
+
+-- Table for tracking job execution statistics
+CREATE TABLE IF NOT EXISTS job_statistics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    job_id UUID NOT NULL,
+    job_type VARCHAR(100) NOT NULL, -- 'standard' or 'enhanced'
+    execution_time_seconds REAL,
+    memory_usage_mb REAL,
+    cpu_usage_percent REAL,
+    records_processed INTEGER DEFAULT 0,
+    success_rate REAL DEFAULT 0.0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Index for statistics
+CREATE INDEX IF NOT EXISTS idx_job_statistics_job_id ON job_statistics(job_id);
+CREATE INDEX IF NOT EXISTS idx_job_statistics_type ON job_statistics(job_type);
+CREATE INDEX IF NOT EXISTS idx_job_statistics_created_at ON job_statistics(created_at);
+
+-- Function to update the updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Triggers to automatically update updated_at timestamps
+CREATE TRIGGER update_datasets_updated_at 
+    BEFORE UPDATE ON datasets 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_dataset_generation_jobs_updated_at 
+    BEFORE UPDATE ON dataset_generation_jobs 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_enhanced_dataset_jobs_updated_at 
+    BEFORE UPDATE ON enhanced_dataset_jobs 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); ]]></file><file path="dataset-generator-service/real_api_schemas.json"><![CDATA[{
+  "dataset-generator-service": {
+    "service_name": "dataset-generator-service",
+    "description": "AI dataset creation and augmentation service for machine learning workflows",
+    "version": "0.1.0",
+    "capabilities": [
+      "dataset-generation",
+      "data-augmentation",
+      "synthetic-data-creation",
+      "dataset-analysis",
+      "data-preprocessing",
+      "format-conversion"
+    ],
+    "use_cases": [
+      "Generate synthetic training datasets for machine learning",
+      "Augment existing datasets with additional samples",
+      "Create labeled datasets from raw data sources",
+      "Convert between different dataset formats (CSV, JSON, Parquet)",
+      "Analyze dataset quality and distribution",
+      "Generate evaluation and test datasets"
+    ],
+    "dependencies": [
+      "storage-service",
+      "embedding-service",
+      "database"
+    ],
+    "grpc_port": 20090,
+    "admin_port": 20091,
+    "endpoints": [
+      {
+        "method": "GenerateDataset",
+        "description": "Generate a new synthetic dataset based on specifications",
+        "example": "Generate 1000 text classification samples with specific schema",
+        "tags": [
+          "dataset",
+          "generation",
+          "synthetic"
+        ],
+        "permissions": [
+          "datasets.generate"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "AugmentDataset",
+        "description": "Augment an existing dataset with additional synthetic samples",
+        "example": "Augment text dataset with paraphrasing and synonym replacement",
+        "tags": [
+          "dataset",
+          "augmentation",
+          "enhancement"
+        ],
+        "permissions": [
+          "datasets.augment"
+        ],
+        "parameters": {
+          "source_dataset_id": "ID of source dataset to augment"
+        }
+      },
+      {
+        "method": "AnalyzeDataset",
+        "description": "Analyze dataset quality, distribution, and characteristics",
+        "example": "Analyze text dataset for quality issues and distribution",
+        "tags": [
+          "dataset",
+          "analysis",
+          "quality"
+        ],
+        "permissions": [
+          "datasets.analyze"
+        ],
+        "parameters": {
+          "dataset_id": "Dataset identifier to analyze"
+        }
+      },
+      {
+        "method": "ConvertDatasetFormat",
+        "description": "Convert dataset between different formats and schemas",
+        "example": "Convert CSV dataset to Hugging Face format with validation",
+        "tags": [
+          "dataset",
+          "conversion",
+          "format"
+        ],
+        "permissions": [
+          "datasets.convert"
+        ],
+        "parameters": {
+          "source_dataset_id": "Source dataset identifier"
+        }
+      },
+      {
+        "method": "ListDatasets",
+        "description": "List available datasets with filtering and metadata",
+        "example": "List all text datasets with metadata for training pipeline",
+        "tags": [
+          "dataset",
+          "listing",
+          "metadata"
+        ],
+        "permissions": [
+          "datasets.list"
+        ],
+        "parameters": {
+          "filter_type": "Filter by dataset type"
+        }
+      },
+      {
+        "method": "DeleteDataset",
+        "description": "Delete a dataset and its associated files",
+        "example": "Delete temporary dataset with backup creation",
+        "tags": [
+          "dataset",
+          "deletion",
+          "cleanup"
+        ],
+        "permissions": [
+          "datasets.delete"
+        ],
+        "parameters": {
+          "dataset_id": "Dataset identifier to delete"
+        }
+      },
+      {
+        "method": "GetGenerationStatus",
+        "description": "Get status of ongoing dataset generation or processing tasks",
+        "example": "Check progress of large dataset generation task",
+        "tags": [
+          "dataset",
+          "status",
+          "progress"
+        ],
+        "permissions": [
+          "datasets.status"
+        ],
+        "parameters": {
+          "task_id": "Task identifier"
+        }
+      }
+    ]
+  },
+  "fine-tune-service": {
+    "service_name": "fine-tune-service",
+    "description": "Model fine-tuning service for training custom AI models on specialized datasets",
+    "version": "0.1.0",
+    "capabilities": [
+      "model_fine_tuning",
+      "training_orchestration",
+      "dataset_preparation",
+      "model_evaluation",
+      "training_monitoring",
+      "distributed_training",
+      "model_versioning",
+      "hyperparameter_optimization"
+    ],
+    "use_cases": [
+      "Fine-tune language models on domain-specific data",
+      "Train custom embedding models",
+      "Perform hyperparameter optimization",
+      "Monitor training progress and metrics",
+      "Manage training datasets and validation",
+      "Export and version trained models"
+    ],
+    "dependencies": [
+      "dataset-generator-service",
+      "storage-service"
+    ],
+    "grpc_port": 20080,
+    "admin_port": 20081,
+    "endpoints": [
+      {
+        "method": "StartTraining",
+        "description": "Start a new model fine-tuning job",
+        "example": "StartTraining({ job_name: 'legal-docs-llama', base_model: 'llama-2-7b', dataset_id: 'legal-corpus-v1' })",
+        "tags": [
+          "training",
+          "fine-tuning",
+          "jobs"
+        ],
+        "permissions": [
+          "training:start"
+        ],
+        "parameters": {
+          "job_name": "Name for the training job"
+        }
+      },
+      {
+        "method": "GetTrainingStatus",
+        "description": "Get detailed status and metrics for a training job",
+        "example": "GetTrainingStatus({ job_id: 'train-123' })",
+        "tags": [
+          "training",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ListTrainingJobs",
+        "description": "List training jobs with filtering options",
+        "example": "ListTrainingJobs({ status: 'running', limit: 10 })",
+        "tags": [
+          "training",
+          "list",
+          "jobs"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "CancelTraining",
+        "description": "Cancel a running training job",
+        "example": "CancelTraining({ job_id: 'train-123', reason: 'User requested cancellation' })",
+        "tags": [
+          "training",
+          "cancel",
+          "jobs"
+        ],
+        "permissions": [
+          "training:cancel"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetTrainingLogs",
+        "description": "Get training logs for a specific job",
+        "example": "GetTrainingLogs({ job_id: 'train-123', log_level: 'info' })",
+        "tags": [
+          "training",
+          "logs",
+          "monitoring"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "workflow-service": {
+    "service_name": "workflow-service",
+    "description": "Dynamic agent workflow orchestration and execution service",
+    "version": "0.1.0",
+    "capabilities": [
+      "workflow-orchestration",
+      "dynamic-agent-workflows",
+      "workflow-execution",
+      "task-coordination",
+      "parallel-execution",
+      "conditional-branching"
+    ],
+    "use_cases": [
+      "Create and manage complex multi-step workflows",
+      "Orchestrate dynamic agent-based task execution",
+      "Handle parallel and sequential workflow steps",
+      "Manage conditional workflow branching and decision points",
+      "Coordinate cross-service task execution",
+      "Track workflow progress and handle failures"
+    ],
+    "dependencies": [
+      "job-queue-service",
+      "chat-agent-service",
+      "settings-service",
+      "database"
+    ],
+    "grpc_port": 20160,
+    "admin_port": 20161,
+    "endpoints": [
+      {
+        "method": "CreateWorkflow",
+        "description": "Create a new workflow definition with steps and dependencies",
+        "example": "Create multi-step data processing workflow with parallel execution",
+        "tags": [
+          "workflow",
+          "creation",
+          "orchestration"
+        ],
+        "permissions": [
+          "workflows.create"
+        ],
+        "parameters": {
+          "name": "Workflow name"
+        }
+      },
+      {
+        "method": "ExecuteWorkflow",
+        "description": "Execute a workflow with provided input data",
+        "example": "Execute data processing workflow with user input parameters",
+        "tags": [
+          "workflow",
+          "execution",
+          "orchestration"
+        ],
+        "permissions": [
+          "workflows.execute"
+        ],
+        "parameters": {
+          "workflow_id": "Workflow identifier"
+        }
+      },
+      {
+        "method": "GetExecutionStatus",
+        "description": "Get the current status and progress of a workflow execution",
+        "example": "Get status of long-running data processing workflow",
+        "tags": [
+          "workflow",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "workflows.status"
+        ],
+        "parameters": {
+          "execution_id": "Execution identifier"
+        }
+      },
+      {
+        "method": "StopExecution",
+        "description": "Stop a running workflow execution",
+        "example": "Stop failed workflow execution gracefully",
+        "tags": [
+          "workflow",
+          "control",
+          "cancellation"
+        ],
+        "permissions": [
+          "workflows.control"
+        ],
+        "parameters": {
+          "execution_id": "Execution identifier"
+        }
+      },
+      {
+        "method": "ListWorkflows",
+        "description": "List available workflows with filtering and pagination",
+        "example": "List all available data processing workflow templates",
+        "tags": [
+          "workflow",
+          "listing",
+          "discovery"
+        ],
+        "permissions": [
+          "workflows.list"
+        ],
+        "parameters": {
+          "filter": "Filter by workflow name or tag"
+        }
+      },
+      {
+        "method": "GetWorkflowDefinition",
+        "description": "Get detailed workflow definition and metadata",
+        "example": "Get complete workflow definition for editing",
+        "tags": [
+          "workflow",
+          "definition",
+          "metadata"
+        ],
+        "permissions": [
+          "workflows.read"
+        ],
+        "parameters": {
+          "workflow_id": "Workflow identifier"
+        }
+      },
+      {
+        "method": "ValidateWorkflow",
+        "description": "Validate a workflow definition for correctness",
+        "example": "Validate complex multi-step workflow definition",
+        "tags": [
+          "workflow",
+          "validation",
+          "analysis"
+        ],
+        "permissions": [
+          "workflows.validate"
+        ],
+        "parameters": {
+          "definition": "Workflow definition to validate"
+        }
+      }
+    ]
+  },
+  "vector-service": {
+    "service_name": "vector-service",
+    "description": "Vector database service using Qdrant for storing and searching vector embeddings",
+    "version": "0.1.0",
+    "capabilities": [
+      "vector-storage",
+      "similarity-search",
+      "collection-management",
+      "vector-indexing"
+    ],
+    "use_cases": [
+      "Store vector embeddings",
+      "Perform similarity searches",
+      "Manage vector collections",
+      "Index and retrieve vectors"
+    ],
+    "dependencies": [
+      "embedding-service"
+    ],
+    "grpc_port": 20040,
+    "admin_port": 20041,
+    "endpoints": [
+      {
+        "method": "UpsertVector",
+        "description": "Insert or update a vector in a collection",
+        "example": "UpsertVector({ collection_name: 'documents', id: 'doc_1', vector: [0.1, 0.2, 0.3] })",
+        "tags": [
+          "vector",
+          "storage",
+          "upsert"
+        ],
+        "permissions": [
+          "vector:write"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      },
+      {
+        "method": "SearchVector",
+        "description": "Search for similar vectors in a collection",
+        "example": "SearchVector({ collection_name: 'documents', query_vector: [0.1, 0.2, 0.3], limit: 10 })",
+        "tags": [
+          "vector",
+          "search",
+          "similarity"
+        ],
+        "permissions": [
+          "vector:read"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      },
+      {
+        "method": "CreateCollection",
+        "description": "Create a new vector collection",
+        "example": "CreateCollection({ collection_name: 'documents', vector_size: 1536, distance: 'Cosine' })",
+        "tags": [
+          "vector",
+          "collection",
+          "create"
+        ],
+        "permissions": [
+          "vector:admin"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      }
+    ]
+  },
+  "rerank-service": {
+    "service_name": "rerank-service",
+    "description": "Document reranking service for improving search result relevance using various reranking models",
+    "version": "0.1.0",
+    "capabilities": [
+      "document-reranking",
+      "relevance-scoring",
+      "multiple-providers",
+      "batch-processing",
+      "local-models"
+    ],
+    "use_cases": [
+      "Rerank search results by relevance to query",
+      "Improve retrieval quality for RAG systems",
+      "Score document relevance for ranking",
+      "Batch rerank multiple document sets",
+      "Use local or API-based reranking models"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 14000,
+    "admin_port": 14001,
+    "endpoints": [
+      {
+        "method": "Rerank",
+        "description": "Rerank a list of documents based on their relevance to a query",
+        "example": "Rerank({ query: 'machine learning', documents: ['AI overview', 'ML algorithms', 'cooking recipes'], top_k: 2 })",
+        "tags": [
+          "reranking",
+          "relevance",
+          "search"
+        ],
+        "permissions": [
+          "rerank:execute"
+        ],
+        "parameters": {
+          "query": "The search query"
+        }
+      },
+      {
+        "method": "RerankBatch",
+        "description": "Rerank multiple sets of documents for different queries",
+        "example": "RerankBatch({ requests: [{ query: 'AI', documents: ['AI doc', 'ML doc'] }] })",
+        "tags": [
+          "reranking",
+          "batch",
+          "relevance"
+        ],
+        "permissions": [
+          "rerank:execute"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetSupportedModels",
+        "description": "Get a list of supported reranking models",
+        "example": "GetSupportedModels({})",
+        "tags": [
+          "models",
+          "configuration"
+        ],
+        "permissions": [
+          "rerank:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "HealthCheck",
+        "description": "Check the health status of the reranking service",
+        "example": "HealthCheck({})",
+        "tags": [
+          "health",
+          "monitoring"
+        ],
+        "permissions": [],
+        "parameters": {}
+      }
+    ]
+  },
+  "rag-service": {
+    "service_name": "rag-service",
+    "description": "Retrieval-Augmented Generation service for semantic search and document retrieval",
+    "version": "0.1.0",
+    "capabilities": [
+      "semantic-search",
+      "document-retrieval",
+      "query-generation",
+      "vector-search",
+      "reranking",
+      "rag-pipeline"
+    ],
+    "use_cases": [
+      "Perform semantic search over document collections",
+      "Generate relevant queries for retrieval",
+      "Retrieve and rank documents by relevance",
+      "Execute full RAG pipeline with context",
+      "Index and manage document embeddings"
+    ],
+    "dependencies": [
+      "vector-service",
+      "embedding-service",
+      "rerank-service"
+    ],
+    "grpc_port": 20090,
+    "admin_port": 20091,
+    "endpoints": [
+      {
+        "method": "search",
+        "description": "Perform semantic search over indexed documents",
+        "example": "search({ query: 'machine learning algorithms', collection: 'papers', limit: 10 })",
+        "tags": [
+          "search",
+          "semantic",
+          "retrieval"
+        ],
+        "permissions": [
+          "rag:search"
+        ],
+        "parameters": {
+          "query": "Search query"
+        }
+      },
+      {
+        "method": "generate_query",
+        "description": "Generate optimized search queries from natural language input",
+        "example": "generate_query({ natural_query: 'How does attention work in transformers?' })",
+        "tags": [
+          "query",
+          "generation",
+          "llm"
+        ],
+        "permissions": [
+          "rag:query_generation"
+        ],
+        "parameters": {
+          "natural_query": "Natural language query"
+        }
+      },
+      {
+        "method": "index_document",
+        "description": "Index a document for semantic search",
+        "example": "index_document({ document: { content: 'AI research paper...', collection: 'papers' } })",
+        "tags": [
+          "indexing",
+          "documents"
+        ],
+        "permissions": [
+          "rag:index"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "chat-service": {
+    "service_name": "chat-service",
+    "description": "LLM chat & conversation service providing text completion and streaming capabilities",
+    "version": "0.1.0",
+    "capabilities": [
+      "text-completion",
+      "chat-conversation",
+      "streaming-response",
+      "multi-model-support"
+    ],
+    "use_cases": [
+      "Generate text completions",
+      "Maintain conversation context",
+      "Stream real-time responses",
+      "Support multiple LLM providers"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 20010,
+    "admin_port": 20011,
+    "endpoints": [
+      {
+        "method": "Complete",
+        "description": "Generate a text completion for the given prompt",
+        "example": "Complete({ prompt: 'What is the capital of France?' })",
+        "tags": [
+          "llm",
+          "text-generation",
+          "sync"
+        ],
+        "permissions": [],
+        "parameters": {
+          "prompt": "The input prompt"
+        }
+      },
+      {
+        "method": "CompleteStream",
+        "description": "Generate a streaming text completion for the given prompt",
+        "example": "CompleteStream({ prompt: 'Tell me a story about...' })",
+        "tags": [
+          "llm",
+          "text-generation",
+          "streaming"
+        ],
+        "permissions": [],
+        "parameters": {
+          "prompt": "The input prompt"
+        }
+      }
+    ]
+  },
+  "job-queue-service": {
+    "service_name": "job-queue-service",
+    "description": "Asynchronous job queue management and background task processing service",
+    "version": "0.1.0",
+    "capabilities": [
+      "job-queuing",
+      "task-scheduling",
+      "background-processing",
+      "job-status-tracking",
+      "priority-based-execution",
+      "job-retry-management"
+    ],
+    "use_cases": [
+      "Queue background jobs for asynchronous processing",
+      "Schedule tasks for future execution",
+      "Track job execution status and progress",
+      "Handle job failures and automatic retries",
+      "Manage job priorities and execution order",
+      "Process long-running tasks without blocking main services"
+    ],
+    "dependencies": [
+      "database",
+      "in-memory-service"
+    ],
+    "grpc_port": 20190,
+    "admin_port": 20191,
+    "endpoints": [
+      {
+        "method": "QueueJob",
+        "description": "Queue a new job for background processing",
+        "example": "Queue data processing job with high priority",
+        "tags": [
+          "jobs",
+          "queue",
+          "async"
+        ],
+        "permissions": [
+          "jobs.queue"
+        ],
+        "parameters": {
+          "job_type": "Type/category of the job"
+        }
+      },
+      {
+        "method": "GetJobStatus",
+        "description": "Get the current status and details of a job",
+        "example": "Get status of data processing job 'job_123456'",
+        "tags": [
+          "jobs",
+          "status",
+          "tracking"
+        ],
+        "permissions": [
+          "jobs.status"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "CancelJob",
+        "description": "Cancel a queued or running job",
+        "example": "Cancel long-running job due to timeout",
+        "tags": [
+          "jobs",
+          "cancellation",
+          "control"
+        ],
+        "permissions": [
+          "jobs.cancel"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "ListJobs",
+        "description": "List jobs with filtering and pagination",
+        "example": "List all failed jobs from the last 24 hours",
+        "tags": [
+          "jobs",
+          "listing",
+          "pagination"
+        ],
+        "permissions": [
+          "jobs.list"
+        ],
+        "parameters": {
+          "status_filter": "Filter by job status"
+        }
+      },
+      {
+        "method": "RetryJob",
+        "description": "Manually retry a failed job",
+        "example": "Retry failed data processing job with reset counter",
+        "tags": [
+          "jobs",
+          "retry",
+          "recovery"
+        ],
+        "permissions": [
+          "jobs.retry"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "GetQueueStats",
+        "description": "Get queue statistics and health metrics",
+        "example": "Get queue health and job distribution statistics",
+        "tags": [
+          "stats",
+          "monitoring",
+          "queue"
+        ],
+        "permissions": [
+          "jobs.stats"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "chat-agent-service": {
+    "service_name": "chat-agent-service",
+    "description": "Intelligent chat agent service with auto-tool selection, multi-agent support, and conversation management",
+    "version": "0.1.0",
+    "capabilities": [
+      "conversational-ai",
+      "auto-tool-selection",
+      "multi-agent-support",
+      "tool-permission-management",
+      "context-aware-conversations",
+      "intelligent-routing"
+    ],
+    "use_cases": [
+      "Handle conversational AI requests with auto-tool selection",
+      "Manage multi-agent conversations and routing",
+      "Coordinate tool permission requests and responses",
+      "Provide context-aware chat responses",
+      "Route user intents to appropriate tools and services",
+      "Manage conversation history and context"
+    ],
+    "dependencies": [
+      "chat-service",
+      "mcp-service",
+      "vector-service"
+    ],
+    "grpc_port": 20180,
+    "admin_port": 20181,
+    "endpoints": [
+      {
+        "method": "InitiateChat",
+        "description": "Start a new chat conversation with auto-tool selection capabilities",
+        "example": "InitiateChat with user message to start intelligent conversation",
+        "tags": [
+          "chat",
+          "conversation",
+          "ai",
+          "auto-tools"
+        ],
+        "permissions": [
+          "chat.initiate"
+        ],
+        "parameters": {
+          "agent_id": "ID of the agent to use"
+        }
+      },
+      {
+        "method": "ContinueChat",
+        "description": "Continue an existing chat conversation with context",
+        "example": "Continue conversation with additional context and history",
+        "tags": [
+          "chat",
+          "conversation",
+          "context"
+        ],
+        "permissions": [
+          "chat.continue"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "HandleToolPermission",
+        "description": "Handle tool permission requests and responses for auto-tool workflows",
+        "example": "Handle user approval/denial of tool execution permission",
+        "tags": [
+          "tools",
+          "permissions",
+          "workflow"
+        ],
+        "permissions": [
+          "tools.permission"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "GetConversationHistory",
+        "description": "Retrieve conversation history for a session",
+        "example": "Retrieve last 50 messages from conversation history",
+        "tags": [
+          "chat",
+          "history",
+          "session"
+        ],
+        "permissions": [
+          "chat.history"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "ListAvailableAgents",
+        "description": "List all available agents and their capabilities",
+        "example": "List all available agents with their specializations",
+        "tags": [
+          "agents",
+          "discovery",
+          "capabilities"
+        ],
+        "permissions": [
+          "agents.list"
+        ],
+        "parameters": {
+          "filter": "Filter agents by capability or type"
+        }
+      }
+    ]
+  },
+  "storage-service": {
+    "service_name": "storage-service",
+    "description": "Multi-cloud storage service for managing files across various cloud providers and local storage",
+    "version": "0.1.0",
+    "capabilities": [
+      "multi-cloud-storage",
+      "file-upload-download",
+      "metadata-management",
+      "storage-providers",
+      "local-filesystem"
+    ],
+    "use_cases": [
+      "Store and retrieve files from cloud storage",
+      "Manage file metadata and permissions",
+      "Provide unified interface across storage providers",
+      "Handle file uploads and downloads",
+      "Support local and cloud storage backends"
+    ],
+    "dependencies": [
+      "database-service",
+      "settings-service"
+    ],
+    "grpc_port": 16000,
+    "admin_port": 16001,
+    "endpoints": [
+      {
+        "method": "UploadFile",
+        "description": "Upload a file to the configured storage backend",
+        "example": "UploadFile({ file_name: 'document.pdf', content: 'base64...', content_type: 'application/pdf' })",
+        "tags": [
+          "storage",
+          "upload",
+          "files"
+        ],
+        "permissions": [
+          "storage:write"
+        ],
+        "parameters": {
+          "file_name": "Name of the file"
+        }
+      },
+      {
+        "method": "DownloadFile",
+        "description": "Download a file from storage",
+        "example": "DownloadFile({ file_id: 'file-123', include_metadata: true })",
+        "tags": [
+          "storage",
+          "download",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file to download"
+        }
+      },
+      {
+        "method": "DeleteFile",
+        "description": "Delete a file from storage",
+        "example": "DeleteFile({ file_id: 'file-123', permanent: false })",
+        "tags": [
+          "storage",
+          "delete",
+          "files"
+        ],
+        "permissions": [
+          "storage:delete"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file to delete"
+        }
+      },
+      {
+        "method": "ListFiles",
+        "description": "List files in storage with optional filtering",
+        "example": "ListFiles({ prefix: 'documents/', limit: 50 })",
+        "tags": [
+          "storage",
+          "list",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "prefix": "File name prefix filter"
+        }
+      },
+      {
+        "method": "GetFileMetadata",
+        "description": "Get metadata for a specific file",
+        "example": "GetFileMetadata({ file_id: 'file-123' })",
+        "tags": [
+          "storage",
+          "metadata",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file"
+        }
+      },
+      {
+        "method": "GetStorageStats",
+        "description": "Get storage usage statistics",
+        "example": "GetStorageStats({})",
+        "tags": [
+          "storage",
+          "statistics",
+          "monitoring"
+        ],
+        "permissions": [
+          "storage:admin"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "monitor-service": {
+    "service_name": "monitor-service",
+    "description": "System monitoring and health check service with metrics collection",
+    "version": "0.1.0",
+    "capabilities": [
+      "system-monitoring",
+      "health-checks",
+      "metrics-collection",
+      "service-discovery",
+      "alert-management",
+      "performance-tracking"
+    ],
+    "use_cases": [
+      "Monitor health status of all microservices",
+      "Collect and aggregate performance metrics",
+      "Detect service failures and outages",
+      "Generate alerts for critical issues",
+      "Track system resource usage",
+      "Provide monitoring dashboard data"
+    ],
+    "dependencies": [
+      "prometheus",
+      "all-services"
+    ],
+    "grpc_port": 20110,
+    "admin_port": 20111,
+    "endpoints": [
+      {
+        "method": "GetSystemHealth",
+        "description": "Get overall system health status across all services",
+        "example": "Get health status of all Autapia microservices",
+        "tags": [
+          "monitoring",
+          "health",
+          "system"
+        ],
+        "permissions": [
+          "monitor.health"
+        ],
+        "parameters": {
+          "include_details": "Include detailed health information"
+        }
+      },
+      {
+        "method": "GetServiceMetrics",
+        "description": "Get performance metrics for specific services",
+        "example": "Get CPU and memory metrics for chat-service over last hour",
+        "tags": [
+          "monitoring",
+          "metrics",
+          "performance"
+        ],
+        "permissions": [
+          "monitor.metrics"
+        ],
+        "parameters": {
+          "service_names": "List of service names to get metrics for"
+        }
+      },
+      {
+        "method": "CreateAlert",
+        "description": "Create a monitoring alert rule",
+        "example": "Create alert for high CPU usage on chat-service",
+        "tags": [
+          "monitoring",
+          "alerts",
+          "rules"
+        ],
+        "permissions": [
+          "monitor.alerts.create"
+        ],
+        "parameters": {
+          "name": "Alert rule name"
+        }
+      },
+      {
+        "method": "GetActiveAlerts",
+        "description": "Get currently active alerts and their details",
+        "example": "Get all critical alerts currently active",
+        "tags": [
+          "monitoring",
+          "alerts",
+          "status"
+        ],
+        "permissions": [
+          "monitor.alerts.read"
+        ],
+        "parameters": {
+          "severity_filter": "Filter by severity level"
+        }
+      },
+      {
+        "method": "GetServiceStatus",
+        "description": "Get detailed status information for a specific service",
+        "example": "Get detailed status for chat-service including 24h history",
+        "tags": [
+          "monitoring",
+          "service",
+          "status"
+        ],
+        "permissions": [
+          "monitor.service.status"
+        ],
+        "parameters": {
+          "service_name": "Name of the service"
+        }
+      },
+      {
+        "method": "StreamMetrics",
+        "description": "Stream real-time metrics data for monitoring dashboards",
+        "example": "Stream CPU, memory, and request metrics for all services",
+        "tags": [
+          "monitoring",
+          "metrics",
+          "realtime"
+        ],
+        "permissions": [
+          "monitor.metrics.stream"
+        ],
+        "parameters": {
+          "services": "Services to stream metrics for"
+        }
+      },
+      {
+        "method": "TriggerHealthCheck",
+        "description": "Manually trigger health check for specific services",
+        "example": "Trigger deep health check for database-dependent services",
+        "tags": [
+          "monitoring",
+          "health",
+          "manual"
+        ],
+        "permissions": [
+          "monitor.health.trigger"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "logging-service": {
+    "service_name": "logging-service",
+    "description": "Centralized logging service for aggregating, indexing, and querying logs from all Autapia microservices",
+    "version": "0.1.0",
+    "capabilities": [
+      "log_aggregation",
+      "log_indexing",
+      "real_time_streaming",
+      "log_search",
+      "log_filtering",
+      "metrics_extraction",
+      "log_retention",
+      "structured_logging",
+      "log_forwarding",
+      "alerting"
+    ],
+    "use_cases": [
+      "Centralize logs from all microservices",
+      "Real-time log streaming and monitoring",
+      "Search and filter logs across services",
+      "Extract metrics from log patterns",
+      "Set up log-based alerts and notifications",
+      "Debug issues across distributed services"
+    ],
+    "dependencies": [],
+    "grpc_port": 22000,
+    "admin_port": 22001,
+    "endpoints": [
+      {
+        "method": "IngestLogs",
+        "description": "Ingest log entries from microservices",
+        "example": "IngestLogs({ service_name: 'chat-service', logs: [{ timestamp: '2024-01-01T12:00:00Z', level: 'INFO', message: 'Request processed' }] })",
+        "tags": [
+          "ingestion",
+          "logs",
+          "batch"
+        ],
+        "permissions": [
+          "log:write"
+        ],
+        "parameters": {
+          "service_name": "Name of the service sending logs"
+        }
+      },
+      {
+        "method": "SearchLogs",
+        "description": "Search logs with advanced filtering and querying",
+        "example": "SearchLogs({ query: 'error database connection', filters: { service_names: ['chat-service'], levels: ['ERROR'] } })",
+        "tags": [
+          "search",
+          "query",
+          "logs"
+        ],
+        "permissions": [
+          "log:read"
+        ],
+        "parameters": {
+          "query": "Search query string"
+        }
+      },
+      {
+        "method": "StreamLogs",
+        "description": "Stream logs in real-time with filtering",
+        "example": "StreamLogs({ filters: { service_names: ['embedding-service'], levels: ['ERROR', 'WARN'] } })",
+        "tags": [
+          "streaming",
+          "real-time",
+          "logs"
+        ],
+        "permissions": [
+          "log:stream"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetLogMetrics",
+        "description": "Get aggregated metrics from logs",
+        "example": "GetLogMetrics({ metric_type: 'counts', time_range: { start_time: '2024-01-01T00:00:00Z', end_time: '2024-01-01T23:59:59Z', interval: '1h' } })",
+        "tags": [
+          "metrics",
+          "aggregation",
+          "analytics"
+        ],
+        "permissions": [
+          "log:read",
+          "metrics:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "SetLogRetention",
+        "description": "Configure log retention policies",
+        "example": "SetLogRetention({ service_name: 'chat-service', retention_policy: { retention_days: 30, compression: true } })",
+        "tags": [
+          "retention",
+          "policy",
+          "administration"
+        ],
+        "permissions": [
+          "log:admin",
+          "retention:write"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "settings-service": {
+    "service_name": "settings-service",
+    "description": "Centralized configuration management service for all Autapia microservices",
+    "version": "0.1.0",
+    "capabilities": [
+      "centralized-config",
+      "service-settings",
+      "configuration-reload",
+      "config-validation",
+      "environment-management"
+    ],
+    "use_cases": [
+      "Store and retrieve service configurations",
+      "Manage environment-specific settings",
+      "Provide centralized configuration for all microservices",
+      "Support dynamic configuration reloading",
+      "Validate configuration schemas"
+    ],
+    "dependencies": [
+      "database-service"
+    ],
+    "grpc_port": 17000,
+    "admin_port": 17001,
+    "endpoints": [
+      {
+        "method": "GetServiceConfig",
+        "description": "Retrieve configuration for a specific service",
+        "example": "GetServiceConfig({ service_name: 'embedding-service', environment: 'production' })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to get configuration for"
+        }
+      },
+      {
+        "method": "SetServiceConfig",
+        "description": "Update configuration for a specific service",
+        "example": "SetServiceConfig({ service_name: 'embedding-service', configuration: { provider: 'openai' } })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:write"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to update configuration for"
+        }
+      },
+      {
+        "method": "ListServices",
+        "description": "List all services with configuration",
+        "example": "ListServices({ environment: 'production', include_config: false })",
+        "tags": [
+          "configuration",
+          "services",
+          "listing"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "DeleteServiceConfig",
+        "description": "Delete configuration for a specific service",
+        "example": "DeleteServiceConfig({ service_name: 'old-service' })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:delete"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to delete configuration for"
+        }
+      },
+      {
+        "method": "ReloadServiceConfig",
+        "description": "Trigger configuration reload for a specific service",
+        "example": "ReloadServiceConfig({ service_name: 'embedding-service' })",
+        "tags": [
+          "configuration",
+          "reload",
+          "management"
+        ],
+        "permissions": [
+          "config:reload"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to reload configuration for"
+        }
+      },
+      {
+        "method": "GetEnvironments",
+        "description": "List all available environments",
+        "example": "GetEnvironments({})",
+        "tags": [
+          "environment",
+          "configuration"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ValidateConfig",
+        "description": "Validate configuration against service schema",
+        "example": "ValidateConfig({ service_name: 'embedding-service', configuration: { provider: 'openai' } })",
+        "tags": [
+          "validation",
+          "configuration"
+        ],
+        "permissions": [
+          "config:validate"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to validate configuration for"
+        }
+      }
+    ]
+  },
+  "planner-service": {
+    "service_name": "planner-service",
+    "description": "Intelligent task planning and execution coordination service",
+    "version": "0.1.0",
+    "capabilities": [
+      "task_planning",
+      "llm_integration",
+      "execution_coordination",
+      "strategy_selection",
+      "dependency_resolution",
+      "workflow_orchestration"
+    ],
+    "use_cases": [
+      "Multi-step task decomposition and planning",
+      "LLM-driven intelligent planning strategies",
+      "Complex workflow execution coordination",
+      "Service orchestration and routing",
+      "Adaptive planning based on context and complexity"
+    ],
+    "dependencies": [
+      "chat-service",
+      "job-queue-service",
+      "settings-service"
+    ],
+    "grpc_port": 20200,
+    "admin_port": 20201,
+    "endpoints": [
+      {
+        "method": "CreatePlan",
+        "description": "Create a new execution plan for a given task",
+        "example": "CreatePlan with user query and context to generate step-by-step execution plan",
+        "tags": [
+          "planning",
+          "creation"
+        ],
+        "permissions": [],
+        "parameters": {
+          "query": "User task or query to plan for"
+        }
+      },
+      {
+        "method": "GetPlan",
+        "description": "Retrieve an existing plan by ID",
+        "example": "GetPlan by plan_id to retrieve current plan status and details",
+        "tags": [
+          "planning",
+          "retrieval"
+        ],
+        "permissions": [],
+        "parameters": {
+          "plan_id": "Plan identifier"
+        }
+      },
+      {
+        "method": "ExecutePlan",
+        "description": "Execute a plan with step-by-step coordination",
+        "example": "ExecutePlan to start plan execution with real-time progress streaming",
+        "tags": [
+          "execution",
+          "coordination"
+        ],
+        "permissions": [],
+        "parameters": {
+          "plan_id": "Plan identifier to execute"
+        }
+      }
+    ]
+  },
+  "a2a-service": {
+    "service_name": "a2a-service",
+    "description": "Application-to-Application communication service for external integrations, webhooks, and message routing",
+    "version": "0.1.0",
+    "capabilities": [
+      "webhook_management",
+      "external_api_integration",
+      "message_routing",
+      "event_streaming",
+      "protocol_conversion",
+      "authentication",
+      "rate_limiting"
+    ],
+    "use_cases": [
+      "Connect external applications to Autapia ecosystem",
+      "Handle incoming webhooks from third-party services",
+      "Route messages between different protocols",
+      "Stream events to external systems",
+      "Manage API authentication and rate limiting"
+    ],
+    "dependencies": [],
+    "grpc_port": 20070,
+    "admin_port": 20071,
+    "endpoints": [
+      {
+        "method": "RegisterIntegration",
+        "description": "Register a new external integration or webhook endpoint",
+        "example": "RegisterIntegration({ name: 'slack-webhook', integration_type: 'webhook', endpoint_url: 'https://hooks.slack.com/...' })",
+        "tags": [
+          "integration",
+          "webhook",
+          "registration"
+        ],
+        "permissions": [
+          "integration:write"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ListIntegrations",
+        "description": "List all registered integrations",
+        "example": "ListIntegrations({ limit: 10, offset: 0 })",
+        "tags": [
+          "integration",
+          "list"
+        ],
+        "permissions": [
+          "integration:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "SendMessage",
+        "description": "Send a message through registered integrations",
+        "example": "SendMessage({ integration_id: 'slack-001', message_type: 'notification', payload: { text: 'Hello world' } })",
+        "tags": [
+          "messaging",
+          "integration",
+          "send"
+        ],
+        "permissions": [
+          "integration:write",
+          "message:send"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetIntegrationStatus",
+        "description": "Get detailed status and metrics for an integration",
+        "example": "GetIntegrationStatus({ integration_id: 'slack-001' })",
+        "tags": [
+          "integration",
+          "status",
+          "metrics"
+        ],
+        "permissions": [
+          "integration:read"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "embedding-service": {
+    "service_name": "embedding-service",
+    "description": "Text embedding service providing vector representations for various models",
+    "version": "0.1.0",
+    "capabilities": [
+      "text-embedding",
+      "multi-model-support",
+      "batch-processing",
+      "vector-generation"
+    ],
+    "use_cases": [
+      "Generate text embeddings for semantic search",
+      "Create vector representations for ML models",
+      "Process batch embedding requests",
+      "Support multiple embedding providers"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 20020,
+    "admin_port": 20021,
+    "endpoints": [
+      {
+        "method": "Embed",
+        "description": "Generate embeddings for a single text input",
+        "example": "Embed({ text: 'Hello world', model: 'text-embedding-ada-002' })",
+        "tags": [
+          "embedding",
+          "vector",
+          "text-processing"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to embed"
+        }
+      },
+      {
+        "method": "EmbedBatch",
+        "description": "Generate embeddings for multiple text inputs",
+        "example": "EmbedBatch({ texts: ['Hello', 'World'], model: 'text-embedding-ada-002' })",
+        "tags": [
+          "embedding",
+          "vector",
+          "batch",
+          "text-processing"
+        ],
+        "permissions": [],
+        "parameters": {}
+      }
+    ]
+  },
+  "in-memory-service": {
+    "service_name": "in-memory-service",
+    "description": "Redis-based in-memory caching and chat history management service",
+    "version": "0.1.0",
+    "capabilities": [
+      "key-value-storage",
+      "chat-history-management",
+      "session-caching",
+      "temporary-data-storage",
+      "distributed-caching"
+    ],
+    "use_cases": [
+      "Store and retrieve key-value pairs in Redis",
+      "Manage chat conversation history and context",
+      "Cache frequently accessed data across services",
+      "Store temporary session data and user state",
+      "Provide fast access to distributed cache",
+      "Handle conversation memory and context retrieval"
+    ],
+    "dependencies": [
+      "redis"
+    ],
+    "grpc_port": 20060,
+    "admin_port": 20061,
+    "endpoints": [
+      {
+        "method": "Set",
+        "description": "Store a key-value pair in Redis with optional expiration",
+        "example": "Set key 'user:123' with value '{user_data}' and 3600 second TTL",
+        "tags": [
+          "cache",
+          "storage",
+          "redis"
+        ],
+        "permissions": [
+          "cache.write"
+        ],
+        "parameters": {
+          "key": "Key to store"
+        }
+      },
+      {
+        "method": "Get",
+        "description": "Retrieve a value by key from Redis",
+        "example": "Get value for key 'user:123'",
+        "tags": [
+          "cache",
+          "retrieval",
+          "redis"
+        ],
+        "permissions": [
+          "cache.read"
+        ],
+        "parameters": {
+          "key": "Key to retrieve"
+        }
+      },
+      {
+        "method": "Delete",
+        "description": "Delete a key from Redis",
+        "example": "Delete key 'temp:session:abc123'",
+        "tags": [
+          "cache",
+          "deletion",
+          "redis"
+        ],
+        "permissions": [
+          "cache.delete"
+        ],
+        "parameters": {
+          "key": "Key to delete"
+        }
+      },
+      {
+        "method": "StoreChatHistory",
+        "description": "Store chat conversation history for a session",
+        "example": "Store 10 messages for session 'conv_abc123'",
+        "tags": [
+          "chat",
+          "history",
+          "conversation"
+        ],
+        "permissions": [
+          "chat.history.write"
+        ],
+        "parameters": {
+          "session_id": "Chat session identifier"
+        }
+      },
+      {
+        "method": "GetChatHistory",
+        "description": "Retrieve chat conversation history for a session",
+        "example": "Get last 50 messages from session 'conv_abc123'",
+        "tags": [
+          "chat",
+          "history",
+          "retrieval"
+        ],
+        "permissions": [
+          "chat.history.read"
+        ],
+        "parameters": {
+          "session_id": "Chat session identifier"
+        }
+      },
+      {
+        "method": "HealthCheck",
+        "description": "Check Redis connection health and service status",
+        "example": "Check Redis health and connection status",
+        "tags": [
+          "health",
+          "monitoring",
+          "redis"
+        ],
+        "permissions": [
+          "health.check"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "mcp-service": {
+    "service_name": "mcp-service",
+    "description": "Model Context Protocol service for managing and executing tools from MCP servers",
+    "version": "0.1.0",
+    "capabilities": [
+      "mcp-client-management",
+      "tool-discovery",
+      "tool-execution",
+      "stdio-transport",
+      "sse-transport",
+      "http-transport"
+    ],
+    "use_cases": [
+      "Connect to MCP servers via different transports",
+      "Discover available tools from MCP servers",
+      "Execute tools with proper error handling",
+      "Manage MCP server connections dynamically",
+      "Aggregate tools from multiple MCP servers"
+    ],
+    "dependencies": [
+      "database-service",
+      "vector-service",
+      "embedding-service"
+    ],
+    "grpc_port": 13000,
+    "admin_port": 13001,
+    "endpoints": [
+      {
+        "method": "ListConfigs",
+        "description": "List all configured MCP server configurations",
+        "example": "ListConfigs({})",
+        "tags": [
+          "mcp",
+          "configuration",
+          "management"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ConnectToConfig",
+        "description": "Connect to an MCP server using a specific configuration",
+        "example": "ConnectToConfig({ config_id: 1, timeout_ms: 5000 })",
+        "tags": [
+          "mcp",
+          "connection",
+          "client"
+        ],
+        "permissions": [
+          "mcp:connect"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration to connect to"
+        }
+      },
+      {
+        "method": "DisconnectFromConfig",
+        "description": "Disconnect from an MCP server",
+        "example": "DisconnectFromConfig({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "connection",
+          "client"
+        ],
+        "permissions": [
+          "mcp:connect"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration to disconnect from"
+        }
+      },
+      {
+        "method": "ListTools",
+        "description": "List all available tools from connected MCP servers",
+        "example": "ListTools({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "tools",
+          "discovery"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {
+          "config_id": "Optional config ID to filter tools from specific server"
+        }
+      },
+      {
+        "method": "CallTool",
+        "description": "Execute a tool on an MCP server",
+        "example": "CallTool({ config_id: 1, tool_name: 'search', arguments: { query: 'hello' } })",
+        "tags": [
+          "mcp",
+          "tools",
+          "execution"
+        ],
+        "permissions": [
+          "mcp:execute"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration"
+        }
+      },
+      {
+        "method": "GetStatus",
+        "description": "Get connection status for all or specific MCP configurations",
+        "example": "GetStatus({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {
+          "config_id": "Optional config ID to get status for specific server"
+        }
+      }
+    ]
+  },
+  "candle-service": {
+    "service_name": "candle-service",
+    "description": "Native Rust transformer service using Candle ML framework for local inference",
+    "version": "0.1.0",
+    "capabilities": [
+      "local_inference",
+      "transformer_models",
+      "sentence_embeddings",
+      "text_classification",
+      "native_rust_ml",
+      "cpu_gpu_inference",
+      "model_caching"
+    ],
+    "use_cases": [
+      "Generate sentence embeddings locally without API calls",
+      "Perform text classification using local transformer models",
+      "Fast inference for form generation and validation",
+      "Privacy-preserving ML inference",
+      "Offline transformer model execution"
+    ],
+    "dependencies": [],
+    "grpc_port": 20130,
+    "admin_port": 20131,
+    "endpoints": [
+      {
+        "method": "GenerateEmbedding",
+        "description": "Generate sentence embeddings using local transformer models",
+        "example": "GenerateEmbedding({ text: 'Hello world', model_name: 'sentence-transformers/all-MiniLM-L6-v2' })",
+        "tags": [
+          "embedding",
+          "transformer",
+          "local-inference"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to generate embeddings for"
+        }
+      },
+      {
+        "method": "ClassifyText",
+        "description": "Perform text classification using local transformer models",
+        "example": "ClassifyText({ text: 'This is a great product!', labels: ['positive', 'negative', 'neutral'] })",
+        "tags": [
+          "classification",
+          "transformer",
+          "local-inference"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to classify"
+        }
+      },
+      {
+        "method": "GetModelInfo",
+        "description": "Get information about loaded models",
+        "example": "GetModelInfo({})",
+        "tags": [
+          "models",
+          "info",
+          "management"
+        ],
+        "permissions": [],
+        "parameters": {}
+      },
+      {
+        "method": "LoadModel",
+        "description": "Load a new transformer model for inference",
+        "example": "LoadModel({ model_name: 'sentence-transformers/all-MiniLM-L6-v2', device: 'auto' })",
+        "tags": [
+          "models",
+          "loading",
+          "management"
+        ],
+        "permissions": [
+          "model:load"
+        ],
+        "parameters": {
+          "model_name": "HuggingFace model name or local path"
+        }
+      }
+    ]
+  }
+}]]></file><file path="dataset-generator-service/src/bin/generate_real_api_dataset.rs"><![CDATA[use clap::{Parser, Subcommand};
+use log::info;
+use std::env;
+
+// Import the modules from the main crate
+use dataset_generator_service::real_api_dataset_command::RealApiDatasetCommand;
+
+#[derive(Parser)]
+#[command(name = "generate-real-api-dataset")]
+#[command(about = "Generate real API datasets using extracted schemas from routing_schema.rs files")]
+pub struct Cli {
+    #[command(subcommand)]
+    pub command: Commands,
+}
+
+#[derive(Subcommand)]
+pub enum Commands {
+    /// Generate a new single_turn_api dataset using real API schemas
+    Generate {
+        /// Number of examples to generate
+        #[arg(short, long, default_value = "1000")]
+        num_examples: usize,
+        
+        /// Output file path
+        #[arg(short, long, default_value = "./datasets/single_turn_api_real.json")]
+        output: String,
+        
+        /// Workspace root directory
+        #[arg(short, long)]
+        workspace_root: Option<String>,
+    },
+    
+    /// Show statistics about the extracted API schemas
+    Stats {
+        /// Workspace root directory
+        #[arg(short, long)]
+        workspace_root: Option<String>,
+    },
+    
+    /// Validate an existing dataset
+    Validate {
+        /// Dataset file to validate
+        #[arg(short, long)]
+        dataset_path: String,
+        
+        /// Workspace root directory  
+        #[arg(short, long)]
+        workspace_root: Option<String>,
+    },
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Initialize logging
+    env_logger::init();
+    
+    let cli = Cli::parse();
+    
+    match cli.command {
+        Commands::Generate { num_examples, output, workspace_root } => {
+            let workspace_root = workspace_root.unwrap_or_else(|| {
+                env::current_dir()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+            
+            info!("Generating {} examples", num_examples);
+            info!("Workspace root: {}", workspace_root);
+            info!("Output file: {}", output);
+            
+            let command = RealApiDatasetCommand::new(&workspace_root);
+            command.generate_real_api_dataset(&output, num_examples).await?;
+            
+            println!("✅ Successfully generated {} examples in {}", num_examples, output);
+        },
+        
+        Commands::Stats { workspace_root } => {
+            let workspace_root = workspace_root.unwrap_or_else(|| {
+                env::current_dir()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+            
+            let command = RealApiDatasetCommand::new(&workspace_root);
+            command.show_schema_stats().await?;
+        },
+        
+        Commands::Validate { dataset_path, workspace_root } => {
+            let workspace_root = workspace_root.unwrap_or_else(|| {
+                env::current_dir()
+                    .unwrap()
+                    .to_string_lossy()
+                    .to_string()
+            });
+            
+            let command = RealApiDatasetCommand::new(&workspace_root);
+            command.validate_dataset(&dataset_path).await?;
+            
+            println!("✅ Dataset validation completed");
+        },
+    }
+    
+    Ok(())
+}
+]]></file><file path="dataset-generator-service/src/bin/simple_api_test.rs"><![CDATA[use dataset_generator_service::api_config::ApiConfiguration;
+
+fn main() {
+    println!("🔍 Testing API Configuration Coverage");
+    
+    // Initialize the API configuration
+    let api_config = ApiConfiguration::new();
+    
+    println!("📊 API Configuration Statistics:");
+    println!("  - Total services: {}", api_config.services.len());
+    
+    let mut total_endpoints = 0;
+    let mut total_use_cases = 0;
+    
+    for (service_name, service_def) in &api_config.services {
+        let endpoint_count = service_def.endpoints.len();
+        total_endpoints += endpoint_count;
+        
+        let service_use_cases: usize = service_def.endpoints.iter()
+            .map(|e| e.use_cases.len())
+            .sum();
+        total_use_cases += service_use_cases;
+        
+        println!("  - {}: {} endpoints, {} use cases", 
+                 service_name, endpoint_count, service_use_cases);
+    }
+    
+    println!("📈 Totals:");
+    println!("  - Total endpoints: {}", total_endpoints);
+    println!("  - Total use cases: {}", total_use_cases);
+    
+    // Show some sample endpoints
+    println!("\n🔧 Sample endpoints from each service:");
+    for (service_name, service_def) in api_config.services.iter().take(5) {
+        if let Some(first_endpoint) = service_def.endpoints.first() {
+            println!("  - {}: {} ({})", 
+                     service_name, 
+                     first_endpoint.name, 
+                     first_endpoint.endpoint);
+        }
+    }
+    
+    println!("\n✅ API Configuration loaded successfully!");
+    println!("   Ready to generate comprehensive dataset with {} endpoints", total_endpoints);
+}
+]]></file><file path="dataset-generator-service/src/bin/test_api_config.rs"><![CDATA[
+use dataset_generator_service::api_config::ApiConfiguration;
+use dataset_generator_service::enhanced_pipeline::EnhancedApiDatasetPipeline;
+use dataset_generator_service::clients::ServiceClients;
+use std::sync::Arc;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("🔍 Testing API Configuration Coverage");
+    
+    // Initialize the API configuration
+    let api_config = ApiConfiguration::new();
+    
+    println!("📊 API Configuration Statistics:");
+    println!("  - Total services: {}", api_config.services.len());
+    
+    let mut total_endpoints = 0;
+    let mut total_use_cases = 0;
+    
+    for (service_name, service_def) in &api_config.services {
+        let endpoint_count = service_def.endpoints.len();
+        total_endpoints += endpoint_count;
+        
+        let service_use_cases: usize = service_def.endpoints.iter()
+            .map(|e| e.use_cases.len())
+            .sum();
+        total_use_cases += service_use_cases;
+        
+        println!("  - {}: {} endpoints, {} use cases", 
+                 service_name, endpoint_count, service_use_cases);
+    }
+    
+    println!("📈 Totals:");
+    println!("  - Total endpoints: {}", total_endpoints);
+    println!("  - Total use cases: {}", total_use_cases);
+    
+    // Test the enhanced pipeline tools generation
+    println!("\n🛠️  Testing Enhanced Pipeline Tools Generation:");
+    
+    // Create mock clients for testing
+    let mock_clients = Arc::new(ServiceClients::mock_for_testing().await?);
+    let pipeline = EnhancedApiDatasetPipeline::new(mock_clients);
+    
+    // Generate comprehensive tools list
+    let tools = pipeline.generate_comprehensive_tools_list();
+    println!("  - Generated tools: {}", tools.len());
+    
+    if tools.len() == total_endpoints {
+        println!("  ✅ Perfect! Tools count matches endpoint count");
+    } else {
+        println!("  ❌ Mismatch: {} tools vs {} endpoints", tools.len(), total_endpoints);
+    }
+    
+    // Show first 10 tools
+    println!("\n🔧 First 10 tools:");
+    for (i, tool) in tools.iter().take(10).enumerate() {
+        println!("  {}. {}: {}", i+1, tool.function.name, tool.function.description);
+    }
+    
+    if tools.len() > 10 {
+        println!("  ... and {} more tools", tools.len() - 10);
+    }
+    
+    Ok(())
+}
+]]></file><file path="dataset-generator-service/src/bin/test_tools_generation.rs"><![CDATA[use dataset_generator_service::{
+    api_config::ApiConfiguration, 
+    enhanced_pipeline::EnhancedApiDatasetPipeline,
+    clients::ServiceClients
+};
+use std::sync::Arc;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("🔧 Testing Tools Generation...");
+    
+    // Load API configuration
+    let api_config = ApiConfiguration::new();
+    println!("📊 Loaded {} services with {} total endpoints", 
+        api_config.services.len(),
+        api_config.services.values().map(|s| s.endpoints.len()).sum::<usize>()
+    );
+    
+    // Create pipeline with mock clients
+    let clients = ServiceClients::mock_for_testing().await?;
+    let pipeline = EnhancedApiDatasetPipeline::new(Arc::new(clients));
+    
+    // Test tools generation
+    println!("\n🛠️ Generating comprehensive tools list...");
+    let tools = pipeline.generate_comprehensive_tools_list();
+    
+    println!("✅ Generated {} tools", tools.len());
+    
+    // Verify we have tools for all services
+    println!("\n📋 Tools by service:");
+    for (service_name, _service_def) in &api_config.services {
+        let service_tools: Vec<_> = tools.iter()
+            .filter(|tool| tool.function.name.contains(service_name))
+            .collect();
+        println!("  {} → {} tools", service_name, service_tools.len());
+        
+        // List first few tools for verification
+        for (i, tool) in service_tools.iter().take(3).enumerate() {
+            println!("    {}: {}", i + 1, tool.function.name);
+        }
+        if service_tools.len() > 3 {
+            println!("    ... and {} more", service_tools.len() - 3);
+        }
+    }
+    
+    // Check for function name uniqueness
+    let mut function_names = std::collections::HashSet::new();
+    let mut duplicates = Vec::new();
+    
+    for tool in &tools {
+        if !function_names.insert(&tool.function.name) {
+            duplicates.push(&tool.function.name);
+        }
+    }
+    
+    if duplicates.is_empty() {
+        println!("\n✅ All function names are unique");
+    } else {
+        println!("\n⚠️ Found {} duplicate function names:", duplicates.len());
+        for duplicate in duplicates {
+            println!("  - {}", duplicate);
+        }
+    }
+    
+    println!("\n📊 Summary:");
+    println!("  Total tools generated: {}", tools.len());
+    println!("  Expected endpoints: {}", api_config.services.iter().map(|(_, s)| s.endpoints.len()).sum::<usize>());
+    println!("  Tools coverage: {:.1}%", (tools.len() as f64 / api_config.services.iter().map(|(_, s)| s.endpoints.len()).sum::<usize>() as f64) * 100.0);
+    
+    Ok(())
+}
+]]></file><file path="dataset-generator-service/src/clients.rs"><![CDATA[use crate::error::{DatasetError, Result, RetryOperation, RetryConfig, ResultExt};
+use crate::types_minimal::{EmbeddingRequest, EmbeddingResponse, ChatRequest, ChatResponse};
+use log::{debug, info, warn};
+use reqwest::Client;
+use serde_json::json;
+use std::time::Duration;
+
+pub struct ServiceClients {
+    http_client: Client,
+    vector_service_addr: String,
+    embedding_service_addr: String,
+    chat_service_addr: String,
+    retry_operation: RetryOperation,
+}
+
+impl ServiceClients {
+    pub async fn new(
+        vector_service_addr: String,
+        embedding_service_addr: String,
+        chat_service_addr: String,
+    ) -> Result<Self> {
+        let http_client = Client::builder()
+            .timeout(Duration::from_secs(300)) // 5 minute timeout for long operations
+            .build()
+            .map_err(|e| DatasetError::service_connection("http_client", e.to_string()))?;
+
+        let clients = Self {
+            http_client,
+            vector_service_addr,
+            embedding_service_addr,
+            chat_service_addr,
+            retry_operation: RetryOperation::with_defaults(),
+        };
+
+        // Test connectivity to all services
+        clients.test_connectivity().await
+            .with_operation("service_connectivity_test")?;
+
+        Ok(clients)
+    }
+
+    async fn test_connectivity(&self) -> Result<()> {
+        info!("Testing connectivity to microservices...");
+
+        // Test embedding service
+        let embedding_test = self.test_service_health(&self.embedding_service_addr, "embedding-service").await;
+        if let Err(e) = embedding_test {
+            warn!("Embedding service connectivity test failed: {}", e);
+            // Don't fail startup, just warn - service might not be ready yet
+        }
+
+        // Test chat service  
+        let chat_test = self.test_service_health(&self.chat_service_addr, "chat-service").await;
+        if let Err(e) = chat_test {
+            warn!("Chat service connectivity test failed: {}", e);
+        }
+
+        // Test vector service
+        let vector_test = self.test_service_health(&self.vector_service_addr, "vector-service").await;
+        if let Err(e) = vector_test {
+            warn!("Vector service connectivity test failed: {}", e);
+        }
+
+        info!("Service connectivity tests completed");
+        Ok(())
+    }
+
+    async fn test_service_health(&self, service_addr: &str, service_name: &str) -> Result<()> {
+        let health_url = if service_addr.ends_with('/') {
+            format!("{}health", service_addr)
+        } else {
+            format!("{}/health", service_addr)
+        };
+
+        let response = self.http_client
+            .get(&health_url)
+            .timeout(Duration::from_secs(5))
+            .send()
+            .await
+            .map_err(|e| {
+                if e.is_timeout() {
+                    DatasetError::network_timeout(service_name, 5000)
+                } else if e.is_connect() {
+                    DatasetError::service_connection(service_name, format!("Connection failed: {}", e))
+                } else {
+                    DatasetError::service_connection(service_name, e.to_string())
+                }
+            })?;
+
+        if response.status().is_success() {
+            debug!("Health check passed for {}", service_name);
+            Ok(())
+        } else {
+            Err(DatasetError::service_connection(
+                service_name,
+                format!("Health check failed with status: {}", response.status()),
+            ))
+        }
+    }
+
+    pub async fn generate_embedding(&self, request: EmbeddingRequest) -> Result<EmbeddingResponse> {
+        let operation = || async {
+            self.generate_embedding_internal(request.clone()).await
+        };
+
+        self.retry_operation
+            .execute(operation)
+            .await
+            .with_operation("generate_embedding")
+    }
+
+    async fn generate_embedding_internal(&self, request: EmbeddingRequest) -> Result<EmbeddingResponse> {
+        debug!("Generating embedding for text of length: {}", request.text.len());
+
+        let url = format!("{}/embeddings", self.embedding_service_addr);
+        let payload = json!({
+            "text": request.text,
+            "model": request.model,
+            "provider": request.provider
+        });
+
+        let response = self.http_client
+            .post(&url)
+            .json(&payload)
+            .timeout(Duration::from_secs(60))
+            .send()
+            .await
+            .map_err(|e| {
+                if e.is_timeout() {
+                    DatasetError::network_timeout("embedding-service", 60000)
+                } else if e.is_connect() {
+                    DatasetError::service_connection("embedding-service", format!("Connection failed: {}", e))
+                } else {
+                    DatasetError::service_connection("embedding-service", e.to_string())
+                }
+            })?;
+
+        if response.status().is_success() {
+            let embedding_response: EmbeddingResponse = response
+                .json()
+                .await
+                .map_err(|e| DatasetError::parsing("json", format!("Failed to parse embedding response: {}", e)))?;
+            
+            debug!("Successfully generated embedding of dimension: {}", embedding_response.embedding.len());
+            Ok(embedding_response)
+        } else if response.status().as_u16() == 429 {
+            // Rate limit
+            let retry_after = response
+                .headers()
+                .get("retry-after")
+                .and_then(|h| h.to_str().ok())
+                .and_then(|s| s.parse::<u64>().ok())
+                .unwrap_or(5000); // Default 5 seconds
+            
+            Err(DatasetError::rate_limit("embedding-service", retry_after * 1000))
+        } else {
+            let status = response.status();
+            let error_text = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+            
+            Err(DatasetError::service_connection(
+                "embedding-service",
+                format!("Request failed with status {}: {}", status, error_text),
+            ))
+        }
+    }
+
+    pub async fn generate_chat_completion(&self, request: ChatRequest) -> Result<ChatResponse> {
+        let operation = || async {
+            self.generate_chat_completion_internal(request.clone()).await
+        };
+
+        self.retry_operation
+            .execute(operation)
+            .await
+            .with_operation("generate_chat_completion")
+    }
+
+    async fn generate_chat_completion_internal(&self, request: ChatRequest) -> Result<ChatResponse> {
+        debug!("Generating chat completion for prompt of length: {}", request.prompt.len());
+
+        let url = format!("{}/chat/completions", self.chat_service_addr);
+        let payload = json!({
+            "prompt": request.prompt,
+            "model": request.model,
+            "provider": request.provider,
+            "temperature": request.temperature,
+            "max_tokens": request.max_tokens
+        });
+
+        let response = self.http_client
+            .post(&url)
+            .json(&payload)
+            .timeout(Duration::from_secs(180)) // 3 minute timeout for chat completions
+            .send()
+            .await
+            .map_err(|e| {
+                if e.is_timeout() {
+                    DatasetError::network_timeout("chat-service", 180000)
+                } else if e.is_connect() {
+                    DatasetError::service_connection("chat-service", format!("Connection failed: {}", e))
+                } else {
+                    DatasetError::service_connection("chat-service", e.to_string())
+                }
+            })?;
+
+        if response.status().is_success() {
+            let chat_response: ChatResponse = response
+                .json()
+                .await
+                .map_err(|e| DatasetError::parsing("json", format!("Failed to parse chat response: {}", e)))?;
+            
+            debug!("Successfully generated chat completion of length: {}", chat_response.response.len());
+            Ok(chat_response)
+        } else if response.status().as_u16() == 429 {
+            // Rate limit
+            let retry_after = response
+                .headers()
+                .get("retry-after")
+                .and_then(|h| h.to_str().ok())
+                .and_then(|s| s.parse::<u64>().ok())
+                .unwrap_or(10000); // Default 10 seconds for chat
+            
+            Err(DatasetError::rate_limit("chat-service", retry_after * 1000))
+        } else {
+            let status = response.status();
+            let error_text = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+            
+            Err(DatasetError::service_connection(
+                "chat-service",
+                format!("Request failed with status {}: {}", status, error_text),
+            ))
+        }
+    }
+
+    pub async fn search_vectors(&self, query: Vec<f32>, collection: &str, limit: usize) -> Result<Vec<serde_json::Value>> {
+        let operation = || async {
+            self.search_vectors_internal(query.clone(), collection, limit).await
+        };
+
+        self.retry_operation
+            .execute(operation)
+            .await
+            .with_operation("search_vectors")
+    }
+
+    async fn search_vectors_internal(&self, query: Vec<f32>, collection: &str, limit: usize) -> Result<Vec<serde_json::Value>> {
+        debug!("Searching vectors in collection: {} with limit: {}", collection, limit);
+
+        let url = format!("{}/vectors/search", self.vector_service_addr);
+        let payload = json!({
+            "vector": query,
+            "collection": collection,
+            "limit": limit
+        });
+
+        let response = self.http_client
+            .post(&url)
+            .json(&payload)
+            .timeout(Duration::from_secs(30))
+            .send()
+            .await
+            .map_err(|e| {
+                if e.is_timeout() {
+                    DatasetError::network_timeout("vector-service", 30000)
+                } else if e.is_connect() {
+                    DatasetError::service_connection("vector-service", format!("Connection failed: {}", e))
+                } else {
+                    DatasetError::service_connection("vector-service", e.to_string())
+                }
+            })?;
+
+        if response.status().is_success() {
+            let results: Vec<serde_json::Value> = response
+                .json()
+                .await
+                .map_err(|e| DatasetError::parsing("json", format!("Failed to parse vector search response: {}", e)))?;
+            
+            debug!("Successfully searched vectors, found {} results", results.len());
+            Ok(results)
+        } else if response.status().as_u16() == 429 {
+            // Rate limit
+            let retry_after = response
+                .headers()
+                .get("retry-after")
+                .and_then(|h| h.to_str().ok())
+                .and_then(|s| s.parse::<u64>().ok())
+                .unwrap_or(2000); // Default 2 seconds for vector search
+            
+            Err(DatasetError::rate_limit("vector-service", retry_after * 1000))
+        } else {
+            let status = response.status();
+            let error_text = response
+                .text()
+                .await
+                .unwrap_or_else(|_| "Unknown error".to_string());
+            
+            Err(DatasetError::service_connection(
+                "vector-service",
+                format!("Vector search failed with status {}: {}", status, error_text),
+            ))
+        }
+    }
+
+    /// Update retry configuration
+    pub fn with_retry_config(&mut self, config: RetryConfig) -> &mut Self {
+        self.retry_operation = RetryOperation::new(config);
+        self
+    }
+
+    /// Get current service addresses for debugging
+    pub fn get_service_addresses(&self) -> (String, String, String) {
+        (
+            self.vector_service_addr.clone(),
+            self.embedding_service_addr.clone(),
+            self.chat_service_addr.clone(),
+        )
+    }
+
+    /// Validate all service connections
+    pub async fn validate_connections(&self) -> Result<()> {
+        info!("Validating all service connections...");
+        
+        let services = [
+            ("vector-service", &self.vector_service_addr),
+            ("embedding-service", &self.embedding_service_addr),
+            ("chat-service", &self.chat_service_addr),
+        ];
+
+        let mut errors = Vec::new();
+
+        for (service_name, addr) in &services {
+            if let Err(e) = self.test_service_health(addr, service_name).await {
+                errors.push(format!("{}: {}", service_name, e));
+            }
+        }
+
+        if !errors.is_empty() {
+            return Err(DatasetError::service_connection(
+                "multiple_services",
+                format!("Connection validation failed for: {}", errors.join(", ")),
+            ));
+        }
+
+        info!("All service connections validated successfully");
+        Ok(())
+    }
+
+    /// Create a mock ServiceClients instance for testing
+    pub async fn mock_for_testing() -> Result<Self> {
+        let http_client = Client::builder()
+            .timeout(Duration::from_secs(30))
+            .build()
+            .map_err(|e| DatasetError::service_connection("mock_http_client", e.to_string()))?;
+
+        Ok(Self {
+            http_client,
+            vector_service_addr: "http://mock:20030".to_string(),
+            embedding_service_addr: "http://mock:20020".to_string(),
+            chat_service_addr: "http://mock:20010".to_string(),
+            retry_operation: RetryOperation::with_defaults(),
+        })
+    }
+}]]></file><file path="dataset-generator-service/src/database.rs"><![CDATA[use autapia_database_client::{DatabasePool, DatabaseConfig};
+use chrono::{DateTime, Utc};
+use log::{debug, error, info};
+use serde::{Deserialize, Serialize};
+use sqlx::Row;
+use uuid::Uuid;
+
+use crate::error::{DatasetError, Result};
+use crate::types::{JobStatus, DatasetJob};
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct Dataset {
+    pub id: Uuid,
+    pub name: String,
+    pub description: Option<String>,
+    pub file_path: String,
+    pub record_count: i32,
+    pub status: String,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct DatasetGenerationJob {
+    pub id: Uuid,
+    pub name: String,
+    pub input_config: serde_json::Value,
+    pub status: String,
+    pub progress: f32,
+    pub message: Option<String>,
+    pub result_dataset_id: Option<Uuid>,
+    pub error_details: Option<String>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub completed_at: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct EnhancedDatasetJob {
+    pub id: Uuid,
+    pub job_name: String,
+    pub variations_per_use_case: i32,
+    pub status: String,
+    pub progress: f32,
+    pub message: Option<String>,
+    pub total_examples: Option<i32>,
+    pub total_endpoints: Option<i32>,
+    pub services_covered: Vec<String>,
+    pub output_path: Option<String>,
+    pub error_details: Option<String>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub completed_at: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
+pub struct JobStatistics {
+    pub id: Uuid,
+    pub job_id: Uuid,
+    pub job_type: String,
+    pub execution_time_seconds: Option<f32>,
+    pub memory_usage_mb: Option<f32>,
+    pub cpu_usage_percent: Option<f32>,
+    pub records_processed: Option<i32>,
+    pub success_rate: Option<f32>,
+    pub created_at: DateTime<Utc>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateDataset {
+    pub name: String,
+    pub description: Option<String>,
+    pub file_path: String,
+    pub record_count: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateDatasetJob {
+    pub name: String,
+    pub input_config: serde_json::Value,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateEnhancedDatasetJob {
+    pub job_name: String,
+    pub variations_per_use_case: i32,
+}
+
+#[derive(Clone)]
+pub struct DatasetDatabase {
+    pool: DatabasePool,
+}
+
+impl DatasetDatabase {
+    pub async fn new(database_url: &str) -> Result<Self> {
+        info!("Initializing Dataset Generator database connection: {}", database_url);
+        
+        let config = DatabaseConfig {
+            url: database_url.to_string(),
+            ..Default::default()
+        };
+        
+        let pool = DatabasePool::new("dataset-generator-service", config).await
+            .map_err(|e| DatasetError::Database(format!("Failed to create database pool: {}", e)))?;
+        
+        // Run service-specific migrations
+        info!("Running dataset generator service migrations...");
+        autapia_database_client::migrations::run_migrations(pool.pool(), "dataset-generator-service").await
+            .map_err(|e| DatasetError::Database(format!("Failed to run migrations: {}", e)))?;
+        
+        info!("Dataset Generator database initialized successfully");
+        Ok(Self { pool })
+    }
+
+    pub async fn health_check(&self) -> Result<()> {
+        self.pool.health_check().await
+            .map_err(|e| DatasetError::Database(format!("Health check failed: {}", e)))?;
+        Ok(())
+    }
+
+    // Dataset management
+    pub async fn create_dataset(&self, dataset: &CreateDataset) -> Result<Dataset> {
+        debug!("Creating dataset: {}", dataset.name);
+        
+        let dataset_id = Uuid::new_v4();
+        let now = Utc::now();
+        
+        sqlx::query(
+            r#"
+            INSERT INTO datasets (id, name, description, file_path, record_count, status, created_at, updated_at)
+            VALUES ($1, $2, $3, $4, $5, 'active', $6, $6)
+            "#
+        )
+        .bind(dataset_id)
+        .bind(&dataset.name)
+        .bind(&dataset.description)
+        .bind(&dataset.file_path)
+        .bind(dataset.record_count)
+        .bind(now)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to create dataset: {}", e);
+            DatasetError::Database(format!("Failed to create dataset: {}", e))
+        })?;
+
+        let created_dataset = Dataset {
+            id: dataset_id,
+            name: dataset.name.clone(),
+            description: dataset.description.clone(),
+            file_path: dataset.file_path.clone(),
+            record_count: dataset.record_count,
+            status: "active".to_string(),
+            created_at: now,
+            updated_at: now,
+        };
+
+        debug!("Successfully created dataset with ID: {}", dataset_id);
+        Ok(created_dataset)
+    }
+
+    pub async fn get_dataset(&self, dataset_id: &Uuid) -> Result<Option<Dataset>> {
+        debug!("Getting dataset: {}", dataset_id);
+
+        let dataset = sqlx::query_as::<_, Dataset>(
+            r#"
+            SELECT id, name, description, file_path, record_count, status, created_at, updated_at 
+            FROM datasets 
+            WHERE id = $1 AND status = 'active'
+            "#
+        )
+        .bind(dataset_id)
+        .fetch_optional(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to get dataset: {}", e);
+            DatasetError::Database(format!("Failed to get dataset: {}", e))
+        })?;
+
+        Ok(dataset)
+    }
+
+    pub async fn list_datasets(&self, limit: i64, offset: i64) -> Result<Vec<Dataset>> {
+        debug!("Listing datasets (limit: {}, offset: {})", limit, offset);
+
+        let datasets = sqlx::query_as::<_, Dataset>(
+            r#"
+            SELECT id, name, description, file_path, record_count, status, created_at, updated_at 
+            FROM datasets 
+            WHERE status = 'active'
+            ORDER BY created_at DESC 
+            LIMIT $1 OFFSET $2
+            "#
+        )
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to list datasets: {}", e);
+            DatasetError::Database(format!("Failed to list datasets: {}", e))
+        })?;
+
+        debug!("Retrieved {} datasets", datasets.len());
+        Ok(datasets)
+    }
+
+    pub async fn delete_dataset(&self, dataset_id: &Uuid) -> Result<bool> {
+        debug!("Deleting dataset: {}", dataset_id);
+
+        let result = sqlx::query(
+            "UPDATE datasets SET status = 'deleted', updated_at = $1 WHERE id = $2"
+        )
+        .bind(Utc::now())
+        .bind(dataset_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to delete dataset: {}", e);
+            DatasetError::Database(format!("Failed to delete dataset: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    // Enhanced dataset job management
+    pub async fn create_enhanced_dataset_job(&self, job: &CreateEnhancedDatasetJob) -> Result<Uuid> {
+        debug!("Creating enhanced dataset generation job: {}", job.job_name);
+        
+        let job_id = Uuid::new_v4();
+        let now = Utc::now();
+        
+        sqlx::query(
+            r#"
+            INSERT INTO enhanced_dataset_jobs (id, job_name, variations_per_use_case, status, progress, created_at, updated_at)
+            VALUES ($1, $2, $3, 'pending', 0.0, $4, $4)
+            "#
+        )
+        .bind(job_id)
+        .bind(&job.job_name)
+        .bind(job.variations_per_use_case)
+        .bind(now)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to create enhanced dataset job: {}", e);
+            DatasetError::Database(format!("Failed to create enhanced dataset job: {}", e))
+        })?;
+
+        debug!("Successfully created enhanced dataset job with ID: {}", job_id);
+        Ok(job_id)
+    }
+
+    pub async fn get_enhanced_dataset_job(&self, job_id: &Uuid) -> Result<Option<EnhancedDatasetJob>> {
+        debug!("Getting enhanced dataset job: {}", job_id);
+
+        let job = sqlx::query_as::<_, EnhancedDatasetJob>(
+            r#"
+            SELECT id, job_name, variations_per_use_case, status, progress, message, 
+                   total_examples, total_endpoints, services_covered, output_path, 
+                   error_details, created_at, updated_at, completed_at 
+            FROM enhanced_dataset_jobs 
+            WHERE id = $1
+            "#
+        )
+        .bind(job_id)
+        .fetch_optional(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to get enhanced dataset job: {}", e);
+            DatasetError::Database(format!("Failed to get enhanced dataset job: {}", e))
+        })?;
+
+        Ok(job)
+    }
+
+    pub async fn update_enhanced_job_status(&self, job_id: &Uuid, status: &str, progress: f32, message: Option<&str>) -> Result<bool> {
+        debug!("Updating enhanced job {} status to: {} (progress: {})", job_id, status, progress);
+
+        let completed_at = if status == "completed" || status == "failed" {
+            Some(Utc::now())
+        } else {
+            None
+        };
+
+        let result = sqlx::query(
+            r#"
+            UPDATE enhanced_dataset_jobs 
+            SET status = $1, progress = $2, message = $3, updated_at = $4, completed_at = $5
+            WHERE id = $6
+            "#
+        )
+        .bind(status)
+        .bind(progress)
+        .bind(message)
+        .bind(Utc::now())
+        .bind(completed_at)
+        .bind(job_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to update enhanced job status: {}", e);
+            DatasetError::Database(format!("Failed to update enhanced job status: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    pub async fn complete_enhanced_job(&self, job_id: &Uuid, total_examples: i32, total_endpoints: i32, services_covered: &[String], output_path: &str) -> Result<bool> {
+        debug!("Completing enhanced job {} with {} examples covering {} endpoints", job_id, total_examples, total_endpoints);
+
+        let result = sqlx::query(
+            r#"
+            UPDATE enhanced_dataset_jobs 
+            SET status = 'completed', progress = 1.0, total_examples = $1, total_endpoints = $2, 
+                services_covered = $3, output_path = $4, completed_at = $5, updated_at = $5
+            WHERE id = $6
+            "#
+        )
+        .bind(total_examples)
+        .bind(total_endpoints)
+        .bind(services_covered)
+        .bind(output_path)
+        .bind(Utc::now())
+        .bind(job_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to complete enhanced job: {}", e);
+            DatasetError::Database(format!("Failed to complete enhanced job: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    pub async fn fail_enhanced_job(&self, job_id: &Uuid, error_details: &str) -> Result<bool> {
+        debug!("Failing enhanced job {} with error: {}", job_id, error_details);
+
+        let result = sqlx::query(
+            r#"
+            UPDATE enhanced_dataset_jobs 
+            SET status = 'failed', error_details = $1, completed_at = $2, updated_at = $2
+            WHERE id = $3
+            "#
+        )
+        .bind(error_details)
+        .bind(Utc::now())
+        .bind(job_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to fail enhanced job: {}", e);
+            DatasetError::Database(format!("Failed to fail enhanced job: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    pub async fn list_enhanced_dataset_jobs(&self, limit: i64, offset: i64) -> Result<Vec<EnhancedDatasetJob>> {
+        debug!("Listing enhanced dataset jobs (limit: {}, offset: {})", limit, offset);
+
+        let jobs = sqlx::query_as::<_, EnhancedDatasetJob>(
+            r#"
+            SELECT id, job_name, variations_per_use_case, status, progress, message, 
+                   total_examples, total_endpoints, services_covered, output_path, 
+                   error_details, created_at, updated_at, completed_at 
+            FROM enhanced_dataset_jobs 
+            ORDER BY created_at DESC 
+            LIMIT $1 OFFSET $2
+            "#
+        )
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to list enhanced dataset jobs: {}", e);
+            DatasetError::Database(format!("Failed to list enhanced dataset jobs: {}", e))
+        })?;
+
+        debug!("Retrieved {} enhanced dataset jobs", jobs.len());
+        Ok(jobs)
+    }
+
+    // Standard dataset generation job management (existing methods updated)
+    pub async fn create_generation_job(&self, job: &CreateDatasetJob) -> Result<Uuid> {
+        debug!("Creating dataset generation job: {}", job.name);
+        
+        let job_id = Uuid::new_v4();
+        let now = Utc::now();
+        
+        sqlx::query(
+            r#"
+            INSERT INTO dataset_generation_jobs (id, name, input_config, status, progress, created_at, updated_at)
+            VALUES ($1, $2, $3, 'pending', 0.0, $4, $4)
+            "#
+        )
+        .bind(job_id)
+        .bind(&job.name)
+        .bind(&job.input_config)
+        .bind(now)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to create generation job: {}", e);
+            DatasetError::Database(format!("Failed to create generation job: {}", e))
+        })?;
+
+        debug!("Successfully created generation job with ID: {}", job_id);
+        Ok(job_id)
+    }
+
+    pub async fn get_generation_job(&self, job_id: &Uuid) -> Result<Option<DatasetGenerationJob>> {
+        debug!("Getting generation job: {}", job_id);
+
+        let job = sqlx::query_as::<_, DatasetGenerationJob>(
+            r#"
+            SELECT id, name, input_config, status, progress, message, result_dataset_id, 
+                   error_details, created_at, updated_at, completed_at 
+            FROM dataset_generation_jobs 
+            WHERE id = $1
+            "#
+        )
+        .bind(job_id)
+        .fetch_optional(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to get generation job: {}", e);
+            DatasetError::Database(format!("Failed to get generation job: {}", e))
+        })?;
+
+        Ok(job)
+    }
+
+    pub async fn update_job_status(&self, job_id: &Uuid, status: &str, progress: f32, message: Option<&str>) -> Result<bool> {
+        debug!("Updating job {} status to: {} (progress: {})", job_id, status, progress);
+
+        let completed_at = if status == "completed" || status == "failed" {
+            Some(Utc::now())
+        } else {
+            None
+        };
+
+        let result = sqlx::query(
+            r#"
+            UPDATE dataset_generation_jobs 
+            SET status = $1, progress = $2, message = $3, updated_at = $4, completed_at = $5
+            WHERE id = $6
+            "#
+        )
+        .bind(status)
+        .bind(progress)
+        .bind(message)
+        .bind(Utc::now())
+        .bind(completed_at)
+        .bind(job_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to update job status: {}", e);
+            DatasetError::Database(format!("Failed to update job status: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    pub async fn complete_job(&self, job_id: &Uuid, dataset_id: &Uuid) -> Result<bool> {
+        debug!("Completing job {} with dataset {}", job_id, dataset_id);
+
+        let result = sqlx::query(
+            r#"
+            UPDATE dataset_generation_jobs 
+            SET status = 'completed', progress = 1.0, result_dataset_id = $1, completed_at = $2, updated_at = $2
+            WHERE id = $3
+            "#
+        )
+        .bind(dataset_id)
+        .bind(Utc::now())
+        .bind(job_id)
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to complete job: {}", e);
+            DatasetError::Database(format!("Failed to complete job: {}", e))
+        })?;
+
+        Ok(result.rows_affected() > 0)
+    }
+
+    pub async fn list_generation_jobs(&self, limit: i64, offset: i64) -> Result<Vec<DatasetGenerationJob>> {
+        debug!("Listing generation jobs (limit: {}, offset: {})", limit, offset);
+
+        let jobs = sqlx::query_as::<_, DatasetGenerationJob>(
+            r#"
+            SELECT id, name, input_config, status, progress, message, result_dataset_id, 
+                   error_details, created_at, updated_at, completed_at 
+            FROM dataset_generation_jobs 
+            ORDER BY created_at DESC 
+            LIMIT $1 OFFSET $2
+            "#
+        )
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to list generation jobs: {}", e);
+            DatasetError::Database(format!("Failed to list generation jobs: {}", e))
+        })?;
+
+        debug!("Retrieved {} generation jobs", jobs.len());
+        Ok(jobs)
+    }
+
+    pub async fn get_active_jobs_count(&self) -> Result<i64> {
+        debug!("Getting active jobs count");
+
+        let row = sqlx::query(
+            r#"
+            SELECT 
+                (SELECT COUNT(*) FROM dataset_generation_jobs WHERE status IN ('pending', 'processing')) +
+                (SELECT COUNT(*) FROM enhanced_dataset_jobs WHERE status IN ('pending', 'processing'))
+                as count
+            "#
+        )
+        .fetch_one(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to get active jobs count: {}", e);
+            DatasetError::Database(format!("Failed to get active jobs count: {}", e))
+        })?;
+
+        let count: i64 = row.get("count");
+        Ok(count)
+    }
+
+    // Job Statistics Management
+    pub async fn record_job_statistics(&self, job_id: &Uuid, job_type: &str, stats: &JobStatistics) -> Result<()> {
+        debug!("Recording statistics for job {} of type {}", job_id, job_type);
+
+        sqlx::query(
+            r#"
+            INSERT INTO job_statistics (job_id, job_type, execution_time_seconds, memory_usage_mb, 
+                                      cpu_usage_percent, records_processed, success_rate, created_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            "#
+        )
+        .bind(job_id)
+        .bind(job_type)
+        .bind(stats.execution_time_seconds)
+        .bind(stats.memory_usage_mb)
+        .bind(stats.cpu_usage_percent)
+        .bind(stats.records_processed)
+        .bind(stats.success_rate)
+        .bind(Utc::now())
+        .execute(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to record job statistics: {}", e);
+            DatasetError::Database(format!("Failed to record job statistics: {}", e))
+        })?;
+
+        debug!("Successfully recorded statistics for job {}", job_id);
+        Ok(())
+    }
+
+    // Statistics
+    pub async fn get_processing_statistics(&self) -> Result<serde_json::Value> {
+        debug!("Getting processing statistics");
+
+        let stats = sqlx::query(
+            r#"
+            SELECT 
+                COUNT(*) as total_jobs,
+                COUNT(*) FILTER (WHERE status = 'completed') as completed_jobs,
+                COUNT(*) FILTER (WHERE status = 'failed') as failed_jobs,
+                COUNT(*) FILTER (WHERE status = 'pending') as pending_jobs,
+                COUNT(*) FILTER (WHERE status = 'processing') as processing_jobs,
+                AVG(CASE WHEN status = 'completed' THEN progress ELSE NULL END) as avg_progress
+            FROM (
+                SELECT status, progress FROM dataset_generation_jobs
+                UNION ALL
+                SELECT status, progress FROM enhanced_dataset_jobs
+            ) combined_jobs
+            "#
+        )
+        .fetch_one(self.pool.pool())
+        .await
+        .map_err(|e| {
+            error!("Failed to get processing statistics: {}", e);
+            DatasetError::Database(format!("Failed to get processing statistics: {}", e))
+        })?;
+
+        let result = serde_json::json!({
+            "total_jobs": stats.get::<i64, _>("total_jobs"),
+            "completed_jobs": stats.get::<i64, _>("completed_jobs"),
+            "failed_jobs": stats.get::<i64, _>("failed_jobs"),
+            "pending_jobs": stats.get::<i64, _>("pending_jobs"),
+            "processing_jobs": stats.get::<i64, _>("processing_jobs"),
+            "average_progress": stats.get::<Option<f64>, _>("avg_progress").unwrap_or(0.0)
+        });
+
+        Ok(result)
+    }
+} ]]></file><file path="dataset-generator-service/src/lib.rs"><![CDATA[// Library interface for dataset-generator-service
+
+pub mod api_config;
+pub mod enhanced_pipeline;
+pub mod clients;
+pub mod error;
+pub mod types_minimal;
+pub mod schema_extractor;
+pub mod real_api_dataset_generator;
+pub mod real_api_dataset_command;
+
+// Re-export commonly used types
+pub use api_config::{ApiConfiguration, EnhancedDataset};
+pub use schema_extractor::{ServiceApiSchema, ExtractedEndpoint, SchemaExtractor};
+pub use real_api_dataset_generator::{ApiDatasetGenerator, FiftyOneApiExample};
+pub use real_api_dataset_command::RealApiDatasetCommand;
+pub use enhanced_pipeline::EnhancedApiDatasetPipeline;
+pub use clients::ServiceClients;
+]]></file><file path="dataset-generator-service/src/types.rs"><![CDATA[use crate::dataset_generator::{DatasetConfig, RawSource};
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum JobStatus {
+    Pending,
+    Running,
+    Processing,
+    Completed,
+    Failed,
+}
+
+#[derive(Debug, Clone)]
+pub struct DatasetJob {
+    pub id: String,
+    pub status: JobStatus,
+    pub config: DatasetConfig,
+    pub sources: Vec<RawSource>,
+    pub progress: f32,
+    pub message: String,
+    pub dataset_info: Option<DatasetMetadata>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub completed_at: Option<DateTime<Utc>>,
+    pub output_path: Option<String>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DatasetMetadata {
+    pub dataset_id: String,
+    pub name: String,
+    pub description: String,
+    pub total_samples: u64,
+    pub train_samples: u64,
+    pub validation_samples: u64,
+    pub test_samples: u64,
+    pub created_at: String,
+    pub output_path: String,
+    pub file_size_bytes: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProcessedChunk {
+    pub id: String,
+    pub text: String,
+    pub embedding: Option<Vec<f32>>,
+    pub metadata: std::collections::HashMap<String, String>,
+    pub quality_score: f32,
+    pub source_file: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QAExample {
+    pub question: String,
+    pub answer: String,
+    pub context: String,
+    pub quality_score: f32,
+    pub metadata: std::collections::HashMap<String, String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DatasetSample {
+    pub id: String,
+    pub input: String,
+    pub output: String,
+    pub instruction: Option<String>,
+    pub context: Option<String>,
+    pub metadata: std::collections::HashMap<String, String>,
+    pub quality_score: f32,
+    pub split: DatasetSplit,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum DatasetSplit {
+    Train,
+    Validation,
+    Test,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProcessingStats {
+    pub total_files_processed: usize,
+    pub total_chunks_created: usize,
+    pub total_embeddings_generated: usize,
+    pub total_qa_pairs_extracted: usize,
+    pub total_samples_after_filtering: usize,
+    pub total_samples_final: usize,
+    pub processing_time_seconds: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EmbeddingRequest {
+    pub text: String,
+    pub model: String,
+    pub provider: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EmbeddingResponse {
+    pub embedding: Vec<f32>,
+    pub model: String,
+    pub provider: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatRequest {
+    pub prompt: String,
+    pub model: String,
+    pub provider: String,
+    pub temperature: f32,
+    pub max_tokens: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatResponse {
+    pub response: String,
+    pub model: String,
+    pub provider: String,
+} ]]></file></context_slicer>

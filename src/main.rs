@@ -73,25 +73,25 @@ impl McpServer {
                     // ── AST Semantic Patcher ──────────────────────────────────
                     {
                         "name": "cortex_act_edit_ast",
-                        "description": "🔧 AST SEMANTIC PATCHER — Apply surgical code edits to a source file using Tree-sitter byte-accurate targeting. Edits are applied via Two-Phase Commit (dry-run → validate → commit). If validation detects ERROR nodes, the Auto-Healer automatically sends the broken block to a local LLM for repair within a strict 10-second timeout before safe commit. NEVER uses line numbers — targets semantic nodes by name.",
+                        "description": "Replace or delete a named symbol (function/class/struct) in any source file. Targets by name, not line number. Auto-heals broken AST via local LLM if validation fails. Use cortexast map_overview to discover symbol names first.",
                         "inputSchema": {
                             "type": "object",
                             "properties": {
-                                "file": { "type": "string", "description": "Absolute path to the file to edit." },
+                                "file": { "type": "string", "description": "Abs path to source file." },
                                 "edits": {
                                     "type": "array",
-                                    "description": "List of semantic edits to apply (bottom-up patching applied automatically).",
+                                    "description": "Edits to apply (bottom-up order enforced automatically).",
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "target": { "type": "string", "description": "Semantic target: 'kind:name' or just 'name'. E.g. 'function:login' or 'login'." },
-                                            "action": { "type": "string", "enum": ["replace", "delete"], "description": "Edit action to apply." },
-                                            "code":   { "type": "string", "description": "Replacement source code (used for 'replace' action)." }
+                                            "target": { "type": "string", "description": "Symbol name or 'kind:name' (e.g. 'login' or 'function:login')." },
+                                            "action": { "type": "string", "enum": ["replace", "delete"], "description": "replace: swap entire symbol body. delete: remove symbol." },
+                                            "code":   { "type": "string", "description": "Full replacement source (required for replace)." }
                                         },
                                         "required": ["target", "action"]
                                     }
                                 },
-                                "llm_url": { "type": "string", "description": "Optional override URL for the Auto-Healer LLM endpoint. Defaults to http://127.0.0.1:1234/v1/chat/completions." }
+                                "llm_url": { "type": "string", "description": "Auto-Healer LLM endpoint override. Default: http://127.0.0.1:1234/v1/chat/completions." }
                             },
                             "required": ["file", "edits"]
                         }
@@ -99,16 +99,16 @@ impl McpServer {
                     // ── Unified File Patcher (Config / Docs / Env) ──────────
                     {
                         "name": "cortex_patch_file",
-                        "description": "🔧 UNIFIED PATCHER — Surgically modify Config (JSON/YAML/TOML via dot-path), Docs (Markdown section heading), or Env (.env keys). Avoids full-file rewrites and saves tokens.\n• type='config' → target is dot-path e.g. 'dependencies.serde'\n• type='docs'   → target is heading text e.g. 'Installation'\n• type='env'    → target is key name e.g. 'OPENAI_API_KEY'",
+                        "description": "Surgically patch config (JSON/YAML/TOML via dot-path), markdown docs (section heading), or .env (key). Avoids full-file rewrites. type=config: target='dependencies.serde'. type=docs: target='Installation'. type=env: target='API_KEY'.",
                         "inputSchema": {
                             "type": "object",
                             "properties": {
-                                "file":          { "type": "string", "description": "Absolute path to the target file." },
-                                "type":          { "type": "string", "enum": ["config", "docs", "env"], "description": "Type of patching to apply." },
-                                "action":        { "type": "string", "enum": ["set", "delete"], "description": "Patch action." },
-                                "target":        { "type": "string", "description": "Dot-path (config), Section heading (docs), or Key name (env)." },
-                                "value":         { "description": "New value/content to set. Required for 'set' action." },
-                                "heading_level": { "type": "integer", "description": "Heading level (1-4) for 'docs' only. Defaults to 2 (##).", "default": 2 }
+                                "file":          { "type": "string", "description": "Abs path to target file." },
+                                "type":          { "type": "string", "enum": ["config", "docs", "env"], "description": "File type to patch." },
+                                "action":        { "type": "string", "enum": ["set", "delete"], "description": "set: upsert value. delete: remove key/section." },
+                                "target":        { "type": "string", "description": "Dot-path for config, heading text for docs, key name for env." },
+                                "value":         { "description": "New value (required for set)." },
+                                "heading_level": { "type": "integer", "description": "Heading level for docs (1-4). Default 2 (##).", "default": 2 }
                             },
                             "required": ["file", "type", "action", "target"]
                         }
@@ -116,31 +116,31 @@ impl McpServer {
                     // ── Async Job Runner ─────────────────────────────────────
                     {
                         "name": "cortex_act_run_async",
-                        "description": "⏳ ASYNC JOB RUNNER — Spawn a terminal command or shell script as a background job. Returns immediately with a job_id to avoid MCP timeout. Use cortex_check_job to poll for results.",
+                        "description": "Run a shell command as a background job. Returns immediately with job_id. Poll with cortex_check_job. Use for long-running builds, scripts, or any command that may exceed MCP timeout.",
                         "inputSchema": {
                             "type": "object",
                             "properties": {
-                                "command":      { "type": "string",  "description": "Shell command to run in the background." },
-                                "cwd":          { "type": "string",  "description": "Optional working directory for the command." },
-                                "timeout_secs": { "type": "integer", "description": "Optional hard timeout in seconds. Defaults to 300.", "default": 300 }
+                                "command":      { "type": "string",  "description": "Shell command to execute." },
+                                "cwd":          { "type": "string",  "description": "Working directory. Default: cwd." },
+                                "timeout_secs": { "type": "integer", "description": "Hard timeout seconds. Default 300.", "default": 300 }
                             },
                             "required": ["command"]
                         }
                     },
                     {
                         "name": "cortex_check_job",
-                        "description": "📊 JOB STATUS — Poll a background job started by cortex_act_run_async. Returns status (running/done/failed), PID, exit code, duration_secs, and the last 20 lines of the log file (log_tail).",
+                        "description": "Poll a background job (from cortex_act_run_async). Returns status (running/done/failed), exit code, duration_secs, and last 20 lines of output (log_tail).",
                         "inputSchema": {
                             "type": "object",
                             "properties": {
-                                "job_id": { "type": "string", "description": "Job ID returned by cortex_act_run_async." }
+                                "job_id": { "type": "string", "description": "Job ID from cortex_act_run_async." }
                             },
                             "required": ["job_id"]
                         }
                     },
                     {
                         "name": "cortex_kill_job",
-                        "description": "🛑 KILL JOB — Terminate a running background job. Sends SIGTERM to the process and marks it as failed. Safe to call on already-finished jobs (no-op).",
+                        "description": "Terminate a background job (SIGTERM). No-op if job already finished.",
                         "inputSchema": {
                             "type": "object",
                             "properties": {

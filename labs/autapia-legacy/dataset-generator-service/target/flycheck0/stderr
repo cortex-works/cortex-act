@@ -1,0 +1,14 @@
+    Updating crates.io index
+error: failed to get `autapia_database_client` as a dependency of package `dataset-generator-service v0.1.0 (/Users/hero/Documents/work/autapia-legacy/dataset-generator-service)`
+
+Caused by:
+  failed to load source for dependency `autapia_database_client`
+
+Caused by:
+  Unable to update /Users/hero/Documents/work/shared/autapia_database_client
+
+Caused by:
+  failed to read `/Users/hero/Documents/work/shared/autapia_database_client/Cargo.toml`
+
+Caused by:
+  No such file or directory (os error 2)

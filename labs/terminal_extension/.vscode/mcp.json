@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "terminal-master": {
+      "command": "node",
+      "args": ["/Users/hero/Documents/work/terminal_extension/mcp-server/dist/index.js"],
+      "env": { "NODE_ENV": "production" }
+    }
+  }
+}

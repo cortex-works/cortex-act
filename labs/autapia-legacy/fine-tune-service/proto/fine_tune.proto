@@ -1,0 +1,363 @@
+syntax = "proto3";
+
+package fine_tune;
+
+// Fine-tuning service for dataset curation and model fine-tuning
+service FineTune {
+  // Submit a new fine-tuning job
+  rpc SubmitJob(SubmitRequest) returns (SubmitResponse);
+  
+  // Get job status and logs
+  rpc GetStatus(StatusRequest) returns (StatusResponse);
+  
+  // Cancel a running job
+  rpc CancelJob(CancelRequest) returns (CancelResponse);
+  
+  // Delete a job (completed, failed, or cancelled jobs only)
+  rpc DeleteJob(DeleteRequest) returns (DeleteResponse);
+  
+  // List all jobs (with optional filtering)
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+  
+  // Get job logs (streaming)
+  rpc GetJobLogs(JobLogsRequest) returns (stream JobLogEntry);
+  
+  // Health check
+  rpc GetHealth(HealthRequest) returns (HealthResponse);
+}
+
+// Request message for submitting a fine-tuning job
+message SubmitRequest {
+  // Model configuration
+  ModelConfig model_config = 1;
+  
+  // Dataset configuration  
+  DatasetConfig dataset_config = 2;
+  
+  // Training configuration
+  TrainingConfig training_config = 3;
+  
+  // Output configuration
+  OutputConfig output_config = 4;
+  
+  // Optional job metadata
+  string job_name = 5;
+  map<string, string> metadata = 6;
+  
+  // The engine to use for the fine-tuning job
+  TrainingEngine engine = 7;
+}
+
+// Model configuration
+message ModelConfig {
+  oneof model_source {
+    string model_name = 1;        // e.g. "gpt2-small", "falcon-7b-mini"
+    string model_path = 2;        // Local path to model directory/file
+  }
+  
+  // Fine-tuning method
+  FineTuningMethod method = 3;
+}
+
+// Dataset configuration
+message DatasetConfig {
+  oneof dataset_source {
+    VectorDatasetConfig vector_config = 1;    // Use vector service (existing)
+    LocalDatasetConfig local_config = 2;      // Use local files (new)
+  }
+  
+  // Dataset split configuration
+  optional DatasetSplit split_config = 3;
+  
+  // Dataset type for processing
+  optional DatasetType dataset_type = 4;
+}
+
+// Vector-based dataset configuration (existing functionality)
+message VectorDatasetConfig {
+  string seed_prompt = 1;       // Topic or instruction seed for data retrieval
+  int32 retrieval_top_k = 2;    // Number of chunks to retrieve from vector store
+  string collection_name = 3;   // Vector collection name
+  
+  // Data processing options
+  bool qa_generation = 4;       // Generate QA pairs
+  bool content_cleaning = 5;    // Clean content with LLM
+  optional float quality_threshold = 6; // Content quality threshold
+}
+
+// Local dataset configuration (new)
+message LocalDatasetConfig {
+  string dataset_path = 1;      // Path to JSONL/CSV/Parquet file or folder
+  string input_field = 2;       // Field name for input text (default: "input")
+  string output_field = 3;      // Field name for output text (default: "output")
+  optional string format = 4;   // File format: "jsonl", "csv", "parquet" (auto-detect if not specified)
+}
+
+// Dataset split configuration
+message DatasetSplit {
+  oneof split_type {
+    float train_ratio = 1;      // Train ratio (0.0-1.0), validation = 1 - train_ratio
+    DatasetPaths paths = 2;     // Separate train/validation file paths
+  }
+}
+
+// Separate dataset paths
+message DatasetPaths {
+  string train_path = 1;
+  optional string validation_path = 2;
+}
+
+// Dataset type for processing
+enum DatasetType {
+  SINGLE_TURN = 0;              // Single-turn Q&A pairs
+  MULTI_TURN = 1;               // Multi-turn conversational exchanges
+  MIXED = 2;                    // Mixed single-turn and multi-turn examples
+}
+
+// Fine-tuning method
+enum FineTuningMethod {
+  FULL_PARAMETER = 0;           // Full parameter fine-tuning
+  LORA = 1;                     // LoRA (Low-Rank Adaptation)
+  QLORA = 2;                    // QLoRA (Quantized LoRA)
+}
+
+// The training engine to use for a fine-tuning job
+enum TrainingEngine {
+  CANDLE_CLI = 0;               // Use the candle-cli tool (default, existing behavior)
+  CANDLE_NATIVE = 1;            // Use the integrated native Rust Candle engine (BERT only)
+  HUGGINGFACE_TRANSFORMERS = 2; // Use Hugging Face transformers library (supports all architectures)
+}
+
+// Training configuration parameters
+message TrainingConfig {
+  // Core hyperparameters
+  int32 batch_size = 1;         // Training batch size
+  float learning_rate = 2;      // Learning rate
+  int32 epochs = 3;             // Number of training epochs
+  
+  // Optimizer configuration
+  Optimizer optimizer = 4;      // Optimizer type
+  Scheduler scheduler = 5;      // Learning rate scheduler
+  
+  // Precision and device
+  Precision precision = 6;      // Training precision
+  string device = 7;            // Device to use: "cpu", "cuda", "mps"
+  
+  // Sequence configuration
+  int32 max_sequence_length = 8; // Maximum sequence length
+  int32 gradient_accumulation_steps = 9; // Gradient accumulation steps
+  optional int32 block_size = 10; // Block size for language model training
+  
+  // Advanced options
+  bool use_gradient_checkpointing = 11; // Enable gradient checkpointing
+  float warmup_ratio = 12;      // Warmup ratio for learning rate scheduler
+  optional float weight_decay = 13; // Weight decay
+  optional float gradient_clip_norm = 14; // Gradient clipping norm
+  
+  // LoRA-specific parameters (when method = LORA/QLORA)
+  optional LoRAConfig lora_config = 15;
+}
+
+// Optimizer types
+enum Optimizer {
+  ADAMW = 0;
+  ADAFACTOR = 1;
+  SGD = 2;
+  ADAM = 3;
+}
+
+// Learning rate scheduler types
+enum Scheduler {
+  LINEAR = 0;
+  COSINE = 1;
+  CONSTANT = 2;
+  POLYNOMIAL = 3;
+}
+
+// Training precision
+enum Precision {
+  FP32 = 0;
+  FP16 = 1;
+  BF16 = 2;
+}
+
+// LoRA configuration
+message LoRAConfig {
+  int32 rank = 1;               // LoRA rank (default: 16)
+  float alpha = 2;              // LoRA alpha (default: 32)
+  float dropout = 3;            // LoRA dropout (default: 0.1)
+  repeated string target_modules = 4; // Target modules for LoRA (e.g., ["q_proj", "v_proj"])
+}
+
+// Output configuration
+message OutputConfig {
+  string output_dir = 1;        // Output directory for model and checkpoints
+  int32 save_steps = 2;         // Save checkpoint every N steps (0 = save only at end)
+  optional int32 save_epochs = 3; // Save checkpoint every N epochs
+  bool save_only_best = 4;      // Save only the best checkpoint based on validation loss
+  optional string resume_from_checkpoint = 5; // Path to checkpoint to resume from
+}
+
+// Logging configuration
+message LoggingConfig {
+  LogLevel log_level = 1;       // Logging level
+  repeated string metrics = 2;  // Metrics to track
+  bool enable_tensorboard = 3;  // Enable TensorBoard logging
+  bool enable_mlflow = 4;       // Enable MLflow logging
+  optional string experiment_name = 5; // Experiment name for tracking
+}
+
+// Log levels
+enum LogLevel {
+  DEBUG = 0;
+  INFO = 1;
+  WARNING = 2;
+  ERROR = 3;
+}
+
+// Response message for job submission
+message SubmitResponse {
+  string job_id = 1;
+  string message = 2;
+  JobStatus status = 3;
+}
+
+// Request message for getting job status
+message StatusRequest {
+  string job_id = 1;
+}
+
+// Response message for job status
+message StatusResponse {
+  string job_id = 1;
+  JobStatus status = 2;
+  float progress = 3;           // 0.0–1.0
+  repeated string recent_logs = 4; // Last few log entries
+  JobMetadata metadata = 5;
+  optional string error_message = 6;
+  optional TrainingMetrics current_metrics = 7; // Current training metrics
+}
+
+// Training metrics
+message TrainingMetrics {
+  optional float train_loss = 1;
+  optional float validation_loss = 2;
+  optional float learning_rate = 3;
+  int32 current_step = 4;
+  int32 current_epoch = 5;
+  optional float perplexity = 6;
+}
+
+// Request message for canceling a job
+message CancelRequest {
+  string job_id = 1;
+  string reason = 2;            // Optional cancellation reason
+}
+
+// Response message for job cancellation
+message CancelResponse {
+  bool cancelled = 1;
+  string message = 2;
+}
+
+// Request message for deleting a job
+message DeleteRequest {
+  string job_id = 1;
+  bool force = 2;               // Force delete even if job is running (will cancel first)
+}
+
+// Response message for job deletion
+message DeleteResponse {
+  bool deleted = 1;
+  string message = 2;
+}
+
+// Request message for listing jobs
+message ListJobsRequest {
+  optional JobStatus status_filter = 1; // Filter by status
+  int32 limit = 2;              // Maximum number of jobs to return
+  int32 offset = 3;             // Offset for pagination
+  optional string user_id = 4;  // Filter by user (future use)
+}
+
+// Response message for listing jobs
+message ListJobsResponse {
+  repeated JobSummary jobs = 1;
+  int32 total_count = 2;
+}
+
+// Request message for getting job logs
+message JobLogsRequest {
+  string job_id = 1;
+  optional int32 tail_lines = 2; // Number of recent lines to return
+  bool follow = 3;              // Whether to stream new logs
+}
+
+// Job log entry
+message JobLogEntry {
+  string timestamp = 1;
+  string level = 2;             // "INFO", "WARN", "ERROR", "DEBUG"
+  string message = 3;
+  optional string component = 4; // Which component generated the log
+}
+
+// Health check request
+message HealthRequest {}
+
+// Health check response
+message HealthResponse {
+  bool healthy = 1;
+  string message = 2;
+  map<string, string> service_status = 3; // Status of dependent services
+}
+
+// Job status enumeration
+enum JobStatus {
+  PENDING = 0;      // Job submitted but not started
+  PREPARING = 1;    // Preparing dataset and environment
+  TRAINING = 2;     // Model training in progress
+  COMPLETED = 3;    // Job completed successfully
+  FAILED = 4;       // Job failed with error
+  CANCELLED = 5;    // Job was cancelled
+}
+
+// Job metadata
+message JobMetadata {
+  string job_id = 1;
+  string job_name = 2;
+  string created_at = 3;
+  optional string started_at = 4;
+  optional string completed_at = 5;
+  
+  // Configuration used for this job
+  ModelConfig model_config = 6;
+  DatasetConfig dataset_config = 7;
+  TrainingConfig training_config = 8;
+  OutputConfig output_config = 9;
+  
+  map<string, string> metadata = 10;
+  
+  // Resource usage
+  optional ResourceUsage resource_usage = 11;
+}
+
+// Resource usage information
+message ResourceUsage {
+  float cpu_usage_percent = 1;
+  int64 memory_usage_bytes = 2;
+  optional float gpu_usage_percent = 3;
+  optional int64 gpu_memory_usage_bytes = 4;
+  int64 disk_usage_bytes = 5;
+}
+
+// Job summary for listing
+message JobSummary {
+  string job_id = 1;
+  string job_name = 2;
+  string model_name = 3;
+  JobStatus status = 4;
+  float progress = 5;
+  string created_at = 6;
+  optional string completed_at = 7;
+  FineTuningMethod method = 8;
+} 

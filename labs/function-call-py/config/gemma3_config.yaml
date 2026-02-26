@@ -1,0 +1,53 @@
+# Gemma 3 Function Calling Configuration
+
+# Model Configuration
+model:
+  name: "gemma3:2b"  # Can be changed to gemma3:9b or gemma3:27b
+  temperature: 0.7
+  max_tokens: 1024
+  top_p: 0.9
+  stop_sequences: ["</function_call>", "<|end_of_text|>"]
+
+# Ollama Configuration
+ollama:
+  host: "localhost"
+  port: 11434
+  timeout: 30
+  keep_alive: "5m"
+
+# External API Configuration (set your API keys in .env file)
+apis:
+  serper:
+    enabled: true
+    base_url: "https://google.serper.dev"
+    # Get your API key from https://serper.dev/
+    
+  mymemory:
+    enabled: true
+    base_url: "https://api.mymemory.translated.net"
+    # Free tier available, no API key required
+    
+  openweathermap:
+    enabled: true
+    base_url: "https://api.openweathermap.org/data/2.5"
+    # Get your API key from https://openweathermap.org/api
+
+# Function Calling Configuration
+function_calling:
+  max_retries: 3
+  timeout: 10
+  fallback_to_direct_answer: true
+  confidence_threshold: 0.8
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/gemma3_function_calling.log"
+
+# Performance Settings
+performance:
+  batch_size: 1
+  use_cache: true
+  cache_ttl: 300  # 5 minutes
+  max_concurrent_requests: 3

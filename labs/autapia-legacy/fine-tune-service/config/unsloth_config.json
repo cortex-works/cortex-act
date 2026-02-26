@@ -1,0 +1,27 @@
+{
+  "database": {
+    "database_url": "postgresql://postgres:root@localhost:5432/autapia"
+  },
+  "services": {
+    "vector_service_url": "http://127.0.0.1:20030",
+    "chat_service_url": "http://127.0.0.1:20010",
+    "embedding_service_url": "http://127.0.0.1:20020",
+    "candle_fine_tune_service_url": "http://127.0.0.1:50051"
+  },
+  "fine_tuning": {
+    "models_dir": "./models",
+    "datasets_dir": "./datasets",
+    "max_concurrent_jobs": 2,
+    "default_device": "cuda",
+    "candle_cli_path": null,
+    "engine": "unsloth",
+    "prefer_candle_for_embeddings": true
+  },
+  "storage": {
+    "artifacts_dir": "./artifacts",
+    "temp_dir": "./temp",
+    "max_dataset_size_mb": 1000
+  },
+  "data_dir": "./data",
+  "max_memory_mb": 8192
+}

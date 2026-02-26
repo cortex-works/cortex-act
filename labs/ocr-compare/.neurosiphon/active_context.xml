@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?><neurosiphon><repository_map><![CDATA[# REPOSITORY_MAP
+README.md
+ocrbench/metrics.py
+ocrbench/utils.py
+scripts/metrics.py
+scripts/utils.py
+docker/Dockerfile.paddleocr-arm64
+scripts/full_test.sh
+scripts/engines.py
+ocrbench/engines.py
+reports/summary.md
+docker/Dockerfile.paddleocr-repo-arm64
+data/ground_truth.txt
+data/ground_truth.example.txt
+benchmark.py
+requirements.txt
+scripts/paddle_ocr_infer.py
+scripts/run_benchmark.py
+outputs/thai_trocr.txt
+tmptj4_rzt3.py
+tmpp0u4i8gb.py]]></repository_map><file path="README.md"><![CDATA[# TRUNCATED
+OCR Benchmark (Thai + English)
+This project benchmarks multiple OCR engines on a single image with a shared preprocessing pipeline and Thai-aware accuracy metrics (CER/WER).
+Engines supported:
+- Tesseract (tha+eng)
+- EasyOCR (th+en)
+- Thai‑TrOCR (Transformer fine-tuned for Thai/English)
+- PaddleOCR (optional; via local install; limited Thai support in official wheels)
+Quick start
+1) Python env (macOS)
+- Install Homebrew Tesseract (for Tesseract engine):
+  - brew install tesseract tesseract-lang
+- Create venv and install deps:
+  - python3 -m venv .venv
+  - source .venv/bin/activate
+  - pip install --upgrade pip
+  - pip install -r requirements.txt
+2) Ground truth
+- Put expected text for `1.jpg` in `ground_truth.txt` (UTF-8). If omitted, metrics will be skipped for that engine.
+3) Run benchmark
+- python benchmark.py --image 1.jpg --gt ground_truth.txt --engines tesseract,easyocr,trocr,paddle --save-debug
+4) Results
+- Outputs per engine: `outputs/`
+- Reports: `reports/summary.json` and `reports/summary.md`
+- Preprocessing debug images (if `--save-debug`): `debug/`
+Notes on PaddleOCR
+- PaddleOCR on macOS ARM can be finicky. The default requirements do NOT install it. If you want to try it, install `paddlepaddle` and `paddleocr` manually as noted in `requirements.txt` (commented lines). Thai (`lang='th'`) is not officially supported in older wheels; the code will fallback to `latin` if `th` is unavailable, so Thai accuracy may be poor. Use Thai‑TrOCR and EasyOCR for Thai text.
+Engines
+- Tesseract: Requires `tesseract` CLI in PATH; uses `tha+eng` and psm=6.
+- EasyOCR: Reader(["th","en"]).
+- Thai‑TrOCR: Uses `openthaigpt/thai-trocr` from Hugging Face; CPU-friendly but slower.
+- PaddleOCR: Attempts local Python import and falls back to `latin` if `th` unsupported. You can omit it.
+Preprocessing
+- Upscale (min side 1200 px) with area interpolation
+- Grayscale
+- Light deskew (±5° search)
+- Sauvola binarization
+Metrics
+- Normalization: Unicode NFKC + collapse whitespace
+- CER: Levenshtein distance / charac
+/* ... */]]></file><file path="ocrbench/metrics.py"><![CDATA[// ... (6 imports)
+def timeit(fn: Callable, *args, **kwargs):
+        ...
+def cer(ref: str, hyp: str) -> float:
+        ...
+def _thai_aware_wer(ref: str, hyp: str) -> float:
+        ...
+def compute_metrics(ref: str, hyp: str) -> Dict[str, Any]:
+        ...]]></file><file path="ocrbench/utils.py"><![CDATA[// ... (5 imports)
+def ensure_dirs(*paths: str) -> None:
+        ...
+def read_text(path: str) -> Optional[str]:
+        ...
+def write_json(path: str, data) -> None:
+        ...
+def write_text(path: str, data: str) -> None:
+        ...
+THAI_RE = re.compile(r"\p{Script=Thai}")
+def is_thai_text(s: str) -> bool:
+        ...
+def normalize_text(s: str) -> str:
+        ...]]></file><file path="scripts/metrics.py"><![CDATA[// ... (14 imports)
+def timeit(fn: Callable, *args, **kwargs):
+        ...
+def cer(ref: str, hyp: str) -> float:
+        ...
+def _thai_aware_wer(ref: str, hyp: str) -> float:
+        ...
+def compute_metrics(ref: str, hyp: str) -> Dict[str, Any]:
+        ...
+try:
+except Exception:
+    word_tokenize = None
+def normalize_text(s: str) -> str:
+        ...
+def cer(ref: str, hyp: str) -> float:
+        ...
+def compute_metrics(ref: str, hyp: str) -> Dict[str, float]:
+        ...
+def timeit(fn, *args, **kwargs):
+        ...]]></file><file path="scripts/utils.py"><![CDATA[// ... (5 imports)
+def ensure_dirs(*paths: str) -> None:
+        ...
+def read_text(path: str) -> Optional[str]:
+        ...
+def write_json(path: str, data) -> None:
+        ...
+def write_text(path: str, data: str) -> None:
+        ...
+THAI_RE = re.compile(r"\p{Script=Thai}")
+def is_thai_text(s: str) -> bool:
+        ...
+def normalize_text(s: str) -> str:
+        ...]]></file><file path="docker/Dockerfile.paddleocr-arm64"><![CDATA[/* TRUNCATED */
+# Pinned PaddleOCR runtime for Apple Silicon (arm64)
+# - numpy 1.23.x + opencv 4.6.0.66
+# - paddlepaddle 2.6.1 (aarch64 wheel)
+# - paddleocr 2.6.0.1 (pre-PaddleX integration)
+# - libgomp, gl libs
+FROM --platform=linux/arm64/v8 python:3.10-slim
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq && apt-get install -y -qq \
+libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libgomp1 \
+&& rm -rf /var/lib/apt/lists/*
+# Pin Python deps to avoid ABI clashes
+RUN python3 -m pip install -U pip setuptools wheel \
+&& python3 -m pip install --no-cache-dir \
+numpy==1.23.5 opencv-contrib-python==4.6.0.66 \
+&& python3 -m pip install --no-cache-dir \
+paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html \
+&& python3 -m pip install --no-cache-dir paddleocr==2.6.0.1
+# Pre-download PP-OCRv3 models (det + Thai rec) and extract
+RUN apt-get update -qq && apt-get install -y -qq wget tar >/dev/null 2>&1 \
+&& mkdir -p /opt/paddle/models \
+&& cd /opt/paddle/models \
+&& wget -q https://paddleocr.bj.bcebos.com/PP-OCRv3/det/ch_PP-OCRv3_det_infer.tar \
+&& tar -xf ch_PP-OCRv3_det_infer.tar \
+&& rm -f ch_PP-OCRv3_det_infer.tar \
+&& wget -q https://paddleocr.bj.bcebos.com/PP-OCRv3/rec/th_PP-OCRv3_rec_infer.tar \
+&& tar -xf th_PP-OCRv3_rec_infer.tar \
+&& rm -f th_PP-OCRv3_rec_infer.tar
+# Safer CPU defaults
+ENV FLAGS_use_mkldnn=false \
+OMP_NUM_THREADS=1 \
+MKL_NUM_THREADS=1 \
+CPU_NUM=1
+WORKDIR /work]]></file><file path="scripts/full_test.sh"><![CDATA[/* TRUNCATED */
+#!/usr/bin/env bash
+set -euo pipefail
+IMG="${1:-1.jpg}"
+GT="${2:-data/ground_truth.txt}"
+echo "Running full benchmark on $IMG ..."
+python scripts/run_benchmark.py --image "$IMG" --ground-truth "$GT" --engines tesseract easyocr thai_trocr paddleocr
+echo
+echo "Summary (reports/summary.md):"
+cat reports/summary.md || true]]></file><file path="scripts/engines.py"><![CDATA[// ... (14 imports)
+def run_tesseract(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_easyocr(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_thai_trocr(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_paddleocr(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def to_pil(gray_or_bgr: np.ndarray) -> Image.Image:
+        ...
+def run_tesseract(img: np.ndarray) -> Tuple[str, Dict]:
+        ...
+def run_easyocr(img: np.ndarray) -> Tuple[str, Dict]:
+        ...
+_paddle_singleton = None
+def _paddleocr_via_docker(img: np.ndarray) -> Tuple[str, Dict]:
+    os.makedirs("outputs", exist_ok=True)
+    host_img = os.path.join(os.getcwd(), "outputs", "paddle_input.png")
+    cv2.imwrite(host_img, img)
+    container_img = "/work/outputs/paddle_input.png"
+    name = os.environ.get("PADDLE_DOCKER_NAME", "ocr_paddle_runtime")
+    host_machine = platform.machine().lower()
+    platform_override = os.environ.get("PADDLE_DOCKER_PLATFORM")
+    if platform_override:
+        platform_candidates = [platform_override]
+    elif "arm64" in host_machine or "aarch64" in host_machine:
+        platform_candidates = ["linux/arm64/v8"]
+    else:
+        platform_candidates = ["linux/amd64"]
+    def run_cmd(args):
+                ...
+    image_override = os.environ.get("PADDLE_DOCKER_IMAGE")
+    images = [image_override] if image_override else [
+        "ocr-paddleocr:arm64",
+        "ocr-paddleocr-repo:arm64",
+        "python:3.10-slim",
+    ]
+    recreate = False
+    insp = run_cmd(["docker", "inspect", "-f", "{{.Config.Image}}", name])
+    if insp.returncode != 0:
+        recreate = True
+    else:
+        if insp.stdout.strip() not in images:
+            run_cmd(["docker", "rm", "-f", name])
+            recreate = True
+    if recreate:
+        if "ocr-paddleocr:arm64" in images and run_cmd(["docker", "image", "inspect", "ocr-paddleocr:arm64"]).returncode != 0:
+            dockerfile = os.path.join("docker", "Dockerfile.paddleocr-arm64")
+            if os.path.exists(dockerfile):
+                build = run_cmd(["docker", "build", "-t", "ocr-paddleocr:arm64", "-f", dockerfile, "."])
+                if build.returncode != 0:
+                    pass
+        if "ocr-paddleocr-repo:arm64" in images and run_cmd(["docker", "image", "inspect", "ocr-paddleocr-repo:arm64"]).returncode != 0:
+            dockerfile = os.path.join("docker", "Dockerfile.paddleocr-repo-arm64")
+            if os.path.exists(dockerfile):
+                build = run_cmd(["docker", "build", "-t", "ocr-paddleocr-repo:arm64", "-f", dockerfile, "."])
+                if build.returncode != 0:
+                    pass
+        last_err = None
+        for img in images:
+            for plat in platform_candidates:
+                if img.startswith("ocr-paddleocr:") or img.startswith("ocr-paddleocr-repo:"):
+                    setup_cmd = "tail -f /dev/null"
+                else:
+                    if plat.startswith("linux/arm64"):
+                        pip_paddle = "python3 -m pip install -q --no-cache-dir paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html"
+                    else:
+                        pip_paddle = "python3 -m pip install -q --no-cache-dir paddlepaddle==2.6.1"
+                    setup_cmd = (
+                        "apt-get update >/dev/null 2>&1 && apt-get install -y -qq libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libgomp1 >/dev/null 2>&1 || true; "
+                        "python3 -m pip install -q --no-cache-dir -U pip setuptools wheel >/dev/null 2>&1 || true; "
+                        f"{pip_paddle} >/dev/null 2>&1 || true; "
+                        "python3 -m pip install -q --no-cache-dir paddleocr==2.6.0.1 >/dev/null 2>&1 || true; "
+                        "tail -f /dev/null"
+                    )
+                args = [
+                    "docker", "run", "-d", "--name", name, "--platform", plat,
+                    "-v", f"{os.getcwd()}:/work", "-w", "/work",
+                    img,
+                    "bash", "-lc", setup_cmd,
+                ]
+                create = run_cmd(args)
+                if create.returncode == 0:
+                    last_err = None
+                    image_used = img
+                    break
+                last_err = create.stdout
+                run_cmd(["docker", "rm", "-f", name])
+            if last_err is None:
+                break
+        if last_err is not None:
+            raise RuntimeError(f"paddleocr docker failed to start: {last_err}")
+        time.sleep(1.5)
+    else:
+        state = run_cmd(["docker", "inspect", "-f", "{{.State.Running}}", name])
+        if state.stdout.strip() != "true":
+            start = run_cmd(["docker", "start", name])
+            if start.returncode != 0:
+                raise RuntimeError(f"paddleocr docker failed to start existing container: {start.stdout}")
+    prep = run_cmd(["docker", "exec", name, "bash", "-lc",
+                    "apt-get update >/dev/null 2>&1 && apt-get install -y -qq libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 >/dev/null 2>&1 || true; "
+                    "python3 -m pip install -q --no-cache-dir -U pip setuptools wheel >/dev/null 2>&1 || true; "
+                    "python3 -m pip install -q --no-cache-dir numpy==1.23.5 opencv-python==4.6.0.66 imgaug==0.4.0 scikit-image==0.21.0 pillow==10.4.0 >/dev/null 2>&1 || true; "
+                    "python3 -m pip install -q --no-cache-dir paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html >/dev/null 2>&1 || true; "
+                    "python3 -m pip install -q --no-cache-dir paddleocr==2.6.0.1 >/dev/null 2>&1 || true"])
+    def _exec_and_read() -> Tuple[str, Dict]:
+                ...
+    return _exec_and_read()
+def run_paddleocr(img: np.ndarray) -> Tuple[str, Dict]:
+        ...
+_trocr_model = None
+_trocr_processor = None
+def load_thai_trocr():
+        ...
+def run_thai_trocr(img: np.ndarray) -> Tuple[str, Dict]:
+        ...
+ENGINES = {
+    "tesseract": run_tesseract,
+    "easyocr": run_easyocr,
+    "paddleocr": run_paddleocr,
+    "thai_trocr": run_thai_trocr,
+}]]></file><file path="ocrbench/engines.py"><![CDATA[// ... (3 imports)
+def run_tesseract(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_easyocr(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_thai_trocr(image: np.ndarray) -> Dict[str, Any]:
+        ...
+def run_paddleocr(image: np.ndarray) -> Dict[str, Any]:
+        ...]]></file><file path="reports/summary.md"><![CDATA[# TRUNCATED
+# OCR Benchmark Summary
+Image: /Users/hero/Documents/work/ocr-compare/1.jpg
+- tesseract: time=0.38s
+- easyocr: time=4.97s
+- trocr: time=5.54s
+- paddle: time=3.90s (error: No supported language)]]></file><file path="docker/Dockerfile.paddleocr-repo-arm64"><![CDATA[/* TRUNCATED */
+# PaddleOCR repo-based runtime (arm64) to avoid pip package ABI conflicts
+FROM --platform=linux/arm64/v8 python:3.10-slim
+ENV DEBIAN_FRONTEND=noninteractive \
+FLAGS_use_mkldnn=false \
+OMP_NUM_THREADS=1 \
+MKL_NUM_THREADS=1 \
+CPU_NUM=1
+RUN apt-get update -qq && apt-get install -y -qq \
+git wget ca-certificates libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libgomp1 \
+&& update-ca-certificates \
+&& rm -rf /var/lib/apt/lists/*
+# Pin core deps known to work well on aarch64
+RUN python3 -m pip install -U pip setuptools wheel \
+&& python3 -m pip install --no-cache-dir \
+numpy==1.23.5 opencv-python==4.6.0.66 shapely==2.0.4 scikit-image==0.21.0 pyclipper==1.3.0.post4 imgaug==0.4.0 pillow==10.4.0 \
+&& python3 -m pip install --no-cache-dir \
+paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html
+# Clone PaddleOCR repo at a stable tag
+RUN git clone --depth 1 --branch release/2.7 https://github.com/PaddlePaddle/PaddleOCR.git /opt/PaddleOCR \
+&& python3 -m pip install --no-cache-dir -r /opt/PaddleOCR/requirements.txt || true \
+&& python3 -m pip install --no-cache-dir numpy==1.23.5 opencv-python==4.6.0.66 imgaug==0.4.0
+WORKDIR /work]]></file><file path="data/ground_truth.txt"><![CDATA[# TRUNCATED
+เรียนคุณ วินิตา เปเปอร์พัลล์
+ร่วมเป็นเจ้าภาพทางกุศลเพื่อรวบรวมเงินเข้ากองทุนสวัสดิการเพื่อเด็กยากไร้ในต่างแดน ซีทีร์
+หวังว่าจะเมตตา
+นางสาวมะลิ ตั้งจิตให้นิ่ง]]></file><file path="data/ground_truth.example.txt"><![CDATA[# TRUNCATED
+เรียนคุณ วินิตา เปเปอร์พัลล์
+ร่วมเป็นเจ้าภาพทางกุศลเพื่อรวบรวมเงินเข้ากองทุนสวัสดิการเพื่อเด็กยากไร้ในต่างแดน ซีทีร์
+หวังว่าจะเมตตา
+นางสาวมะลิ ตั้งจิตให้นิ่ง]]></file><file path="benchmark.py"><![CDATA[// ... (10 imports)
+ENGINE_FUNCS = {
+    "tesseract": run_tesseract,
+    "easyocr": run_easyocr,
+    "trocr": run_thai_trocr,
+    "paddle": run_paddleocr,
+}
+def run_benchmark(image_path: str, engines: List[str], gt_path: str = None, save_debug: bool = False) -> Dict[str, Any]:
+        ...
+def parse_args():
+        ...
+if __name__ == "__main__":
+    args = parse_args()
+    engines = [e.strip() for e in args.engines.split(",") if e.strip()]
+    summary = run_benchmark(args.image, engines, args.gt, args.save_debug)
+    print("\n[green]Done. Reports in reports/[/green]")]]></file><file path="requirements.txt"><![CDATA[# TRUNCATED
+opencv-python>=4.6.0
+scikit-image>=0.21.0
+numpy>=1.23,<2.0
+pillow>=10.2.0
+python-Levenshtein>=0.21.0
+jiwer>=3.0.3
+pythainlp>=5.0.0
+regex>=2023.12.25
+unicodedata2; python_version<'3.9'
+rich>=13.7.0
+# Engines
+pytesseract>=0.3.10
+easyocr>=1.7.1
+transformers>=4.44.0
+torch>=2.3.0
+sentencepiece>=0.2.0
+accelerate>=0.33.0
+# PaddleOCR is optional; installing on macOS ARM is unreliable.
+# If you want to try it locally, uncomment the following and ensure compatible versions:
+# paddlepaddle==2.6.1; platform_machine=='arm64'
+# paddleocr==2.6.0.1
+numpy
+opencv-python
+pillow
+scikit-image
+python-Levenshtein
+jiwer
+rich
+# OCR libraries
+pytesseract
+easyocr
+paddlepaddle==2.6.1; platform_machine != 'arm64'
+paddleocr
+transformers
+torch
+sentencepiece
+accelerate
+pythainlp]]></file><file path="scripts/paddle_ocr_infer.py"><![CDATA[// ... (2 imports)
+os.environ.setdefault("FLAGS_use_mkldnn", "false")
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("CPU_NUM", "1")
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+def main():
+        ...
+if __name__=='__main__':
+    main()]]></file><file path="scripts/run_benchmark.py"><![CDATA[// ... (10 imports)
+def read_text(path: str) -> str:
+        ...
+def write_text(path: str, text: str):
+        ...
+def to_jsonable(obj):
+        ...
+def main():
+    p = argparse.ArgumentParser(description="Run OCR benchmark on a single image")
+    p.add_argument("--image", required=True)
+    p.add_argument("--ground-truth", required=True)
+    p.add_argument("--engines", nargs="*", default=["tesseract", "easyocr", "paddleocr", "thai_trocr"],
+                   help="subset of: tesseract easyocr paddleocr thai_trocr")
+    p.add_argument("--outdir", default="outputs")
+    args = p.parse_args()
+    os.makedirs(args.outdir, exist_ok=True)
+    os.makedirs("reports", exist_ok=True)
+    proc = preprocess(args.image)
+    save_debug(proc, os.path.join(args.outdir, "preprocessed"))
+    img = proc["deskewed"]
+    gt = read_text(args.ground_truth)
+    summary = {}
+    for name in args.engines:
+        if name not in ENGINES:
+            print(f"[yellow]Skipping unknown engine {name}")
+            continue
+        fn = ENGINES[name]
+        try:
+            (text, meta), dt = timeit(fn, img)
+        except Exception as e:
+            print(f"[red]{name} failed[/red]: {e}")
+            summary[name] = {"metrics": {"cer": None, "wer": None}, "time_s": None, "meta": {"error": str(e)}}
+            continue
+        out_path = os.path.join(args.outdir, f"{name}.txt")
+        write_text(out_path, text)
+        m = compute_metrics(gt, text)
+        summary[name] = {
+            "name": name,
+            "metrics": m,
+            "time_s": dt,
+            "meta": to_jsonable(meta),
+        }
+        print(f"[green]{name}[/green] -> time: {dt:.3f}s, CER={m['cer']:.3f}, WER={m['wer']:.3f}")
+    with open("reports/summary.json", "w", encoding="utf-8") as f:
+        json.dump(summary, f, ensure_ascii=False, indent=2)
+    headers = ["Tool", "CER", "WER", "Speed (s)"]
+    lines = ["| " + " | ".join(headers) + " |", "|" + "---|"*len(headers)]
+    for tool, vals in summary.items():
+        cer = vals["metrics"]["cer"]
+        wer = vals["metrics"]["wer"]
+        t = vals["time_s"]
+        def fmt(x):
+                        ...
+        lines.append(f"| {tool} | {fmt(cer)} | {fmt(wer)} | {fmt(t)} |")
+    md = "\n".join(lines)
+    with open("reports/summary.md", "w", encoding="utf-8") as f:
+        f.write(md)
+    print("\nSaved reports to reports/summary.{json,md}")
+if __name__ == "__main__":
+    main()]]></file><file path="outputs/thai_trocr.txt"><![CDATA[# TRUNCATED
+-]]></file><file path="tmptj4_rzt3.py"><![CDATA[// ... (2 imports)
+            img_path = r"/Users/hero/Documents/work/ocr-compare/tmpwq9qsxpx.png"
+            ocr = PaddleOCR(lang='th', use_angle_cls=True)
+            res = ocr.ocr(img_path)
+            lines, boxes, confs = [], [], []
+            for page in res:
+                for item in page:
+                    if isinstance(item,(list,tuple)) and len(item)==2:
+                        box, tc = item
+                        if isinstance(tc,(list,tuple)) and len(tc)==2:
+                            txt, conf = tc
+                        else:
+                            txt, conf = str(tc), 0.0
+                    elif isinstance(item, dict):
+                        box = item.get('points') or item.get('box')
+                        txt = item.get('text','')
+                        conf = float(item.get('score',0.0))
+                    else:
+                        continue
+                    lines.append(txt); boxes.append(box); confs.append(float(conf))
+            print(json.dumps({'text':'
+'.join(lines),'boxes':boxes,'confs':confs}, ensure_ascii=False))]]></file><file path="tmpp0u4i8gb.py"><![CDATA[// ... (2 imports)
+img_path = r"/Users/hero/Documents/work/ocr-compare/tmpl73t6lib.png"
+ocr = PaddleOCR(lang='th', use_angle_cls=True)
+res = ocr.ocr(img_path)
+lines, boxes, confs = [], [], []
+for page in res:
+    for item in page:
+        if isinstance(item,(list,tuple)) and len(item)==2:
+            box, tc = item
+            if isinstance(tc,(list,tuple)) and len(tc)==2:
+                txt, conf = tc
+            else:
+                txt, conf = str(tc), 0.0
+        elif isinstance(item, dict):
+            box = item.get('points') or item.get('box')
+            txt = item.get('text','')
+            conf = float(item.get('score',0.0))
+        else:
+            continue
+        lines.append(txt); boxes.append(box); confs.append(float(conf))
+print(json.dumps({'text':'
+'.join(lines),'boxes':boxes,'confs':confs}, ensure_ascii=False))]]></file></neurosiphon>

@@ -1,0 +1,38 @@
+# Pinned PaddleOCR runtime for Apple Silicon (arm64)
+# - numpy 1.23.x + opencv 4.6.0.66
+# - paddlepaddle 2.6.1 (aarch64 wheel)
+# - paddleocr 2.6.0.1 (pre-PaddleX integration)
+# - libgomp, gl libs
+FROM --platform=linux/arm64/v8 python:3.10-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -qq && apt-get install -y -qq \
+    libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pin Python deps to avoid ABI clashes
+RUN python3 -m pip install -U pip setuptools wheel \
+    && python3 -m pip install --no-cache-dir \
+       numpy==1.23.5 opencv-contrib-python==4.6.0.66 \
+    && python3 -m pip install --no-cache-dir \
+       paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html \
+    && python3 -m pip install --no-cache-dir paddleocr==2.6.0.1
+
+# Pre-download PP-OCRv3 models (det + Thai rec) and extract
+RUN apt-get update -qq && apt-get install -y -qq wget tar >/dev/null 2>&1 \
+    && mkdir -p /opt/paddle/models \
+    && cd /opt/paddle/models \
+    && wget -q https://paddleocr.bj.bcebos.com/PP-OCRv3/det/ch_PP-OCRv3_det_infer.tar \
+    && tar -xf ch_PP-OCRv3_det_infer.tar \
+    && rm -f ch_PP-OCRv3_det_infer.tar \
+    && wget -q https://paddleocr.bj.bcebos.com/PP-OCRv3/rec/th_PP-OCRv3_rec_infer.tar \
+    && tar -xf th_PP-OCRv3_rec_infer.tar \
+    && rm -f th_PP-OCRv3_rec_infer.tar
+
+# Safer CPU defaults
+ENV FLAGS_use_mkldnn=false \
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    CPU_NUM=1
+
+WORKDIR /work

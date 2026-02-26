@@ -1,0 +1,13 @@
+{
+  "name": "terminal-master-mcp",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "MCP Server for Terminal Master VS Code Extension",
+  "main": "mcp-server/dist/index.js",
+  "scripts": {
+    "start": "node mcp-server/dist/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

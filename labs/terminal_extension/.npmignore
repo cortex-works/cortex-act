@@ -1,0 +1,5 @@
+clean_build/
+mcp-server/
+terminal-master-1.0.0.vsix
+*.vsix
+**/*.map

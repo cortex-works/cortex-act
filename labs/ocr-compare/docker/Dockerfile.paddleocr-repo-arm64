@@ -1,0 +1,27 @@
+# PaddleOCR repo-based runtime (arm64) to avoid pip package ABI conflicts
+FROM --platform=linux/arm64/v8 python:3.10-slim
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    FLAGS_use_mkldnn=false \
+    OMP_NUM_THREADS=1 \
+    MKL_NUM_THREADS=1 \
+    CPU_NUM=1
+
+RUN apt-get update -qq && apt-get install -y -qq \
+    git wget ca-certificates libgl1 libglib2.0-0 libsm6 libxrender1 libxext6 libgomp1 \
+    && update-ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pin core deps known to work well on aarch64
+RUN python3 -m pip install -U pip setuptools wheel \
+ && python3 -m pip install --no-cache-dir \
+    numpy==1.23.5 opencv-python==4.6.0.66 shapely==2.0.4 scikit-image==0.21.0 pyclipper==1.3.0.post4 imgaug==0.4.0 pillow==10.4.0 \
+ && python3 -m pip install --no-cache-dir \
+    paddlepaddle==2.6.1 -f https://www.paddlepaddle.org.cn/whl/linux/aarch64/stable.html
+
+# Clone PaddleOCR repo at a stable tag
+RUN git clone --depth 1 --branch release/2.7 https://github.com/PaddlePaddle/PaddleOCR.git /opt/PaddleOCR \
+ && python3 -m pip install --no-cache-dir -r /opt/PaddleOCR/requirements.txt || true \
+ && python3 -m pip install --no-cache-dir numpy==1.23.5 opencv-python==4.6.0.66 imgaug==0.4.0
+
+WORKDIR /work

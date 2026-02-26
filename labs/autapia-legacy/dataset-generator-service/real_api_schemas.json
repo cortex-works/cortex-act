@@ -1,0 +1,1925 @@
+{
+  "dataset-generator-service": {
+    "service_name": "dataset-generator-service",
+    "description": "AI dataset creation and augmentation service for machine learning workflows",
+    "version": "0.1.0",
+    "capabilities": [
+      "dataset-generation",
+      "data-augmentation",
+      "synthetic-data-creation",
+      "dataset-analysis",
+      "data-preprocessing",
+      "format-conversion"
+    ],
+    "use_cases": [
+      "Generate synthetic training datasets for machine learning",
+      "Augment existing datasets with additional samples",
+      "Create labeled datasets from raw data sources",
+      "Convert between different dataset formats (CSV, JSON, Parquet)",
+      "Analyze dataset quality and distribution",
+      "Generate evaluation and test datasets"
+    ],
+    "dependencies": [
+      "storage-service",
+      "embedding-service",
+      "database"
+    ],
+    "grpc_port": 20090,
+    "admin_port": 20091,
+    "endpoints": [
+      {
+        "method": "GenerateDataset",
+        "description": "Generate a new synthetic dataset based on specifications",
+        "example": "Generate 1000 text classification samples with specific schema",
+        "tags": [
+          "dataset",
+          "generation",
+          "synthetic"
+        ],
+        "permissions": [
+          "datasets.generate"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "AugmentDataset",
+        "description": "Augment an existing dataset with additional synthetic samples",
+        "example": "Augment text dataset with paraphrasing and synonym replacement",
+        "tags": [
+          "dataset",
+          "augmentation",
+          "enhancement"
+        ],
+        "permissions": [
+          "datasets.augment"
+        ],
+        "parameters": {
+          "source_dataset_id": "ID of source dataset to augment"
+        }
+      },
+      {
+        "method": "AnalyzeDataset",
+        "description": "Analyze dataset quality, distribution, and characteristics",
+        "example": "Analyze text dataset for quality issues and distribution",
+        "tags": [
+          "dataset",
+          "analysis",
+          "quality"
+        ],
+        "permissions": [
+          "datasets.analyze"
+        ],
+        "parameters": {
+          "dataset_id": "Dataset identifier to analyze"
+        }
+      },
+      {
+        "method": "ConvertDatasetFormat",
+        "description": "Convert dataset between different formats and schemas",
+        "example": "Convert CSV dataset to Hugging Face format with validation",
+        "tags": [
+          "dataset",
+          "conversion",
+          "format"
+        ],
+        "permissions": [
+          "datasets.convert"
+        ],
+        "parameters": {
+          "source_dataset_id": "Source dataset identifier"
+        }
+      },
+      {
+        "method": "ListDatasets",
+        "description": "List available datasets with filtering and metadata",
+        "example": "List all text datasets with metadata for training pipeline",
+        "tags": [
+          "dataset",
+          "listing",
+          "metadata"
+        ],
+        "permissions": [
+          "datasets.list"
+        ],
+        "parameters": {
+          "filter_type": "Filter by dataset type"
+        }
+      },
+      {
+        "method": "DeleteDataset",
+        "description": "Delete a dataset and its associated files",
+        "example": "Delete temporary dataset with backup creation",
+        "tags": [
+          "dataset",
+          "deletion",
+          "cleanup"
+        ],
+        "permissions": [
+          "datasets.delete"
+        ],
+        "parameters": {
+          "dataset_id": "Dataset identifier to delete"
+        }
+      },
+      {
+        "method": "GetGenerationStatus",
+        "description": "Get status of ongoing dataset generation or processing tasks",
+        "example": "Check progress of large dataset generation task",
+        "tags": [
+          "dataset",
+          "status",
+          "progress"
+        ],
+        "permissions": [
+          "datasets.status"
+        ],
+        "parameters": {
+          "task_id": "Task identifier"
+        }
+      }
+    ]
+  },
+  "fine-tune-service": {
+    "service_name": "fine-tune-service",
+    "description": "Model fine-tuning service for training custom AI models on specialized datasets",
+    "version": "0.1.0",
+    "capabilities": [
+      "model_fine_tuning",
+      "training_orchestration",
+      "dataset_preparation",
+      "model_evaluation",
+      "training_monitoring",
+      "distributed_training",
+      "model_versioning",
+      "hyperparameter_optimization"
+    ],
+    "use_cases": [
+      "Fine-tune language models on domain-specific data",
+      "Train custom embedding models",
+      "Perform hyperparameter optimization",
+      "Monitor training progress and metrics",
+      "Manage training datasets and validation",
+      "Export and version trained models"
+    ],
+    "dependencies": [
+      "dataset-generator-service",
+      "storage-service"
+    ],
+    "grpc_port": 20080,
+    "admin_port": 20081,
+    "endpoints": [
+      {
+        "method": "StartTraining",
+        "description": "Start a new model fine-tuning job",
+        "example": "StartTraining({ job_name: 'legal-docs-llama', base_model: 'llama-2-7b', dataset_id: 'legal-corpus-v1' })",
+        "tags": [
+          "training",
+          "fine-tuning",
+          "jobs"
+        ],
+        "permissions": [
+          "training:start"
+        ],
+        "parameters": {
+          "job_name": "Name for the training job"
+        }
+      },
+      {
+        "method": "GetTrainingStatus",
+        "description": "Get detailed status and metrics for a training job",
+        "example": "GetTrainingStatus({ job_id: 'train-123' })",
+        "tags": [
+          "training",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ListTrainingJobs",
+        "description": "List training jobs with filtering options",
+        "example": "ListTrainingJobs({ status: 'running', limit: 10 })",
+        "tags": [
+          "training",
+          "list",
+          "jobs"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "CancelTraining",
+        "description": "Cancel a running training job",
+        "example": "CancelTraining({ job_id: 'train-123', reason: 'User requested cancellation' })",
+        "tags": [
+          "training",
+          "cancel",
+          "jobs"
+        ],
+        "permissions": [
+          "training:cancel"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetTrainingLogs",
+        "description": "Get training logs for a specific job",
+        "example": "GetTrainingLogs({ job_id: 'train-123', log_level: 'info' })",
+        "tags": [
+          "training",
+          "logs",
+          "monitoring"
+        ],
+        "permissions": [
+          "training:read"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "workflow-service": {
+    "service_name": "workflow-service",
+    "description": "Dynamic agent workflow orchestration and execution service",
+    "version": "0.1.0",
+    "capabilities": [
+      "workflow-orchestration",
+      "dynamic-agent-workflows",
+      "workflow-execution",
+      "task-coordination",
+      "parallel-execution",
+      "conditional-branching"
+    ],
+    "use_cases": [
+      "Create and manage complex multi-step workflows",
+      "Orchestrate dynamic agent-based task execution",
+      "Handle parallel and sequential workflow steps",
+      "Manage conditional workflow branching and decision points",
+      "Coordinate cross-service task execution",
+      "Track workflow progress and handle failures"
+    ],
+    "dependencies": [
+      "job-queue-service",
+      "chat-agent-service",
+      "settings-service",
+      "database"
+    ],
+    "grpc_port": 20160,
+    "admin_port": 20161,
+    "endpoints": [
+      {
+        "method": "CreateWorkflow",
+        "description": "Create a new workflow definition with steps and dependencies",
+        "example": "Create multi-step data processing workflow with parallel execution",
+        "tags": [
+          "workflow",
+          "creation",
+          "orchestration"
+        ],
+        "permissions": [
+          "workflows.create"
+        ],
+        "parameters": {
+          "name": "Workflow name"
+        }
+      },
+      {
+        "method": "ExecuteWorkflow",
+        "description": "Execute a workflow with provided input data",
+        "example": "Execute data processing workflow with user input parameters",
+        "tags": [
+          "workflow",
+          "execution",
+          "orchestration"
+        ],
+        "permissions": [
+          "workflows.execute"
+        ],
+        "parameters": {
+          "workflow_id": "Workflow identifier"
+        }
+      },
+      {
+        "method": "GetExecutionStatus",
+        "description": "Get the current status and progress of a workflow execution",
+        "example": "Get status of long-running data processing workflow",
+        "tags": [
+          "workflow",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "workflows.status"
+        ],
+        "parameters": {
+          "execution_id": "Execution identifier"
+        }
+      },
+      {
+        "method": "StopExecution",
+        "description": "Stop a running workflow execution",
+        "example": "Stop failed workflow execution gracefully",
+        "tags": [
+          "workflow",
+          "control",
+          "cancellation"
+        ],
+        "permissions": [
+          "workflows.control"
+        ],
+        "parameters": {
+          "execution_id": "Execution identifier"
+        }
+      },
+      {
+        "method": "ListWorkflows",
+        "description": "List available workflows with filtering and pagination",
+        "example": "List all available data processing workflow templates",
+        "tags": [
+          "workflow",
+          "listing",
+          "discovery"
+        ],
+        "permissions": [
+          "workflows.list"
+        ],
+        "parameters": {
+          "filter": "Filter by workflow name or tag"
+        }
+      },
+      {
+        "method": "GetWorkflowDefinition",
+        "description": "Get detailed workflow definition and metadata",
+        "example": "Get complete workflow definition for editing",
+        "tags": [
+          "workflow",
+          "definition",
+          "metadata"
+        ],
+        "permissions": [
+          "workflows.read"
+        ],
+        "parameters": {
+          "workflow_id": "Workflow identifier"
+        }
+      },
+      {
+        "method": "ValidateWorkflow",
+        "description": "Validate a workflow definition for correctness",
+        "example": "Validate complex multi-step workflow definition",
+        "tags": [
+          "workflow",
+          "validation",
+          "analysis"
+        ],
+        "permissions": [
+          "workflows.validate"
+        ],
+        "parameters": {
+          "definition": "Workflow definition to validate"
+        }
+      }
+    ]
+  },
+  "vector-service": {
+    "service_name": "vector-service",
+    "description": "Vector database service using Qdrant for storing and searching vector embeddings",
+    "version": "0.1.0",
+    "capabilities": [
+      "vector-storage",
+      "similarity-search",
+      "collection-management",
+      "vector-indexing"
+    ],
+    "use_cases": [
+      "Store vector embeddings",
+      "Perform similarity searches",
+      "Manage vector collections",
+      "Index and retrieve vectors"
+    ],
+    "dependencies": [
+      "embedding-service"
+    ],
+    "grpc_port": 20040,
+    "admin_port": 20041,
+    "endpoints": [
+      {
+        "method": "UpsertVector",
+        "description": "Insert or update a vector in a collection",
+        "example": "UpsertVector({ collection_name: 'documents', id: 'doc_1', vector: [0.1, 0.2, 0.3] })",
+        "tags": [
+          "vector",
+          "storage",
+          "upsert"
+        ],
+        "permissions": [
+          "vector:write"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      },
+      {
+        "method": "SearchVector",
+        "description": "Search for similar vectors in a collection",
+        "example": "SearchVector({ collection_name: 'documents', query_vector: [0.1, 0.2, 0.3], limit: 10 })",
+        "tags": [
+          "vector",
+          "search",
+          "similarity"
+        ],
+        "permissions": [
+          "vector:read"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      },
+      {
+        "method": "CreateCollection",
+        "description": "Create a new vector collection",
+        "example": "CreateCollection({ collection_name: 'documents', vector_size: 1536, distance: 'Cosine' })",
+        "tags": [
+          "vector",
+          "collection",
+          "create"
+        ],
+        "permissions": [
+          "vector:admin"
+        ],
+        "parameters": {
+          "collection_name": "Name of the collection"
+        }
+      }
+    ]
+  },
+  "rerank-service": {
+    "service_name": "rerank-service",
+    "description": "Document reranking service for improving search result relevance using various reranking models",
+    "version": "0.1.0",
+    "capabilities": [
+      "document-reranking",
+      "relevance-scoring",
+      "multiple-providers",
+      "batch-processing",
+      "local-models"
+    ],
+    "use_cases": [
+      "Rerank search results by relevance to query",
+      "Improve retrieval quality for RAG systems",
+      "Score document relevance for ranking",
+      "Batch rerank multiple document sets",
+      "Use local or API-based reranking models"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 14000,
+    "admin_port": 14001,
+    "endpoints": [
+      {
+        "method": "Rerank",
+        "description": "Rerank a list of documents based on their relevance to a query",
+        "example": "Rerank({ query: 'machine learning', documents: ['AI overview', 'ML algorithms', 'cooking recipes'], top_k: 2 })",
+        "tags": [
+          "reranking",
+          "relevance",
+          "search"
+        ],
+        "permissions": [
+          "rerank:execute"
+        ],
+        "parameters": {
+          "query": "The search query"
+        }
+      },
+      {
+        "method": "RerankBatch",
+        "description": "Rerank multiple sets of documents for different queries",
+        "example": "RerankBatch({ requests: [{ query: 'AI', documents: ['AI doc', 'ML doc'] }] })",
+        "tags": [
+          "reranking",
+          "batch",
+          "relevance"
+        ],
+        "permissions": [
+          "rerank:execute"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetSupportedModels",
+        "description": "Get a list of supported reranking models",
+        "example": "GetSupportedModels({})",
+        "tags": [
+          "models",
+          "configuration"
+        ],
+        "permissions": [
+          "rerank:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "HealthCheck",
+        "description": "Check the health status of the reranking service",
+        "example": "HealthCheck({})",
+        "tags": [
+          "health",
+          "monitoring"
+        ],
+        "permissions": [],
+        "parameters": {}
+      }
+    ]
+  },
+  "rag-service": {
+    "service_name": "rag-service",
+    "description": "Retrieval-Augmented Generation service for semantic search and document retrieval",
+    "version": "0.1.0",
+    "capabilities": [
+      "semantic-search",
+      "document-retrieval",
+      "query-generation",
+      "vector-search",
+      "reranking",
+      "rag-pipeline"
+    ],
+    "use_cases": [
+      "Perform semantic search over document collections",
+      "Generate relevant queries for retrieval",
+      "Retrieve and rank documents by relevance",
+      "Execute full RAG pipeline with context",
+      "Index and manage document embeddings"
+    ],
+    "dependencies": [
+      "vector-service",
+      "embedding-service",
+      "rerank-service"
+    ],
+    "grpc_port": 20090,
+    "admin_port": 20091,
+    "endpoints": [
+      {
+        "method": "search",
+        "description": "Perform semantic search over indexed documents",
+        "example": "search({ query: 'machine learning algorithms', collection: 'papers', limit: 10 })",
+        "tags": [
+          "search",
+          "semantic",
+          "retrieval"
+        ],
+        "permissions": [
+          "rag:search"
+        ],
+        "parameters": {
+          "query": "Search query"
+        }
+      },
+      {
+        "method": "generate_query",
+        "description": "Generate optimized search queries from natural language input",
+        "example": "generate_query({ natural_query: 'How does attention work in transformers?' })",
+        "tags": [
+          "query",
+          "generation",
+          "llm"
+        ],
+        "permissions": [
+          "rag:query_generation"
+        ],
+        "parameters": {
+          "natural_query": "Natural language query"
+        }
+      },
+      {
+        "method": "index_document",
+        "description": "Index a document for semantic search",
+        "example": "index_document({ document: { content: 'AI research paper...', collection: 'papers' } })",
+        "tags": [
+          "indexing",
+          "documents"
+        ],
+        "permissions": [
+          "rag:index"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "chat-service": {
+    "service_name": "chat-service",
+    "description": "LLM chat & conversation service providing text completion and streaming capabilities",
+    "version": "0.1.0",
+    "capabilities": [
+      "text-completion",
+      "chat-conversation",
+      "streaming-response",
+      "multi-model-support"
+    ],
+    "use_cases": [
+      "Generate text completions",
+      "Maintain conversation context",
+      "Stream real-time responses",
+      "Support multiple LLM providers"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 20010,
+    "admin_port": 20011,
+    "endpoints": [
+      {
+        "method": "Complete",
+        "description": "Generate a text completion for the given prompt",
+        "example": "Complete({ prompt: 'What is the capital of France?' })",
+        "tags": [
+          "llm",
+          "text-generation",
+          "sync"
+        ],
+        "permissions": [],
+        "parameters": {
+          "prompt": "The input prompt"
+        }
+      },
+      {
+        "method": "CompleteStream",
+        "description": "Generate a streaming text completion for the given prompt",
+        "example": "CompleteStream({ prompt: 'Tell me a story about...' })",
+        "tags": [
+          "llm",
+          "text-generation",
+          "streaming"
+        ],
+        "permissions": [],
+        "parameters": {
+          "prompt": "The input prompt"
+        }
+      }
+    ]
+  },
+  "job-queue-service": {
+    "service_name": "job-queue-service",
+    "description": "Asynchronous job queue management and background task processing service",
+    "version": "0.1.0",
+    "capabilities": [
+      "job-queuing",
+      "task-scheduling",
+      "background-processing",
+      "job-status-tracking",
+      "priority-based-execution",
+      "job-retry-management"
+    ],
+    "use_cases": [
+      "Queue background jobs for asynchronous processing",
+      "Schedule tasks for future execution",
+      "Track job execution status and progress",
+      "Handle job failures and automatic retries",
+      "Manage job priorities and execution order",
+      "Process long-running tasks without blocking main services"
+    ],
+    "dependencies": [
+      "database",
+      "in-memory-service"
+    ],
+    "grpc_port": 20190,
+    "admin_port": 20191,
+    "endpoints": [
+      {
+        "method": "QueueJob",
+        "description": "Queue a new job for background processing",
+        "example": "Queue data processing job with high priority",
+        "tags": [
+          "jobs",
+          "queue",
+          "async"
+        ],
+        "permissions": [
+          "jobs.queue"
+        ],
+        "parameters": {
+          "job_type": "Type/category of the job"
+        }
+      },
+      {
+        "method": "GetJobStatus",
+        "description": "Get the current status and details of a job",
+        "example": "Get status of data processing job 'job_123456'",
+        "tags": [
+          "jobs",
+          "status",
+          "tracking"
+        ],
+        "permissions": [
+          "jobs.status"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "CancelJob",
+        "description": "Cancel a queued or running job",
+        "example": "Cancel long-running job due to timeout",
+        "tags": [
+          "jobs",
+          "cancellation",
+          "control"
+        ],
+        "permissions": [
+          "jobs.cancel"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "ListJobs",
+        "description": "List jobs with filtering and pagination",
+        "example": "List all failed jobs from the last 24 hours",
+        "tags": [
+          "jobs",
+          "listing",
+          "pagination"
+        ],
+        "permissions": [
+          "jobs.list"
+        ],
+        "parameters": {
+          "status_filter": "Filter by job status"
+        }
+      },
+      {
+        "method": "RetryJob",
+        "description": "Manually retry a failed job",
+        "example": "Retry failed data processing job with reset counter",
+        "tags": [
+          "jobs",
+          "retry",
+          "recovery"
+        ],
+        "permissions": [
+          "jobs.retry"
+        ],
+        "parameters": {
+          "job_id": "Job identifier"
+        }
+      },
+      {
+        "method": "GetQueueStats",
+        "description": "Get queue statistics and health metrics",
+        "example": "Get queue health and job distribution statistics",
+        "tags": [
+          "stats",
+          "monitoring",
+          "queue"
+        ],
+        "permissions": [
+          "jobs.stats"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "chat-agent-service": {
+    "service_name": "chat-agent-service",
+    "description": "Intelligent chat agent service with auto-tool selection, multi-agent support, and conversation management",
+    "version": "0.1.0",
+    "capabilities": [
+      "conversational-ai",
+      "auto-tool-selection",
+      "multi-agent-support",
+      "tool-permission-management",
+      "context-aware-conversations",
+      "intelligent-routing"
+    ],
+    "use_cases": [
+      "Handle conversational AI requests with auto-tool selection",
+      "Manage multi-agent conversations and routing",
+      "Coordinate tool permission requests and responses",
+      "Provide context-aware chat responses",
+      "Route user intents to appropriate tools and services",
+      "Manage conversation history and context"
+    ],
+    "dependencies": [
+      "chat-service",
+      "mcp-service",
+      "vector-service"
+    ],
+    "grpc_port": 20180,
+    "admin_port": 20181,
+    "endpoints": [
+      {
+        "method": "InitiateChat",
+        "description": "Start a new chat conversation with auto-tool selection capabilities",
+        "example": "InitiateChat with user message to start intelligent conversation",
+        "tags": [
+          "chat",
+          "conversation",
+          "ai",
+          "auto-tools"
+        ],
+        "permissions": [
+          "chat.initiate"
+        ],
+        "parameters": {
+          "agent_id": "ID of the agent to use"
+        }
+      },
+      {
+        "method": "ContinueChat",
+        "description": "Continue an existing chat conversation with context",
+        "example": "Continue conversation with additional context and history",
+        "tags": [
+          "chat",
+          "conversation",
+          "context"
+        ],
+        "permissions": [
+          "chat.continue"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "HandleToolPermission",
+        "description": "Handle tool permission requests and responses for auto-tool workflows",
+        "example": "Handle user approval/denial of tool execution permission",
+        "tags": [
+          "tools",
+          "permissions",
+          "workflow"
+        ],
+        "permissions": [
+          "tools.permission"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "GetConversationHistory",
+        "description": "Retrieve conversation history for a session",
+        "example": "Retrieve last 50 messages from conversation history",
+        "tags": [
+          "chat",
+          "history",
+          "session"
+        ],
+        "permissions": [
+          "chat.history"
+        ],
+        "parameters": {
+          "session_id": "Session identifier"
+        }
+      },
+      {
+        "method": "ListAvailableAgents",
+        "description": "List all available agents and their capabilities",
+        "example": "List all available agents with their specializations",
+        "tags": [
+          "agents",
+          "discovery",
+          "capabilities"
+        ],
+        "permissions": [
+          "agents.list"
+        ],
+        "parameters": {
+          "filter": "Filter agents by capability or type"
+        }
+      }
+    ]
+  },
+  "storage-service": {
+    "service_name": "storage-service",
+    "description": "Multi-cloud storage service for managing files across various cloud providers and local storage",
+    "version": "0.1.0",
+    "capabilities": [
+      "multi-cloud-storage",
+      "file-upload-download",
+      "metadata-management",
+      "storage-providers",
+      "local-filesystem"
+    ],
+    "use_cases": [
+      "Store and retrieve files from cloud storage",
+      "Manage file metadata and permissions",
+      "Provide unified interface across storage providers",
+      "Handle file uploads and downloads",
+      "Support local and cloud storage backends"
+    ],
+    "dependencies": [
+      "database-service",
+      "settings-service"
+    ],
+    "grpc_port": 16000,
+    "admin_port": 16001,
+    "endpoints": [
+      {
+        "method": "UploadFile",
+        "description": "Upload a file to the configured storage backend",
+        "example": "UploadFile({ file_name: 'document.pdf', content: 'base64...', content_type: 'application/pdf' })",
+        "tags": [
+          "storage",
+          "upload",
+          "files"
+        ],
+        "permissions": [
+          "storage:write"
+        ],
+        "parameters": {
+          "file_name": "Name of the file"
+        }
+      },
+      {
+        "method": "DownloadFile",
+        "description": "Download a file from storage",
+        "example": "DownloadFile({ file_id: 'file-123', include_metadata: true })",
+        "tags": [
+          "storage",
+          "download",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file to download"
+        }
+      },
+      {
+        "method": "DeleteFile",
+        "description": "Delete a file from storage",
+        "example": "DeleteFile({ file_id: 'file-123', permanent: false })",
+        "tags": [
+          "storage",
+          "delete",
+          "files"
+        ],
+        "permissions": [
+          "storage:delete"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file to delete"
+        }
+      },
+      {
+        "method": "ListFiles",
+        "description": "List files in storage with optional filtering",
+        "example": "ListFiles({ prefix: 'documents/', limit: 50 })",
+        "tags": [
+          "storage",
+          "list",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "prefix": "File name prefix filter"
+        }
+      },
+      {
+        "method": "GetFileMetadata",
+        "description": "Get metadata for a specific file",
+        "example": "GetFileMetadata({ file_id: 'file-123' })",
+        "tags": [
+          "storage",
+          "metadata",
+          "files"
+        ],
+        "permissions": [
+          "storage:read"
+        ],
+        "parameters": {
+          "file_id": "Unique identifier of the file"
+        }
+      },
+      {
+        "method": "GetStorageStats",
+        "description": "Get storage usage statistics",
+        "example": "GetStorageStats({})",
+        "tags": [
+          "storage",
+          "statistics",
+          "monitoring"
+        ],
+        "permissions": [
+          "storage:admin"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "monitor-service": {
+    "service_name": "monitor-service",
+    "description": "System monitoring and health check service with metrics collection",
+    "version": "0.1.0",
+    "capabilities": [
+      "system-monitoring",
+      "health-checks",
+      "metrics-collection",
+      "service-discovery",
+      "alert-management",
+      "performance-tracking"
+    ],
+    "use_cases": [
+      "Monitor health status of all microservices",
+      "Collect and aggregate performance metrics",
+      "Detect service failures and outages",
+      "Generate alerts for critical issues",
+      "Track system resource usage",
+      "Provide monitoring dashboard data"
+    ],
+    "dependencies": [
+      "prometheus",
+      "all-services"
+    ],
+    "grpc_port": 20110,
+    "admin_port": 20111,
+    "endpoints": [
+      {
+        "method": "GetSystemHealth",
+        "description": "Get overall system health status across all services",
+        "example": "Get health status of all Autapia microservices",
+        "tags": [
+          "monitoring",
+          "health",
+          "system"
+        ],
+        "permissions": [
+          "monitor.health"
+        ],
+        "parameters": {
+          "include_details": "Include detailed health information"
+        }
+      },
+      {
+        "method": "GetServiceMetrics",
+        "description": "Get performance metrics for specific services",
+        "example": "Get CPU and memory metrics for chat-service over last hour",
+        "tags": [
+          "monitoring",
+          "metrics",
+          "performance"
+        ],
+        "permissions": [
+          "monitor.metrics"
+        ],
+        "parameters": {
+          "service_names": "List of service names to get metrics for"
+        }
+      },
+      {
+        "method": "CreateAlert",
+        "description": "Create a monitoring alert rule",
+        "example": "Create alert for high CPU usage on chat-service",
+        "tags": [
+          "monitoring",
+          "alerts",
+          "rules"
+        ],
+        "permissions": [
+          "monitor.alerts.create"
+        ],
+        "parameters": {
+          "name": "Alert rule name"
+        }
+      },
+      {
+        "method": "GetActiveAlerts",
+        "description": "Get currently active alerts and their details",
+        "example": "Get all critical alerts currently active",
+        "tags": [
+          "monitoring",
+          "alerts",
+          "status"
+        ],
+        "permissions": [
+          "monitor.alerts.read"
+        ],
+        "parameters": {
+          "severity_filter": "Filter by severity level"
+        }
+      },
+      {
+        "method": "GetServiceStatus",
+        "description": "Get detailed status information for a specific service",
+        "example": "Get detailed status for chat-service including 24h history",
+        "tags": [
+          "monitoring",
+          "service",
+          "status"
+        ],
+        "permissions": [
+          "monitor.service.status"
+        ],
+        "parameters": {
+          "service_name": "Name of the service"
+        }
+      },
+      {
+        "method": "StreamMetrics",
+        "description": "Stream real-time metrics data for monitoring dashboards",
+        "example": "Stream CPU, memory, and request metrics for all services",
+        "tags": [
+          "monitoring",
+          "metrics",
+          "realtime"
+        ],
+        "permissions": [
+          "monitor.metrics.stream"
+        ],
+        "parameters": {
+          "services": "Services to stream metrics for"
+        }
+      },
+      {
+        "method": "TriggerHealthCheck",
+        "description": "Manually trigger health check for specific services",
+        "example": "Trigger deep health check for database-dependent services",
+        "tags": [
+          "monitoring",
+          "health",
+          "manual"
+        ],
+        "permissions": [
+          "monitor.health.trigger"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "logging-service": {
+    "service_name": "logging-service",
+    "description": "Centralized logging service for aggregating, indexing, and querying logs from all Autapia microservices",
+    "version": "0.1.0",
+    "capabilities": [
+      "log_aggregation",
+      "log_indexing",
+      "real_time_streaming",
+      "log_search",
+      "log_filtering",
+      "metrics_extraction",
+      "log_retention",
+      "structured_logging",
+      "log_forwarding",
+      "alerting"
+    ],
+    "use_cases": [
+      "Centralize logs from all microservices",
+      "Real-time log streaming and monitoring",
+      "Search and filter logs across services",
+      "Extract metrics from log patterns",
+      "Set up log-based alerts and notifications",
+      "Debug issues across distributed services"
+    ],
+    "dependencies": [],
+    "grpc_port": 22000,
+    "admin_port": 22001,
+    "endpoints": [
+      {
+        "method": "IngestLogs",
+        "description": "Ingest log entries from microservices",
+        "example": "IngestLogs({ service_name: 'chat-service', logs: [{ timestamp: '2024-01-01T12:00:00Z', level: 'INFO', message: 'Request processed' }] })",
+        "tags": [
+          "ingestion",
+          "logs",
+          "batch"
+        ],
+        "permissions": [
+          "log:write"
+        ],
+        "parameters": {
+          "service_name": "Name of the service sending logs"
+        }
+      },
+      {
+        "method": "SearchLogs",
+        "description": "Search logs with advanced filtering and querying",
+        "example": "SearchLogs({ query: 'error database connection', filters: { service_names: ['chat-service'], levels: ['ERROR'] } })",
+        "tags": [
+          "search",
+          "query",
+          "logs"
+        ],
+        "permissions": [
+          "log:read"
+        ],
+        "parameters": {
+          "query": "Search query string"
+        }
+      },
+      {
+        "method": "StreamLogs",
+        "description": "Stream logs in real-time with filtering",
+        "example": "StreamLogs({ filters: { service_names: ['embedding-service'], levels: ['ERROR', 'WARN'] } })",
+        "tags": [
+          "streaming",
+          "real-time",
+          "logs"
+        ],
+        "permissions": [
+          "log:stream"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetLogMetrics",
+        "description": "Get aggregated metrics from logs",
+        "example": "GetLogMetrics({ metric_type: 'counts', time_range: { start_time: '2024-01-01T00:00:00Z', end_time: '2024-01-01T23:59:59Z', interval: '1h' } })",
+        "tags": [
+          "metrics",
+          "aggregation",
+          "analytics"
+        ],
+        "permissions": [
+          "log:read",
+          "metrics:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "SetLogRetention",
+        "description": "Configure log retention policies",
+        "example": "SetLogRetention({ service_name: 'chat-service', retention_policy: { retention_days: 30, compression: true } })",
+        "tags": [
+          "retention",
+          "policy",
+          "administration"
+        ],
+        "permissions": [
+          "log:admin",
+          "retention:write"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "settings-service": {
+    "service_name": "settings-service",
+    "description": "Centralized configuration management service for all Autapia microservices",
+    "version": "0.1.0",
+    "capabilities": [
+      "centralized-config",
+      "service-settings",
+      "configuration-reload",
+      "config-validation",
+      "environment-management"
+    ],
+    "use_cases": [
+      "Store and retrieve service configurations",
+      "Manage environment-specific settings",
+      "Provide centralized configuration for all microservices",
+      "Support dynamic configuration reloading",
+      "Validate configuration schemas"
+    ],
+    "dependencies": [
+      "database-service"
+    ],
+    "grpc_port": 17000,
+    "admin_port": 17001,
+    "endpoints": [
+      {
+        "method": "GetServiceConfig",
+        "description": "Retrieve configuration for a specific service",
+        "example": "GetServiceConfig({ service_name: 'embedding-service', environment: 'production' })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to get configuration for"
+        }
+      },
+      {
+        "method": "SetServiceConfig",
+        "description": "Update configuration for a specific service",
+        "example": "SetServiceConfig({ service_name: 'embedding-service', configuration: { provider: 'openai' } })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:write"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to update configuration for"
+        }
+      },
+      {
+        "method": "ListServices",
+        "description": "List all services with configuration",
+        "example": "ListServices({ environment: 'production', include_config: false })",
+        "tags": [
+          "configuration",
+          "services",
+          "listing"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "DeleteServiceConfig",
+        "description": "Delete configuration for a specific service",
+        "example": "DeleteServiceConfig({ service_name: 'old-service' })",
+        "tags": [
+          "configuration",
+          "services",
+          "management"
+        ],
+        "permissions": [
+          "config:delete"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to delete configuration for"
+        }
+      },
+      {
+        "method": "ReloadServiceConfig",
+        "description": "Trigger configuration reload for a specific service",
+        "example": "ReloadServiceConfig({ service_name: 'embedding-service' })",
+        "tags": [
+          "configuration",
+          "reload",
+          "management"
+        ],
+        "permissions": [
+          "config:reload"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to reload configuration for"
+        }
+      },
+      {
+        "method": "GetEnvironments",
+        "description": "List all available environments",
+        "example": "GetEnvironments({})",
+        "tags": [
+          "environment",
+          "configuration"
+        ],
+        "permissions": [
+          "config:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ValidateConfig",
+        "description": "Validate configuration against service schema",
+        "example": "ValidateConfig({ service_name: 'embedding-service', configuration: { provider: 'openai' } })",
+        "tags": [
+          "validation",
+          "configuration"
+        ],
+        "permissions": [
+          "config:validate"
+        ],
+        "parameters": {
+          "service_name": "Name of the service to validate configuration for"
+        }
+      }
+    ]
+  },
+  "planner-service": {
+    "service_name": "planner-service",
+    "description": "Intelligent task planning and execution coordination service",
+    "version": "0.1.0",
+    "capabilities": [
+      "task_planning",
+      "llm_integration",
+      "execution_coordination",
+      "strategy_selection",
+      "dependency_resolution",
+      "workflow_orchestration"
+    ],
+    "use_cases": [
+      "Multi-step task decomposition and planning",
+      "LLM-driven intelligent planning strategies",
+      "Complex workflow execution coordination",
+      "Service orchestration and routing",
+      "Adaptive planning based on context and complexity"
+    ],
+    "dependencies": [
+      "chat-service",
+      "job-queue-service",
+      "settings-service"
+    ],
+    "grpc_port": 20200,
+    "admin_port": 20201,
+    "endpoints": [
+      {
+        "method": "CreatePlan",
+        "description": "Create a new execution plan for a given task",
+        "example": "CreatePlan with user query and context to generate step-by-step execution plan",
+        "tags": [
+          "planning",
+          "creation"
+        ],
+        "permissions": [],
+        "parameters": {
+          "query": "User task or query to plan for"
+        }
+      },
+      {
+        "method": "GetPlan",
+        "description": "Retrieve an existing plan by ID",
+        "example": "GetPlan by plan_id to retrieve current plan status and details",
+        "tags": [
+          "planning",
+          "retrieval"
+        ],
+        "permissions": [],
+        "parameters": {
+          "plan_id": "Plan identifier"
+        }
+      },
+      {
+        "method": "ExecutePlan",
+        "description": "Execute a plan with step-by-step coordination",
+        "example": "ExecutePlan to start plan execution with real-time progress streaming",
+        "tags": [
+          "execution",
+          "coordination"
+        ],
+        "permissions": [],
+        "parameters": {
+          "plan_id": "Plan identifier to execute"
+        }
+      }
+    ]
+  },
+  "a2a-service": {
+    "service_name": "a2a-service",
+    "description": "Application-to-Application communication service for external integrations, webhooks, and message routing",
+    "version": "0.1.0",
+    "capabilities": [
+      "webhook_management",
+      "external_api_integration",
+      "message_routing",
+      "event_streaming",
+      "protocol_conversion",
+      "authentication",
+      "rate_limiting"
+    ],
+    "use_cases": [
+      "Connect external applications to Autapia ecosystem",
+      "Handle incoming webhooks from third-party services",
+      "Route messages between different protocols",
+      "Stream events to external systems",
+      "Manage API authentication and rate limiting"
+    ],
+    "dependencies": [],
+    "grpc_port": 20070,
+    "admin_port": 20071,
+    "endpoints": [
+      {
+        "method": "RegisterIntegration",
+        "description": "Register a new external integration or webhook endpoint",
+        "example": "RegisterIntegration({ name: 'slack-webhook', integration_type: 'webhook', endpoint_url: 'https://hooks.slack.com/...' })",
+        "tags": [
+          "integration",
+          "webhook",
+          "registration"
+        ],
+        "permissions": [
+          "integration:write"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ListIntegrations",
+        "description": "List all registered integrations",
+        "example": "ListIntegrations({ limit: 10, offset: 0 })",
+        "tags": [
+          "integration",
+          "list"
+        ],
+        "permissions": [
+          "integration:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "SendMessage",
+        "description": "Send a message through registered integrations",
+        "example": "SendMessage({ integration_id: 'slack-001', message_type: 'notification', payload: { text: 'Hello world' } })",
+        "tags": [
+          "messaging",
+          "integration",
+          "send"
+        ],
+        "permissions": [
+          "integration:write",
+          "message:send"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "GetIntegrationStatus",
+        "description": "Get detailed status and metrics for an integration",
+        "example": "GetIntegrationStatus({ integration_id: 'slack-001' })",
+        "tags": [
+          "integration",
+          "status",
+          "metrics"
+        ],
+        "permissions": [
+          "integration:read"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "embedding-service": {
+    "service_name": "embedding-service",
+    "description": "Text embedding service providing vector representations for various models",
+    "version": "0.1.0",
+    "capabilities": [
+      "text-embedding",
+      "multi-model-support",
+      "batch-processing",
+      "vector-generation"
+    ],
+    "use_cases": [
+      "Generate text embeddings for semantic search",
+      "Create vector representations for ML models",
+      "Process batch embedding requests",
+      "Support multiple embedding providers"
+    ],
+    "dependencies": [
+      "settings-service"
+    ],
+    "grpc_port": 20020,
+    "admin_port": 20021,
+    "endpoints": [
+      {
+        "method": "Embed",
+        "description": "Generate embeddings for a single text input",
+        "example": "Embed({ text: 'Hello world', model: 'text-embedding-ada-002' })",
+        "tags": [
+          "embedding",
+          "vector",
+          "text-processing"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to embed"
+        }
+      },
+      {
+        "method": "EmbedBatch",
+        "description": "Generate embeddings for multiple text inputs",
+        "example": "EmbedBatch({ texts: ['Hello', 'World'], model: 'text-embedding-ada-002' })",
+        "tags": [
+          "embedding",
+          "vector",
+          "batch",
+          "text-processing"
+        ],
+        "permissions": [],
+        "parameters": {}
+      }
+    ]
+  },
+  "in-memory-service": {
+    "service_name": "in-memory-service",
+    "description": "Redis-based in-memory caching and chat history management service",
+    "version": "0.1.0",
+    "capabilities": [
+      "key-value-storage",
+      "chat-history-management",
+      "session-caching",
+      "temporary-data-storage",
+      "distributed-caching"
+    ],
+    "use_cases": [
+      "Store and retrieve key-value pairs in Redis",
+      "Manage chat conversation history and context",
+      "Cache frequently accessed data across services",
+      "Store temporary session data and user state",
+      "Provide fast access to distributed cache",
+      "Handle conversation memory and context retrieval"
+    ],
+    "dependencies": [
+      "redis"
+    ],
+    "grpc_port": 20060,
+    "admin_port": 20061,
+    "endpoints": [
+      {
+        "method": "Set",
+        "description": "Store a key-value pair in Redis with optional expiration",
+        "example": "Set key 'user:123' with value '{user_data}' and 3600 second TTL",
+        "tags": [
+          "cache",
+          "storage",
+          "redis"
+        ],
+        "permissions": [
+          "cache.write"
+        ],
+        "parameters": {
+          "key": "Key to store"
+        }
+      },
+      {
+        "method": "Get",
+        "description": "Retrieve a value by key from Redis",
+        "example": "Get value for key 'user:123'",
+        "tags": [
+          "cache",
+          "retrieval",
+          "redis"
+        ],
+        "permissions": [
+          "cache.read"
+        ],
+        "parameters": {
+          "key": "Key to retrieve"
+        }
+      },
+      {
+        "method": "Delete",
+        "description": "Delete a key from Redis",
+        "example": "Delete key 'temp:session:abc123'",
+        "tags": [
+          "cache",
+          "deletion",
+          "redis"
+        ],
+        "permissions": [
+          "cache.delete"
+        ],
+        "parameters": {
+          "key": "Key to delete"
+        }
+      },
+      {
+        "method": "StoreChatHistory",
+        "description": "Store chat conversation history for a session",
+        "example": "Store 10 messages for session 'conv_abc123'",
+        "tags": [
+          "chat",
+          "history",
+          "conversation"
+        ],
+        "permissions": [
+          "chat.history.write"
+        ],
+        "parameters": {
+          "session_id": "Chat session identifier"
+        }
+      },
+      {
+        "method": "GetChatHistory",
+        "description": "Retrieve chat conversation history for a session",
+        "example": "Get last 50 messages from session 'conv_abc123'",
+        "tags": [
+          "chat",
+          "history",
+          "retrieval"
+        ],
+        "permissions": [
+          "chat.history.read"
+        ],
+        "parameters": {
+          "session_id": "Chat session identifier"
+        }
+      },
+      {
+        "method": "HealthCheck",
+        "description": "Check Redis connection health and service status",
+        "example": "Check Redis health and connection status",
+        "tags": [
+          "health",
+          "monitoring",
+          "redis"
+        ],
+        "permissions": [
+          "health.check"
+        ],
+        "parameters": {}
+      }
+    ]
+  },
+  "mcp-service": {
+    "service_name": "mcp-service",
+    "description": "Model Context Protocol service for managing and executing tools from MCP servers",
+    "version": "0.1.0",
+    "capabilities": [
+      "mcp-client-management",
+      "tool-discovery",
+      "tool-execution",
+      "stdio-transport",
+      "sse-transport",
+      "http-transport"
+    ],
+    "use_cases": [
+      "Connect to MCP servers via different transports",
+      "Discover available tools from MCP servers",
+      "Execute tools with proper error handling",
+      "Manage MCP server connections dynamically",
+      "Aggregate tools from multiple MCP servers"
+    ],
+    "dependencies": [
+      "database-service",
+      "vector-service",
+      "embedding-service"
+    ],
+    "grpc_port": 13000,
+    "admin_port": 13001,
+    "endpoints": [
+      {
+        "method": "ListConfigs",
+        "description": "List all configured MCP server configurations",
+        "example": "ListConfigs({})",
+        "tags": [
+          "mcp",
+          "configuration",
+          "management"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {}
+      },
+      {
+        "method": "ConnectToConfig",
+        "description": "Connect to an MCP server using a specific configuration",
+        "example": "ConnectToConfig({ config_id: 1, timeout_ms: 5000 })",
+        "tags": [
+          "mcp",
+          "connection",
+          "client"
+        ],
+        "permissions": [
+          "mcp:connect"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration to connect to"
+        }
+      },
+      {
+        "method": "DisconnectFromConfig",
+        "description": "Disconnect from an MCP server",
+        "example": "DisconnectFromConfig({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "connection",
+          "client"
+        ],
+        "permissions": [
+          "mcp:connect"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration to disconnect from"
+        }
+      },
+      {
+        "method": "ListTools",
+        "description": "List all available tools from connected MCP servers",
+        "example": "ListTools({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "tools",
+          "discovery"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {
+          "config_id": "Optional config ID to filter tools from specific server"
+        }
+      },
+      {
+        "method": "CallTool",
+        "description": "Execute a tool on an MCP server",
+        "example": "CallTool({ config_id: 1, tool_name: 'search', arguments: { query: 'hello' } })",
+        "tags": [
+          "mcp",
+          "tools",
+          "execution"
+        ],
+        "permissions": [
+          "mcp:execute"
+        ],
+        "parameters": {
+          "config_id": "ID of the MCP configuration"
+        }
+      },
+      {
+        "method": "GetStatus",
+        "description": "Get connection status for all or specific MCP configurations",
+        "example": "GetStatus({ config_id: 1 })",
+        "tags": [
+          "mcp",
+          "status",
+          "monitoring"
+        ],
+        "permissions": [
+          "mcp:read"
+        ],
+        "parameters": {
+          "config_id": "Optional config ID to get status for specific server"
+        }
+      }
+    ]
+  },
+  "candle-service": {
+    "service_name": "candle-service",
+    "description": "Native Rust transformer service using Candle ML framework for local inference",
+    "version": "0.1.0",
+    "capabilities": [
+      "local_inference",
+      "transformer_models",
+      "sentence_embeddings",
+      "text_classification",
+      "native_rust_ml",
+      "cpu_gpu_inference",
+      "model_caching"
+    ],
+    "use_cases": [
+      "Generate sentence embeddings locally without API calls",
+      "Perform text classification using local transformer models",
+      "Fast inference for form generation and validation",
+      "Privacy-preserving ML inference",
+      "Offline transformer model execution"
+    ],
+    "dependencies": [],
+    "grpc_port": 20130,
+    "admin_port": 20131,
+    "endpoints": [
+      {
+        "method": "GenerateEmbedding",
+        "description": "Generate sentence embeddings using local transformer models",
+        "example": "GenerateEmbedding({ text: 'Hello world', model_name: 'sentence-transformers/all-MiniLM-L6-v2' })",
+        "tags": [
+          "embedding",
+          "transformer",
+          "local-inference"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to generate embeddings for"
+        }
+      },
+      {
+        "method": "ClassifyText",
+        "description": "Perform text classification using local transformer models",
+        "example": "ClassifyText({ text: 'This is a great product!', labels: ['positive', 'negative', 'neutral'] })",
+        "tags": [
+          "classification",
+          "transformer",
+          "local-inference"
+        ],
+        "permissions": [],
+        "parameters": {
+          "text": "Text to classify"
+        }
+      },
+      {
+        "method": "GetModelInfo",
+        "description": "Get information about loaded models",
+        "example": "GetModelInfo({})",
+        "tags": [
+          "models",
+          "info",
+          "management"
+        ],
+        "permissions": [],
+        "parameters": {}
+      },
+      {
+        "method": "LoadModel",
+        "description": "Load a new transformer model for inference",
+        "example": "LoadModel({ model_name: 'sentence-transformers/all-MiniLM-L6-v2', device: 'auto' })",
+        "tags": [
+          "models",
+          "loading",
+          "management"
+        ],
+        "permissions": [
+          "model:load"
+        ],
+        "parameters": {
+          "model_name": "HuggingFace model name or local path"
+        }
+      }
+    ]
+  }
+}
