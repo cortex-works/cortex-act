@@ -85,11 +85,25 @@ fn collect_rust_symbols(node: tree_sitter::Node, source: &str, out: &mut Vec<Sym
 fn extract_via_regex(source: &str) -> Vec<Symbol> {
     // Cheap heuristic extractor for non-Rust files
     let patterns: &[(&str, &str)] = &[
+        // Rust / general
         (r"(?m)^(?:pub\s+)?(?:async\s+)?fn\s+(\w+)", "function"),
-        (r"(?m)^(?:pub\s+)?struct\s+(\w+)",           "struct"),
-        (r"(?m)^(?:pub\s+)?enum\s+(\w+)",             "enum"),
-        (r"(?m)^(?:pub\s+)?class\s+(\w+)",            "class"),
-        (r"(?m)^def\s+(\w+)",                          "function"),
+        (r"(?m)^(?:pub\s+)?struct\s+(\w+)", "struct"),
+        (r"(?m)^(?:pub\s+)?enum\s+(\w+)", "enum"),
+        // TS / JS
+        (r"(?m)^(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s+(\w+)", "function"),
+        (r"(?m)^(?:export\s+)?(?:default\s+)?class\s+(\w+)", "class"),
+        (r"(?m)^(?:export\s+)?interface\s+(\w+)", "interface"),
+        // Python
+        (r"(?m)^def\s+(\w+)", "function"),
+        (r"(?m)^class\s+(\w+)", "class"),
+        // Go
+        (r"(?m)^func\s+(?:\([^)]+\)\s+)?(\w+)", "function"),
+        (r"(?m)^type\s+(\w+)\s+struct", "struct"),
+        // PHP
+        (r"(?m)^(?:public\s+|private\s+|protected\s+)?(?:static\s+)?function\s+(\w+)", "function"),
+        (r"(?m)^(?:abstract\s+|final\s+)?class\s+(\w+)", "class"),
+        // C# / Java / C++ (Basic signature match)
+        (r"(?m)^(?:public\s+|private\s+|protected\s+|internal\s+)?(?:static\s+|async\s+|virtual\s+|override\s+)?(?:[\w<>,\[\]]+\s+)(\w+)\s*\(", "function"),
     ];
     let mut symbols = Vec::new();
     for (pat, kind) in patterns {
@@ -98,8 +112,10 @@ fn extract_via_regex(source: &str) -> Vec<Symbol> {
                 if let Some(m) = cap.get(1) {
                     // Find full "line" range from pattern match
                     let name_start = m.start();
-                    // Walk forward from name_start to find the end of the block (lazy)
-                    let surrogate_end = (name_start + 500).min(source.len());
+                    // Walk forward from name_start to find the end of the block safely
+                    let suffix = &source[name_start..];
+                    let offset = suffix.char_indices().nth(500).map(|(i, _)| i).unwrap_or(suffix.len());
+                    let surrogate_end = name_start + offset;
                     symbols.push(Symbol {
                         name:       m.as_str().to_string(),
                         kind:       kind.to_string(),

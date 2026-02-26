@@ -182,11 +182,14 @@ impl McpServer {
                 }
 
                 match crate::act::editor::apply_ast_edits(file_path, edits, llm_url.as_deref()) {
-                    Ok(result) => ok(serde_json::to_string(&json!({
-                        "status": "ok",
-                        "message": format!("Applied {} edit(s) to {}", edits_val.len(), file_str),
-                        "preview": &result[..result.len().min(500)]
-                    })).unwrap_or_default()),
+                    Ok(result) => {
+                        let preview: String = result.chars().take(500).collect();
+                        ok(serde_json::to_string(&json!({
+                            "status": "ok",
+                            "message": format!("Applied {} edit(s) to {}", edits_val.len(), file_str),
+                            "preview": preview
+                        })).unwrap_or_default())
+                    }
                     Err(e) => err(format!("cortex_act_edit_ast failed: {}", e)),
                 }
             }
