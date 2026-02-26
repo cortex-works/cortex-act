@@ -83,13 +83,14 @@ fn collect_rust_symbols(node: tree_sitter::Node, source: &str, out: &mut Vec<Sym
 }
 
 fn extract_via_regex(source: &str) -> Vec<Symbol> {
-    // Cheap heuristic extractor for non-Rust files
+    // Language-aware heuristic symbol extractor for non-Rust files.
+    // Uses full-match start (not capture-group start) and proper block-end detection.
     let patterns: &[(&str, &str)] = &[
         // Rust / general
         (r"(?m)^(?:pub\s+)?(?:async\s+)?fn\s+(\w+)", "function"),
         (r"(?m)^(?:pub\s+)?struct\s+(\w+)", "struct"),
         (r"(?m)^(?:pub\s+)?enum\s+(\w+)", "enum"),
-        // TS / JS
+        // TS / JS  (export / async variants)
         (r"(?m)^(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s+(\w+)", "function"),
         (r"(?m)^(?:export\s+)?(?:default\s+)?class\s+(\w+)", "class"),
         (r"(?m)^(?:export\s+)?interface\s+(\w+)", "interface"),
@@ -99,34 +100,108 @@ fn extract_via_regex(source: &str) -> Vec<Symbol> {
         // Go
         (r"(?m)^func\s+(?:\([^)]+\)\s+)?(\w+)", "function"),
         (r"(?m)^type\s+(\w+)\s+struct", "struct"),
-        // PHP
-        (r"(?m)^(?:public\s+|private\s+|protected\s+)?(?:static\s+)?function\s+(\w+)", "function"),
+        // PHP  (method / class with visibility modifiers)
+        (r"(?m)^\s+(?:public\s+|private\s+|protected\s+)?(?:static\s+)?function\s+(\w+)", "function"),
         (r"(?m)^(?:abstract\s+|final\s+)?class\s+(\w+)", "class"),
-        // C# / Java / C++ (Basic signature match)
-        (r"(?m)^(?:public\s+|private\s+|protected\s+|internal\s+)?(?:static\s+|async\s+|virtual\s+|override\s+)?(?:[\w<>,\[\]]+\s+)(\w+)\s*\(", "function"),
+        // C# / Java / C++ — return-type + name + `(`
+        (r"(?m)^\s+(?:public\s+|private\s+|protected\s+|internal\s+)?(?:static\s+|async\s+|virtual\s+|override\s+)?(?:[\w<>\[\],?]+\s+)(\w+)\s*\(", "function"),
     ];
+
+    let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut symbols = Vec::new();
+
     for (pat, kind) in patterns {
-        if let Ok(re) = regex::Regex::new(pat) {
-            for cap in re.captures_iter(source) {
-                if let Some(m) = cap.get(1) {
-                    // Find full "line" range from pattern match
-                    let name_start = m.start();
-                    // Walk forward from name_start to find the end of the block safely
-                    let suffix = &source[name_start..];
-                    let offset = suffix.char_indices().nth(500).map(|(i, _)| i).unwrap_or(suffix.len());
-                    let surrogate_end = name_start + offset;
-                    symbols.push(Symbol {
-                        name:       m.as_str().to_string(),
-                        kind:       kind.to_string(),
-                        start_byte: name_start,
-                        end_byte:   surrogate_end,
-                    });
-                }
+        let re = match regex::Regex::new(pat) {
+            Ok(r)  => r,
+            Err(_) => continue,
+        };
+        for cap in re.captures_iter(source) {
+            let name_cap  = match cap.get(1) { Some(m) => m, None => continue };
+            let full_match = match cap.get(0) { Some(m) => m, None => continue };
+
+            let name = name_cap.as_str().to_string();
+            // Skip reserved / common noise words that regex may catch
+            if matches!(name.as_str(), "if" | "for" | "while" | "return" | "new" | "this" | "var" | "let" | "const") {
+                continue;
             }
+            // Deduplicate: first pattern wins
+            if seen.contains(&name) { continue; }
+            seen.insert(name.clone());
+
+            // `decl_start` = beginning of the whole declaration line
+            let decl_start = full_match.start();
+
+            // Find the real end of the block:
+            // · Brace-delimited langs: count { } until depth returns to 0
+            // · Python: stop when indent returns to same / shallower level
+            let after_decl = &source[decl_start..];
+            let block_end = find_block_end(after_decl);
+            let end_byte  = decl_start + block_end;
+
+            symbols.push(Symbol {
+                name,
+                kind:       kind.to_string(),
+                start_byte: decl_start,
+                end_byte,
+            });
         }
     }
     symbols
+}
+
+/// Locate the end of the first top-level block starting at `src`.
+/// Works for both brace-delimited ({ }) and indentation-based (Python) sources.
+fn find_block_end(src: &str) -> usize {
+    // ── brace-delimited ───────────────────────────────────────────────────────
+    if let Some(first_brace) = src.find('{') {
+        // Only treat as brace-delimited if `{` appears within the first 3 lines.
+        let prefix_lines = src[..first_brace].chars().filter(|&c| c == '\n').count();
+        if prefix_lines <= 3 {
+            let mut depth: i32 = 0;
+            let mut in_str: Option<char> = None;
+            let mut prev = '\0';
+            for (i, ch) in src.char_indices() {
+                // Rudimentary string & char literal skip (no escape handling)
+                if let Some(delim) = in_str {
+                    if ch == delim && prev != '\\' { in_str = None; }
+                } else {
+                    match ch {
+                        '"' | '\'' | '`' => { in_str = Some(ch); }
+                        '{'              => { depth += 1; }
+                        '}' if depth > 0 => {
+                            depth -= 1;
+                            if depth == 0 {
+                                return i + 1; // include closing `}`
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+                prev = ch;
+            }
+            return src.len(); // unbalanced – return entire rest
+        }
+    }
+
+    // ── indentation-based (Python / YAML / …) ────────────────────────────────
+    let mut lines = src.lines();
+    let first_line = match lines.next() { Some(l) => l, None => return src.len() };
+    let base_indent = first_line.len() - first_line.trim_start().len();
+    let mut byte_pos = first_line.len() + 1; // +1 for '\n'
+    let mut last_content_pos = byte_pos;
+    for line in lines {
+        let indent = line.len() - line.trim_start().len();
+        // A non-empty line with indent <= base_indent signals the end of this block
+        if !line.trim().is_empty() && indent <= base_indent {
+            break;
+        }
+        byte_pos += line.len() + 1;
+        if !line.trim().is_empty() {
+            last_content_pos = byte_pos;
+        }
+    }
+    // Use the position after the last content line (strip spurious trailing blank line)
+    last_content_pos.min(src.len())
 }
 
 // ─── Core AST Editor ──────────────────────────────────────────────────────────
@@ -170,7 +245,16 @@ pub fn apply_ast_edits(
             "delete" => "",
             _        => edit.code.as_str(),
         };
-        current_source = format!("{}{}{}", prefix, replacement, suffix);
+        // Ensure a newline separates the replacement from what follows
+        // (critical for Python indentation-based blocks: use double newline)
+        let sep = if !replacement.is_empty() && !replacement.ends_with('\n') {
+            "\n\n"
+        } else if !replacement.is_empty() && !replacement.ends_with("\n\n") && !suffix.starts_with('\n') {
+            "\n"
+        } else {
+            ""
+        };
+        current_source = format!("{}{}{}{}", prefix, replacement, sep, suffix);
     }
 
     // 3. Tree-sitter validation for Rust files (fast, no Wasm needed)
