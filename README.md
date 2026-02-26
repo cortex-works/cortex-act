@@ -15,8 +15,14 @@
 
 | Project | Role | Capability |
 |---------|------|------------|
-| `cortex-ast` | 👁️ Eyes | Read-only: code analysis, symbol lookup, semantic navigation |
+| `CortexAST` | 👁️ Eyes | Read-only: code analysis, symbol lookup, semantic navigation |
 | **`cortex-act`** | ✋ Hands | Write/execute: file edits, config patching, shell commands |
+| `CortexSync` | 🧠 Brain | Global memory: captures intent/decisions, vectorizes memories |
+
+Together, they form the **CortexSync Ecosystem** — a seamless, cross-IDE memory and action layer for AI agents.
+
+> [!IMPORTANT]
+> To enable full ecosystem features (like task-end memory capture), ensure `cortex-sync` is running globally and `CortexAST` is installed as your primary MCP server.
 
 ---
 
@@ -42,7 +48,51 @@
 | `docs` | Markdown | Heading text e.g. `"Installation"` |
 | `env` | `.env` key-value | Key name e.g. `"OPENAI_API_KEY"` |
 
-**Parameters:** `file`, `type`, `action` (set\|delete), `target`, `value?`, `heading_level?`
+**Parameters:** `file`, `type`, `action` (set|delete), `target`, `value?`, `heading_level?`
+
+---
+
+## Usage Examples
+
+### AST Patch — Replace a Symbol
+```json
+{
+  "name": "cortex_act_edit_ast",
+  "arguments": {
+    "file": "/src/auth.rs",
+    "edits": [
+      {
+        "target": "function:login",
+        "action": "replace",
+        "code": "pub fn login(user: &str, pass: &str) -> Result<Token> { Ok(Token::new()) }"
+      }
+    ]
+  }
+}
+```
+
+### Config Patch — Add a Dependency
+```json
+{
+  "name": "cortex_patch_file",
+  "arguments": {
+    "file": "package.json",
+    "type": "config",
+    "action": "set",
+    "target": "dependencies.express",
+    "value": "^5.0.0"
+  }
+}
+```
+
+### Async Job — Run cargo build
+```json
+{
+  "name": "cortex_act_run_async",
+  "arguments": { "command": "cargo build --release" }
+}
+```
+Then check status with `cortex_check_job` using the returned `job_id`.
 
 ---
 
