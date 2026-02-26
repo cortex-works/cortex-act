@@ -28,92 +28,23 @@ Together, they form the **CortexSync Ecosystem** — a seamless, cross-IDE memor
 
 ## Tools
 
-### 🔧 `cortex_act_edit_ast`
-**AST Semantic Patcher** — Apply surgical code edits to source files using Tree-sitter byte-accurate targeting.
-- Two-Phase Commit: dry-run → validate → commit
-- Auto-Healer: sends broken code to a local LLM (LM Studio/Ollama) on syntax error
-- Never uses line numbers — targets semantic nodes by name
-- Supported: Rust (Tree-sitter), all other languages (regex fallback)
+### 1. ✏️ `cortex_act_edit_ast`
+Replace or delete a named symbol (function/class/struct) in any source file. Targets by name, not line number. Auto-heals broken AST via local LLM if validation fails. Use `cortexast map_overview` to discover symbol names first.
 
-**Parameters:** `file`, `edits[]` (`target`, `action`, `code`), `llm_url?`
+### 2. ⚙️ `cortex_patch_file`
+Surgically patch config (JSON/YAML/TOML via dot-path), markdown docs (section heading), or .env (key). Avoids full-file rewrites. 
+- `type=config`: `target='dependencies.serde'`
+- `type=docs`: `target='Installation'`
+- `type=env`: `target='API_KEY'`
 
----
+### 3. ⏳ `cortex_act_run_async`
+Run a shell command as a background job. Returns immediately with `job_id`. Poll with `cortex_check_job`. Use for long-running builds, scripts, or any command that may exceed MCP timeout.
 
-### 🔧 `cortex_patch_file`
-**Unified File Patcher** — Surgically modify config, docs, or env files without rewriting the whole file.
+### 4. 📊 `cortex_check_job`
+Poll a background job (from `cortex_act_run_async`). Returns status (`running`/`done`/`failed`), exit code, `duration_secs`, and last 20 lines of output (`log_tail`).
 
-| `type` | Target format | `target` field |
-|--------|-------------|----------------|
-| `config` | JSON / YAML / TOML | Dot-path e.g. `"dependencies.serde"` |
-| `docs` | Markdown | Heading text e.g. `"Installation"` |
-| `env` | `.env` key-value | Key name e.g. `"OPENAI_API_KEY"` |
-
-**Parameters:** `file`, `type`, `action` (set|delete), `target`, `value?`, `heading_level?`
-
----
-
-## Usage Examples
-
-### AST Patch — Replace a Symbol
-```json
-{
-  "name": "cortex_act_edit_ast",
-  "arguments": {
-    "file": "/src/auth.rs",
-    "edits": [
-      {
-        "target": "function:login",
-        "action": "replace",
-        "code": "pub fn login(user: &str, pass: &str) -> Result<Token> { Ok(Token::new()) }"
-      }
-    ]
-  }
-}
-```
-
-### Config Patch — Add a Dependency
-```json
-{
-  "name": "cortex_patch_file",
-  "arguments": {
-    "file": "package.json",
-    "type": "config",
-    "action": "set",
-    "target": "dependencies.express",
-    "value": "^5.0.0"
-  }
-}
-```
-
-### Async Job — Run cargo build
-```json
-{
-  "name": "cortex_act_run_async",
-  "arguments": { "command": "cargo build --release" }
-}
-```
-Then check status with `cortex_check_job` using the returned `job_id`.
-
----
-
-### ⏳ `cortex_act_run_async`
-**Async Job Runner** — Spawn shell commands as background jobs. Returns immediately with a `job_id`.
-
-**Parameters:** `command`, `cwd?`, `timeout_secs?`
-
----
-
-### 📊 `cortex_check_job`
-**Job Status** — Poll a background job. Returns status, PID, exit code, duration, and last 20 lines of log.
-
-**Parameters:** `job_id`
-
----
-
-### 🛑 `cortex_kill_job`
-**Kill Job** — Send SIGTERM to a running job and mark it as failed.
-
-**Parameters:** `job_id`
+### 5. 🛑 `cortex_kill_job`
+Terminate a background job (SIGTERM). No-op if job already finished.
 
 ---
 
